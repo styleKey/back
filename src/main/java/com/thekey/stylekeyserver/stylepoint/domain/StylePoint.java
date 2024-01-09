@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "StylePoint")
+@Table(name = "Style_point")
 public class StylePoint {
 
     @Id
