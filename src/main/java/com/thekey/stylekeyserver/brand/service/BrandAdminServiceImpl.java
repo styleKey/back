@@ -1,9 +1,9 @@
 package com.thekey.stylekeyserver.brand.service;
 
+import com.thekey.stylekeyserver.brand.BrandErrorMessage;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.BrandDto;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
-import com.thekey.stylekeyserver.exception.ErrorMessage;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,7 +29,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Override
     public Brand findById(Long id) {
         return brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.NOT_FOUND_BRAND.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Override
     public Brand update(Long id, BrandDto requestDto) {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.NOT_FOUND_BRAND.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
 
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
@@ -60,7 +60,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     }
 
     @Override
-    public BrandDto convertToDto (Brand brand) {
+    public BrandDto convertToDto(Brand brand) {
         return BrandDto.builder()
                 .id(brand.getId())
                 .title(brand.getTitle())
