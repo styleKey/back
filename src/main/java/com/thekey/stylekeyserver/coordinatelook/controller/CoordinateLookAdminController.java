@@ -38,7 +38,7 @@ public class CoordinateLookAdminController {
         return optional.map(createdCoordinateLook -> {
             Map<String, Object> response = Map.of(
                     "coordinateLook", createdCoordinateLook,
-                    "stylePointId", getStylePointId(createdCoordinateLook)
+                    "style_point_id", getStylePointId(createdCoordinateLook)
             );
             return ResponseEntity.ok(response);
         }).orElse(ResponseEntity.notFound().build());
@@ -96,7 +96,7 @@ public class CoordinateLookAdminController {
         Optional<CoordinateLook> optional = Optional.ofNullable(coordinateLookAdminService.update(id, requestDto));
         return optional.map(coordinateLook -> ResponseEntity.ok(Map.of(
                 "coordinateLook", coordinateLook,
-                "stylePointId", getStylePointId(coordinateLook)
+                "style_point_id", getStylePointId(coordinateLook)
         ))).orElse(ResponseEntity.notFound().build());
     }
 

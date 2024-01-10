@@ -1,5 +1,7 @@
 package com.thekey.stylekeyserver.brand.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class BrandDto {
 
     @Hidden

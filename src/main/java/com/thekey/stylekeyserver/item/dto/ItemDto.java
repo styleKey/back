@@ -1,5 +1,7 @@
 package com.thekey.stylekeyserver.item.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.category.domain.Category;
 import com.thekey.stylekeyserver.item.domain.Item;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class ItemDto {
 
     @Schema(description = "아이템 ID", example = "1")

@@ -1,6 +1,8 @@
 package com.thekey.stylekeyserver.coordinatelook.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.item.dto.ItemDto;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
@@ -13,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class CoordinateLookDto {
 
     @Hidden
