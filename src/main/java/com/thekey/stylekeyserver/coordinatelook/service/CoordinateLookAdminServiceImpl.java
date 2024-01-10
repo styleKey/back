@@ -61,7 +61,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
     @Override
     public List<CoordinateLook> findByStylePointId(Long id) {
-        return coordinateLookRepository.findByStylePointId(id);
+        return coordinateLookRepository.findCoordinateLookByStylePointId(id);
     }
 
     @Override

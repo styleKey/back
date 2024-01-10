@@ -5,5 +5,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CoordinateLookRepository extends JpaRepository<CoordinateLook, Long> {
-    List<CoordinateLook> findByStylePointId(Long id);
+    List<CoordinateLook> findCoordinateLookByStylePointId(Long id);
 }
