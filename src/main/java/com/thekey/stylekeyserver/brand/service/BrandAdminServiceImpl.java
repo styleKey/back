@@ -38,6 +38,12 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     }
 
     @Override
+    public List<Brand> findByStylePointId(Long id) {
+        StylePoint stylePoint = stylePointAdminService.findById(id);
+        return brandRepository.findBrandByStylePoint(stylePoint);
+    }
+
+    @Override
     public Brand update(Long id, BrandDto requestDto) {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));

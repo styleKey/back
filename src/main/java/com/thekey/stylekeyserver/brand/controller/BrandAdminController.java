@@ -60,6 +60,17 @@ public class BrandAdminController {
                 .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(brands));
     }
 
+    @GetMapping("style-points/{id}")
+    @Operation(summary = "Read All Brands By StylePointId", description = "스타일포인트 ID에 해당하는 브랜드 목록 전체 조회")
+    public ResponseEntity<List<Brand>> getBrandsByStylePointId(@PathVariable Long id) {
+        List<Brand> brands = brandAdminService.findByStylePointId(id);
+
+        return Optional.of(brands)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(brands));
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Update Brand", description = "브랜드 정보 수정")
     public ResponseEntity<BrandDto> updateBrand(@PathVariable Long id,
