@@ -4,6 +4,8 @@ import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
 import com.thekey.stylekeyserver.category.domain.Category;
 import com.thekey.stylekeyserver.category.service.CategoryService;
+import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
 import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.ItemDto;
@@ -39,6 +41,12 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     @Override
     public List<Item> findAll() {
         return itemRepository.findAll();
+    }
+
+    @Override
+    public List<Item> findAllByCoordinateLookId(Long id, CoordinateLookAdminService coordinateLookAdminService) {
+        CoordinateLook coordinateLook = coordinateLookAdminService.findById(id);
+        return itemRepository.findItemByCoordinateLook(coordinateLook);
     }
 
     @Override
