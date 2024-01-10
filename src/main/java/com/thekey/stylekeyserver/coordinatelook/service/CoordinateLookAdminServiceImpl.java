@@ -60,6 +60,11 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     }
 
     @Override
+    public List<CoordinateLook> findByStylePointId(Long id) {
+        return coordinateLookRepository.findByStylePointId(id);
+    }
+
+    @Override
     public CoordinateLook update(Long id, CoordinateLookDto requestDto) {
         CoordinateLook coordinateLook = coordinateLookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(

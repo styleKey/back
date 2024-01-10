@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,6 +75,17 @@ public class CoordinateLookAdminController {
         return ResponseEntity.ok(coordinateLookDtos);
     }
 
+    @GetMapping("/style-points/{id}")
+    @Operation(summary = "Read All CoordinateLook By StylePointId", description = "스타일포인트 ID에 해당하는 코디룩 목록 전체 조회")
+    public ResponseEntity<List<CoordinateLook>> getCoordinateLooksByStylePointId(@PathVariable Long id) {
+        List<CoordinateLook> coordinateLooks = coordinateLookAdminService.findByStylePointId(id);
+
+        return Optional.of(coordinateLooks)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(coordinateLooks));
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Update CoordinateLook", description = "코디룩 정보 수정")
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
@@ -91,7 +104,7 @@ public class CoordinateLookAdminController {
     @DeleteMapping("/{coordinateLookId}/items/{itemId}")
     @Operation(summary = "Delete Item From CoordinateLookId", description = "코디룩에 속한 아이템 삭제")
     public ResponseEntity<Void> deleteItemFromCoordinateLook(@PathVariable Long coordinateLookId,
-                                       @PathVariable Long itemId) {
+                                                             @PathVariable Long itemId) {
         coordinateLookAdminService.deleteItemFromCoordinateLook(coordinateLookId, itemId);
         return ResponseEntity.ok().build();
     }

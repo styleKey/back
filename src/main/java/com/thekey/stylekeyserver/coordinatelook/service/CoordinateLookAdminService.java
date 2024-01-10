@@ -12,6 +12,8 @@ public interface CoordinateLookAdminService {
 
     List<CoordinateLook> findAll();
 
+    List<CoordinateLook> findByStylePointId(Long id);
+
     CoordinateLook update(Long id, CoordinateLookDto requestDto);
 
     void deleteById(Long id);
