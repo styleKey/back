@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,7 +75,7 @@ public class CoordinateLookAdminController {
     }
 
     @GetMapping("/style-points/{id}")
-    @Operation(summary = "Read All CoordinateLook By StylePointId", description = "스타일포인트 ID에 해당하는 코디룩 목록 전체 조회")
+    @Operation(summary = "Read All CoordinateLooks By StylePointId", description = "스타일포인트 ID에 해당하는 코디룩 목록 전체 조회")
     public ResponseEntity<List<CoordinateLook>> getCoordinateLooksByStylePointId(@PathVariable Long id) {
         List<CoordinateLook> coordinateLooks = coordinateLookAdminService.findByStylePointId(id);
 
