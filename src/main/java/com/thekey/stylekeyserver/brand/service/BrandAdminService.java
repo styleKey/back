@@ -11,6 +11,7 @@ public interface BrandAdminService {
     Brand findById(Long id);
 
     List<Brand> findAll();
+    List<Brand> findByStylePointId(Long id);
 
     Brand update(Long id, BrandDto requestDto);
 

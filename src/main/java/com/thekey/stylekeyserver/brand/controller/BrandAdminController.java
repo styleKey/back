@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,13 +52,30 @@ public class BrandAdminController {
 
     @GetMapping
     @Operation(summary = "Read All Brands", description = "브랜드 정보 전체 조회")
-    public ResponseEntity<List<Brand>> getBrands() {
+    public ResponseEntity<List<BrandDto>> getBrands() {
         List<Brand> brands = brandAdminService.findAll();
+        List<BrandDto> brandDtos = brands.stream()
+                .map(brandAdminService::convertToDto)
+                .collect(Collectors.toList());
 
-        return Optional.of(brands)
+        return Optional.of(brandDtos)
                 .filter(list -> !list.isEmpty())
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(brands));
+                .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(brandDtos));
+    }
+
+    @GetMapping("style-points/{id}")
+    @Operation(summary = "Read All Brands By StylePointId", description = "스타일포인트 ID에 해당하는 브랜드 목록 전체 조회")
+    public ResponseEntity<List<BrandDto>> getBrandsByStylePointId(@PathVariable Long id) {
+        List<Brand> brands = brandAdminService.findByStylePointId(id);
+        List<BrandDto> brandDtos = brands.stream()
+                .map(brandAdminService::convertToDto)
+                .collect(Collectors.toList());
+
+        return Optional.of(brandDtos)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(brandDtos));
     }
 
     @PutMapping("/{id}")

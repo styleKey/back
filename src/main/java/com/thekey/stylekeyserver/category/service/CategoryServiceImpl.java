@@ -1,8 +1,8 @@
 package com.thekey.stylekeyserver.category.service;
 
+import com.thekey.stylekeyserver.category.CategoryErrorMessage;
 import com.thekey.stylekeyserver.category.domain.Category;
 import com.thekey.stylekeyserver.category.repository.CategoryRepository;
-import com.thekey.stylekeyserver.exception.ErrorMessage;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -19,7 +19,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.NOT_FOUND_CATEGORY.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(CategoryErrorMessage.NOT_FOUND_CATEGORY.get() + id));
     }
 
     @Override
