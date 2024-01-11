@@ -76,13 +76,16 @@ public class CoordinateLookAdminController {
 
     @GetMapping("/style-points/{id}")
     @Operation(summary = "Read All CoordinateLooks By StylePointId", description = "스타일포인트 ID에 해당하는 코디룩 목록 전체 조회")
-    public ResponseEntity<List<CoordinateLook>> getCoordinateLooksByStylePointId(@PathVariable Long id) {
+    public ResponseEntity<List<CoordinateLookDto>> getCoordinateLooksByStylePointId(@PathVariable Long id) {
         List<CoordinateLook> coordinateLooks = coordinateLookAdminService.findByStylePointId(id);
+        List<CoordinateLookDto> CoordinateLookDtos = coordinateLooks.stream()
+                .map(coordinateLookAdminService::convertToDto)
+                .collect(Collectors.toList());
 
-        return Optional.of(coordinateLooks)
+        return Optional.of(CoordinateLookDtos)
                 .filter(list -> !list.isEmpty())
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(coordinateLooks));
+                .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(CoordinateLookDtos));
     }
 
     @PutMapping("/{id}")
