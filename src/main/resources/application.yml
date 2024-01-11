@@ -15,20 +15,23 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
-    show-sql: true
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
+    defer-datasource-initialization: true
 
+  sql:
+    init:
+      mode: always
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
     org.springframework.transaction: DEBUG
 
 springdoc:
-  packages-to-scan: com.colabear754.springdoc_example.controllers
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
