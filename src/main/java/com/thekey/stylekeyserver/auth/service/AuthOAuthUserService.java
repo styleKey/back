@@ -1,7 +1,5 @@
 package com.thekey.stylekeyserver.auth.service;
 
-import java.util.Optional;
-
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -23,27 +21,6 @@ public class AuthOAuthUserService implements OAuth2UserService<OAuth2UserRequest
     public AuthOAuthUserService(AuthOAuthRepository authOAuthJpaRepository) {
         this.authOAuthJpaRepository = authOAuthJpaRepository;
     }
-
-    // @Override
-    // public OAuth2User loadUser(OAuth2UserRequest userRequest) {
-    //     OAuth2User oAuth2User = delegate.loadUser(userRequest);
-    //     String providerId = userRequest.getClientRegistration().getRegistrationId();
-
-    //     String id = oAuth2User.getName();
-    //     OAuthProviderEnum provider = OAuthProviderEnum.valueOf(providerId.toUpperCase());
-
-    //     AuthOAuthKey authOAuthKey = new AuthOAuthKey(provider, id);
-
-    //     Optional<AuthOAuthEntity> authEntityOptional = authOAuthJpaRepository.findById(authOAuthKey);
-    //     if (authEntityOptional.isPresent()) {
-    //         AuthOAuthEntity authEntity = authEntityOptional.get();
-    //         return new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, authEntity.getUserId());
-    //     } else {
-    //         AuthOAuthEntity newAuthEntity = new AuthOAuthEntity(authOAuthKey, null, null);
-    //         authOAuthJpaRepository.save(newAuthEntity);
-    //         return new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, newAuthEntity.getUserId());
-    //     }
-    // }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
