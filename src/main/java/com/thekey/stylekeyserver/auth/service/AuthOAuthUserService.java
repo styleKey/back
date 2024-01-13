@@ -24,6 +24,27 @@ public class AuthOAuthUserService implements OAuth2UserService<OAuth2UserRequest
         this.authOAuthJpaRepository = authOAuthJpaRepository;
     }
 
+    // @Override
+    // public OAuth2User loadUser(OAuth2UserRequest userRequest) {
+    //     OAuth2User oAuth2User = delegate.loadUser(userRequest);
+    //     String providerId = userRequest.getClientRegistration().getRegistrationId();
+
+    //     String id = oAuth2User.getName();
+    //     OAuthProviderEnum provider = OAuthProviderEnum.valueOf(providerId.toUpperCase());
+
+    //     AuthOAuthKey authOAuthKey = new AuthOAuthKey(provider, id);
+
+    //     Optional<AuthOAuthEntity> authEntityOptional = authOAuthJpaRepository.findById(authOAuthKey);
+    //     if (authEntityOptional.isPresent()) {
+    //         AuthOAuthEntity authEntity = authEntityOptional.get();
+    //         return new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, authEntity.getUserId());
+    //     } else {
+    //         AuthOAuthEntity newAuthEntity = new AuthOAuthEntity(authOAuthKey, null, null);
+    //         authOAuthJpaRepository.save(newAuthEntity);
+    //         return new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, newAuthEntity.getUserId());
+    //     }
+    // }
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
@@ -34,14 +55,13 @@ public class AuthOAuthUserService implements OAuth2UserService<OAuth2UserRequest
 
         AuthOAuthKey authOAuthKey = new AuthOAuthKey(provider, id);
 
-        Optional<AuthOAuthEntity> authEntityOptional = authOAuthJpaRepository.findById(authOAuthKey);
-        if (authEntityOptional.isPresent()) {
-            AuthOAuthEntity authEntity = authEntityOptional.get();
-            return new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, authEntity.getUserId());
-        } else {
-            AuthOAuthEntity newAuthEntity = new AuthOAuthEntity(authOAuthKey, null, null);
-            authOAuthJpaRepository.save(newAuthEntity);
-            return new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, newAuthEntity.getUserId());
-        }
+        return authOAuthJpaRepository.findById(authOAuthKey)
+                .map(authEntity -> new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, authEntity.getUserId()))
+                .orElseGet(() -> {
+                    AuthOAuthEntity newAuthEntity = new AuthOAuthEntity(authOAuthKey, null, null);
+                    authOAuthJpaRepository.save(newAuthEntity);
+                    return new OAuthAuthenticatedUser(oAuth2User, AuthorityUtils.NO_AUTHORITIES, newAuthEntity.getUserId());
+                });
     }
+
 }
