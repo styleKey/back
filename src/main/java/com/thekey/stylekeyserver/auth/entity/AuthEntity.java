@@ -5,7 +5,9 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @MappedSuperclass
 public abstract class AuthEntity {
     @Column(name = "user_id")
@@ -13,12 +15,7 @@ public abstract class AuthEntity {
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt = OffsetDateTime.now();
-
-    // 기본 생성자 추가
-    public AuthEntity() {
-    }
-
-    // 매개변수를 받는 생성자 추가 -> 다른 엔티티 파일 super undefined 오류 해결 
+ 
     public AuthEntity(UUID userId, OffsetDateTime createdAt) {
         this.userId = userId;
         this.createdAt = createdAt;
