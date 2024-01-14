@@ -17,12 +17,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/auth/password/register")
+    @PostMapping("/password/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Void> registerPasswordAuth(
             @RequestBody RegisterPasswordAuthRequest request
@@ -31,7 +31,7 @@ public class AuthController {
         return ApiResponse.ofSuccess();
     }
 
-    @PostMapping("/auth/password/login")
+    @PostMapping("/password/login")
     public ApiResponse<Void> loginByPassword(
             @RequestBody LoginByPasswordRequest request,
             HttpServletRequest httpServletRequest
@@ -44,7 +44,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/auth/logout")
+    @PostMapping("/logout")
     public ApiResponse<Void> logout(HttpServletRequest httpServletRequest) throws ServletException {
         httpServletRequest.logout();
         return ApiResponse.ofSuccess();
