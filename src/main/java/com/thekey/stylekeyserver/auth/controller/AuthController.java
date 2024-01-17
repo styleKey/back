@@ -1,52 +1,42 @@
 package com.thekey.stylekeyserver.auth.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thekey.stylekeyserver.auth.dto.request.AuthRequestDto;
 import com.thekey.stylekeyserver.auth.service.AuthService;
-import com.thekey.stylekeyserver.auth.service.dto.LoginByPasswordRequest;
-import com.thekey.stylekeyserver.auth.service.dto.RegisterPasswordAuthRequest;
-import com.thekey.stylekeyserver.common.dto.ApiResponse;
+import com.thekey.stylekeyserver.global.response.ApiResponseDto;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/auth/password/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Void> registerPasswordAuth(
-            @RequestBody RegisterPasswordAuthRequest request
-    ) {
-        authService.registerPasswordAuth(request);
-        return ApiResponse.ofSuccess();
+   @PostMapping("/sign-up")
+    public ResponseEntity <ApiResponseDto> signUp (@RequestBody @Valid AuthRequestDto authRequestDto){
+        return authService.signUp(authRequestDto);
     }
 
-    @PostMapping("/auth/password/login")
-    public ApiResponse<Void> loginByPassword(
-            @RequestBody LoginByPasswordRequest request,
-            HttpServletRequest httpServletRequest
-    ) {
-        try {
-            httpServletRequest.login(request.getId(), request.getPassword());
-            return ApiResponse.ofSuccess();
-        } catch (ServletException e) {
-            return ApiResponse.ofFailure("Login failed");
-        }
+    @PostMapping("/login")
+    public ResponseEntity <ApiResponseDto> login (@RequestBody @Valid AuthRequestDto authRequestDto,
+                                                     HttpServletResponse response){
+        return authService.login(authRequestDto,response);
     }
 
-    @PostMapping("/auth/logout")
-    public ApiResponse<Void> logout(HttpServletRequest httpServletRequest) throws ServletException {
-        httpServletRequest.logout();
-        return ApiResponse.ofSuccess();
-    }
+   
 }
