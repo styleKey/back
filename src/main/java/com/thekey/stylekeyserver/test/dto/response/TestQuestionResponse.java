@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class TestQuestionResponse {
+
     private Long id;
     private String content;
     private List<TestAnswerResponse> answers;
