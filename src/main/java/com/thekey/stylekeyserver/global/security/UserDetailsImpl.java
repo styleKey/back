@@ -35,7 +35,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return authEntity.toString();
+        return authEntity.getUserId();
     }
 
     @Override
