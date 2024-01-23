@@ -6,10 +6,12 @@ import com.thekey.stylekeyserver.stylepoint.StylePointErrorMessage;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
+import com.thekey.stylekeyserver.test.dto.response.TestResponse;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
 import com.thekey.stylekeyserver.test.entity.TestResult;
 import com.thekey.stylekeyserver.test.repository.TestResultRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,7 @@ public class TestResultService {
     private final StylePointRepository stylePointRepository;
 
     @Transactional
-    public TestResultResponse createTestResult(TestResultRequest request) {
+    public TestResponse createTestResult(TestResultRequest request) {
 
         AuthEntity user = authRepository.findByUserId(request.getUserId()).orElseThrow();
 
@@ -34,6 +36,15 @@ public class TestResultService {
 
         TestResult testResult = TestResultRequest.toEntity(user, stylePoint, request);
 
-        return TestResultResponse.of(testResultRepository.save(testResult));
+        return TestResponse.of(testResultRepository.save(testResult));
+    }
+
+    public List<TestResultResponse> getTestResult(String userId) {
+        AuthEntity user = authRepository.findByUserId(userId).orElseThrow();
+        List<TestResult> testResults = testResultRepository.findAllByUser(user);
+
+        return testResults.stream()
+            .map(TestResultResponse::of)
+            .toList();
     }
 }

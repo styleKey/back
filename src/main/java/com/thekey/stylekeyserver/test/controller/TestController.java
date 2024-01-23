@@ -2,12 +2,14 @@ package com.thekey.stylekeyserver.test.controller;
 
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestQuestionResponse;
+import com.thekey.stylekeyserver.test.dto.response.TestResponse;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
 import com.thekey.stylekeyserver.test.service.TestQuestionService;
 import com.thekey.stylekeyserver.test.service.TestResultService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +30,13 @@ public class TestController {
     }
 
     @PostMapping("/test")
-    public ResponseEntity<TestResultResponse> saveTestResult(@RequestBody TestResultRequest request) {
+    public ResponseEntity<TestResponse> saveTestResult(@RequestBody TestResultRequest request) {
         return ResponseEntity.ok(testResultService.createTestResult(request));
+    }
+
+    @GetMapping("/test-result/list")
+    public ResponseEntity<List<TestResultResponse>> getTestResults() {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok(testResultService.getTestResult(userId));
     }
 }
