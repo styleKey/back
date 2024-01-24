@@ -1,11 +1,14 @@
 package com.thekey.stylekeyserver.test.dto.response;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.test.entity.TestQuestion;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@JsonNaming(SnakeCaseStrategy.class)
 public class TestQuestionResponse {
 
     private Long id;
