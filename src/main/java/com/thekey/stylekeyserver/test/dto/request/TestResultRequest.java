@@ -1,5 +1,7 @@
 package com.thekey.stylekeyserver.test.dto.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.auth.entity.AuthEntity;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.test.entity.TestResult;
@@ -11,6 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonNaming(SnakeCaseStrategy.class)
 public class TestResultRequest {
 
     private String userId;
