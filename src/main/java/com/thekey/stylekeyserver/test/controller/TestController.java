@@ -46,6 +46,6 @@ public class TestController {
     public ResponseEntity<Void> deleteTestResult(@PathVariable Long testResultId) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         testResultService.deleteTestResult(testResultId, userId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
