@@ -34,6 +34,7 @@ public class StylePointApiController {
     }
 
     @GetMapping
+    @Operation(summary = "Read All StylePoint", description = "스타일포인트 전체 정보 조회")
     public ResponseEntity<List<StylePointResponse>> getStylePoints() {
         List<StylePoint> stylePoints = stylePointAdminService.findAll();
 
