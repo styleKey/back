@@ -32,7 +32,7 @@ public class AuthService {
     @Transactional
     public ResponseEntity<ApiResponseDto> signUp(AuthRequestDto authRequestDto) {
 
-        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMemberId());
+        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMember_id());
 
         if (member.isPresent()) {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.USER_EXIST));
@@ -40,13 +40,13 @@ public class AuthService {
 
         String encodedPassword = passwordEncoder.encode(authRequestDto.getPassword());
         OffsetDateTime now = OffsetDateTime.now();
-        authRepository.save(AuthEntity.of(authRequestDto.getMemberId(), encodedPassword, now));
+        authRepository.save(AuthEntity.of(authRequestDto.getMember_id(), encodedPassword, now));
         return ResponseEntity.ok(ApiResponseDto.of(SuccessType.SIGN_UP_SUCCESS));
     }
 
     public ResponseEntity<ApiResponseDto> login(AuthRequestDto authRequestDto, HttpServletResponse response) {
 
-        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMemberId());
+        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMember_id());
 
         if (member.isEmpty()) {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.USER_NOT_FOUND));
@@ -56,7 +56,7 @@ public class AuthService {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.PASSWORD_MISMATCH));
         }
 
-        TokenDto tokenDto = new TokenDto(jwtUtil.createToken(authRequestDto.getMemberId()));
+        TokenDto tokenDto = new TokenDto(jwtUtil.createToken(authRequestDto.getMember_id()));
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, tokenDto.getAccessToken());
 
         return ResponseEntity.ok(ApiResponseDto.of(SuccessType.LOG_IN_SUCCESS,
@@ -66,7 +66,7 @@ public class AuthService {
     @Transactional
     public ResponseEntity<ApiResponseDto> changePassword(AuthRequestDto authRequestDto) {
 
-        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMemberId());
+        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMember_id());
 
         if (member.isEmpty()) {
             return ResponseEntity

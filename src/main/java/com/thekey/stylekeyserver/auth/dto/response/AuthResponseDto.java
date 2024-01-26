@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AuthResponseDto {
-    private String memberId;
+    private String member_id;
 
-    public static AuthResponseDto of(String memberId) {
+    public static AuthResponseDto of(String member_id) {
         return AuthResponseDto.builder()
-                .memberId(memberId)
+                .member_id(member_id)
                 .build();
     }
 }
