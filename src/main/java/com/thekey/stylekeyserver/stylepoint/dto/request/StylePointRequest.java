@@ -1,9 +1,8 @@
-package com.thekey.stylekeyserver.stylepoint.dto;
+package com.thekey.stylekeyserver.stylepoint.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
-public class StylePointDto {
-
-    @Hidden
-    private Long id;
+public class StylePointRequest {
 
     @Schema(description = "스타일포인트 이름", example = "Unique")
     private String title;
@@ -27,17 +23,17 @@ public class StylePointDto {
     private String image;
 
     @Builder
-    public StylePointDto(String title, String description, String image) {
+    public StylePointRequest(String title, String description, String image) {
         this.title = title;
         this.description = description;
         this.image = image;
     }
 
-    public StylePoint toEntity() {
-        return StylePoint.builder()
-                .title(this.title)
-                .description(this.description)
-                .image(this.image)
+    public static StylePointRequest of(StylePoint stylePoint) {
+        return StylePointRequest.builder()
+                .title(stylePoint.getTitle())
+                .description(stylePoint.getDescription())
+                .image(stylePoint.getImage())
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 package com.thekey.stylekeyserver.stylepoint.controller;
 
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import com.thekey.stylekeyserver.stylepoint.dto.response.StylePointResponse;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,16 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "StylePoint", description = "StylePoint API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/style-points")
-public class StylePointAdminController {
+@RequestMapping("/api/style-points")
+public class StylePointApiController {
 
     private final StylePointAdminService stylePointAdminService;
 
@@ -37,7 +34,7 @@ public class StylePointAdminController {
     }
 
     @GetMapping
-    @Operation(summary = "Read All StylePoint", description = "스타일포인트 전체 정보 조회.")
+    @Operation(summary = "Read All StylePoint", description = "스타일포인트 전체 정보 조회")
     public ResponseEntity<List<StylePointResponse>> getStylePoints() {
         List<StylePoint> stylePoints = stylePointAdminService.findAll();
 
@@ -48,19 +45,5 @@ public class StylePointAdminController {
         return ResponseEntity.ok(stylePoints.stream()
                 .map(StylePointResponse::of)
                 .collect(Collectors.toList()));
-
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update StylePoint", description = "스타일포인트 정보 수정")
-    public ResponseEntity<StylePointResponse> update(@PathVariable Long id,
-                                                     @RequestBody StylePointRequest requestDto) {
-
-        if (id == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        StylePoint updated = stylePointAdminService.update(id, requestDto);
-        return ResponseEntity.ok(StylePointResponse.of(updated));
     }
 }
