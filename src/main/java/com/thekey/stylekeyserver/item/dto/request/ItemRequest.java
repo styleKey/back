@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.item.dto;
+package com.thekey.stylekeyserver.item.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
-public class ItemDto {
+public class ItemRequest {
 
     @Schema(description = "아이템 ID", example = "1")
     private Long id;
@@ -34,7 +34,7 @@ public class ItemDto {
     private Long categoryId;
 
     @Builder
-    public ItemDto(Long id, String title, String sales_link, String image, Long brandId, Long categoryId) {
+    public ItemRequest(Long id, String title, String sales_link, String image, Long brandId, Long categoryId) {
         this.id = id;
         this.title = title;
         this.sales_link = sales_link;
@@ -54,3 +54,4 @@ public class ItemDto {
                 .build();
     }
 }
+
