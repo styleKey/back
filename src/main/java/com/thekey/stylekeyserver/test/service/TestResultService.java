@@ -47,4 +47,10 @@ public class TestResultService {
             .map(TestResultResponse::of)
             .toList();
     }
+
+    @Transactional
+    public void deleteTestResult(Long testResultId, String userId) {
+        AuthEntity user = authRepository.findByUserId(userId).orElseThrow();
+        testResultRepository.deleteByUserAndId(user, testResultId);
+    }
 }

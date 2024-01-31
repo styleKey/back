@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface TestResultRepository extends JpaRepository<TestResult, Long> {
 
     List<TestResult> findAllByUser(AuthEntity user);
+
+    void deleteByUserAndId(AuthEntity user, Long id);
 }

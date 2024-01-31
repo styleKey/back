@@ -28,6 +28,7 @@ public class JwtUtil {
     public static final String AUTHORIZATION_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L;
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
 
@@ -60,6 +61,31 @@ public class JwtUtil {
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
+    }
+
+    public String createRefreshToken(String userEmail) {
+        Date date = new Date();
+
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(userEmail)
+                        .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_EXPIRATION_TIME))
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
+    }
+
+    public String refreshToken(String accessToken) {
+        try {
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            String userEmail = claims.getSubject();
+            return createToken(userEmail);
+        } catch (ExpiredJwtException e) {
+            log.info("Expired Refresh Token, 만료된 Access Token 입니다.");
+        } catch (UnsupportedJwtException | MalformedJwtException | SecurityException | IllegalArgumentException e) {
+            log.info("Invalid Refresh Token, 유효하지 않는 Access Token 입니다.");
+        }
+        return null;
     }
 
     public boolean validateToken(String token) {
