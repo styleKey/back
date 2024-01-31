@@ -23,6 +23,7 @@ import com.thekey.stylekeyserver.global.response.ApiResponseDto;
 import com.thekey.stylekeyserver.global.response.ErrorType;
 import com.thekey.stylekeyserver.global.response.SuccessType;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -104,16 +105,33 @@ public class AuthService {
     public ResponseEntity<ApiResponseDto> reissueToken(@Valid AuthReissueRequestDto authReissueRequestDto,
             HttpServletResponse response) {
         jwtUtil.validateToken(authReissueRequestDto.getRefresh_token());
-        // String user_id = jwtUtil.getUserInfoFromToken(authReissueRequestDto.getAccess_token()).toString();
+        
+        Claims claims = jwtUtil.getUserInfoFromToken(authReissueRequestDto.getAccess_token());
+        String userId = claims.getSubject();
 
-        String accessToken = jwtUtil.createToken(authReissueRequestDto.getUser_id());
-        String refreshToken = jwtUtil.refreshToken(authReissueRequestDto.getAccess_token());
-        AuthReissueResponseDto authReissueResponseDto = AuthReissueResponseDto.builder()
-            .access_token(accessToken)
-            .refresh_token(refreshToken)
-            .build();
+        Optional<AuthEntity> authEntityOptional = authRepository.findByUserId(userId);
 
-        return ResponseEntity.ok(ApiResponseDto.of(SuccessType.REISSUE_SUCCESS, authReissueResponseDto));
-    
+        if (authEntityOptional.isPresent()) {
+            AuthEntity authEntity = authEntityOptional.get();
+            String storedRefreshToken = authEntity.getRefreshToken();
+
+            if (storedRefreshToken.equals(authReissueRequestDto.getRefresh_token())) {
+                String newAccessToken = jwtUtil.createToken(userId);
+                String newRefreshToken = jwtUtil.refreshToken(authReissueRequestDto.getAccess_token());
+
+                authEntity.setRefreshToken(newRefreshToken.substring(7));
+                authRepository.save(authEntity);
+
+                AuthReissueResponseDto authReissueResponseDto = AuthReissueResponseDto.builder()
+                    .access_token(newAccessToken)
+                    .refresh_token(newRefreshToken)
+                    .build();
+
+                    return ResponseEntity.ok(ApiResponseDto.of(SuccessType.REISSUE_SUCCESS, authReissueResponseDto));
+
+            }
+        }
+
+        return ResponseEntity.ok(ApiResponseDto.of(ErrorType.NOT_VALID_TOKEN));
     }
 }
