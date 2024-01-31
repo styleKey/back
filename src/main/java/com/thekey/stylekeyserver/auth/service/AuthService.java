@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final Logger log = LoggerFactory.getLogger(AuthService.class);
+    // private final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     private final JwtUtil jwtUtil;
     private final AuthRepository authRepository;
