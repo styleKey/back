@@ -67,6 +67,9 @@ public class AuthService {
         String accessToken = jwtUtil.createToken(authRequestDto.getUser_id());
         String refreshToken = jwtUtil.createRefreshToken(authRequestDto.getUser_id());
 
+        member.get().setRefreshToken(refreshToken);
+        authRepository.save(member.get());
+
         TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, tokenDto.getAccessToken());
 
