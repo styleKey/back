@@ -1,5 +1,8 @@
 package com.thekey.stylekeyserver.auth.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
@@ -8,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.thekey.stylekeyserver.auth.dto.request.AuthReissueRequestDto;
 import com.thekey.stylekeyserver.auth.dto.request.AuthRequestDto;
+import com.thekey.stylekeyserver.auth.dto.response.AuthReissueResponseDto;
 import com.thekey.stylekeyserver.auth.dto.response.AuthResponseDto;
 import com.thekey.stylekeyserver.auth.entity.AuthEntity;
 import com.thekey.stylekeyserver.auth.repository.AuthRepository;
@@ -20,11 +25,14 @@ import com.thekey.stylekeyserver.global.response.SuccessType;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private final Logger log = LoggerFactory.getLogger(AuthService.class);
+
     private final JwtUtil jwtUtil;
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
@@ -56,11 +64,19 @@ public class AuthService {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.PASSWORD_MISMATCH));
         }
 
-        TokenDto tokenDto = new TokenDto(jwtUtil.createToken(authRequestDto.getMember_id()));
+        String accessToken = jwtUtil.createToken(authRequestDto.getMember_id());
+        String refreshToken = jwtUtil.createRefreshToken(authRequestDto.getMember_id());
+
+        TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, tokenDto.getAccessToken());
 
-        return ResponseEntity.ok(ApiResponseDto.of(SuccessType.LOG_IN_SUCCESS,
-                AuthResponseDto.of(member.get().getUserId())));
+        AuthResponseDto authResponseDto = AuthResponseDto.of(
+            member.get().getUserId(),
+            accessToken,
+            refreshToken
+        );
+
+        return ResponseEntity.ok(ApiResponseDto.of(SuccessType.LOG_IN_SUCCESS, authResponseDto));
     }
 
     @Transactional
@@ -79,5 +95,18 @@ public class AuthService {
         authRepository.save(member.get());
 
         return ResponseEntity.ok(ApiResponseDto.of(SuccessType.CHANGE_PASSWORD));
+    }
+
+    @Transactional
+    public ResponseEntity<ApiResponseDto> reissueToken(@Valid AuthReissueRequestDto authReissueRequestDto,
+            HttpServletResponse response) {
+        jwtUtil.validateToken(authReissueRequestDto.getRefresh_token());
+        // String user_id = jwtUtil.getUserInfoFromToken(authReissueRequestDto.getAccess_token()).toString();
+
+        String accessToken = jwtUtil.refreshToken(authReissueRequestDto.getAccess_token());
+        AuthReissueResponseDto authReissueResponseDto = AuthReissueResponseDto.of(accessToken);
+
+        return ResponseEntity.ok(ApiResponseDto.of(SuccessType.REISSUE_SUCCESS, authReissueResponseDto));
+    
     }
 }
