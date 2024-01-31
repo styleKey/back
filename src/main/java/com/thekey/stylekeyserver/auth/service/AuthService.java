@@ -40,7 +40,7 @@ public class AuthService {
     @Transactional
     public ResponseEntity<ApiResponseDto> signUp(AuthRequestDto authRequestDto) {
 
-        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMember_id());
+        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getUser_id());
 
         if (member.isPresent()) {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.USER_EXIST));
@@ -48,13 +48,13 @@ public class AuthService {
 
         String encodedPassword = passwordEncoder.encode(authRequestDto.getPassword());
         OffsetDateTime now = OffsetDateTime.now();
-        authRepository.save(AuthEntity.of(authRequestDto.getMember_id(), encodedPassword, now));
+        authRepository.save(AuthEntity.of(authRequestDto.getUser_id(), encodedPassword, now));
         return ResponseEntity.ok(ApiResponseDto.of(SuccessType.SIGN_UP_SUCCESS));
     }
 
     public ResponseEntity<ApiResponseDto> login(AuthRequestDto authRequestDto, HttpServletResponse response) {
 
-        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMember_id());
+        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getUser_id());
 
         if (member.isEmpty()) {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.USER_NOT_FOUND));
@@ -64,8 +64,8 @@ public class AuthService {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.PASSWORD_MISMATCH));
         }
 
-        String accessToken = jwtUtil.createToken(authRequestDto.getMember_id());
-        String refreshToken = jwtUtil.createRefreshToken(authRequestDto.getMember_id());
+        String accessToken = jwtUtil.createToken(authRequestDto.getUser_id());
+        String refreshToken = jwtUtil.createRefreshToken(authRequestDto.getUser_id());
 
         TokenDto tokenDto = new TokenDto(accessToken, refreshToken);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, tokenDto.getAccessToken());
@@ -82,7 +82,7 @@ public class AuthService {
     @Transactional
     public ResponseEntity<ApiResponseDto> changePassword(AuthRequestDto authRequestDto) {
 
-        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getMember_id());
+        Optional<AuthEntity> member = authRepository.findByUserId(authRequestDto.getUser_id());
 
         if (member.isEmpty()) {
             return ResponseEntity
@@ -103,8 +103,12 @@ public class AuthService {
         jwtUtil.validateToken(authReissueRequestDto.getRefresh_token());
         // String user_id = jwtUtil.getUserInfoFromToken(authReissueRequestDto.getAccess_token()).toString();
 
-        String accessToken = jwtUtil.refreshToken(authReissueRequestDto.getAccess_token());
-        AuthReissueResponseDto authReissueResponseDto = AuthReissueResponseDto.of(accessToken);
+        String accessToken = jwtUtil.createToken(authReissueRequestDto.getUser_id());
+        String refreshToken = jwtUtil.refreshToken(authReissueRequestDto.getAccess_token());
+        AuthReissueResponseDto authReissueResponseDto = AuthReissueResponseDto.builder()
+            .access_token(accessToken)
+            .refresh_token(refreshToken)
+            .build();
 
         return ResponseEntity.ok(ApiResponseDto.of(SuccessType.REISSUE_SUCCESS, authReissueResponseDto));
     

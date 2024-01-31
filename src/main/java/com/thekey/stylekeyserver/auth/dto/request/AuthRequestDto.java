@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class AuthRequestDto {
      @NotBlank(message = "ID를 입력해주세요.")
-    private String member_id;
+    private String user_id;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;

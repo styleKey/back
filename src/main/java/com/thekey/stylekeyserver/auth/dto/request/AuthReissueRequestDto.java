@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthReissueRequestDto {
     @NotEmpty
+    private String user_id;
+
+    @NotEmpty
     private String access_token;
 
     @NotEmpty
