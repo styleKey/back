@@ -29,6 +29,9 @@ public class AuthEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     public static AuthEntity of(String userId, String password, OffsetDateTime createdAt){
         return AuthEntity.builder()
                 .userId(userId)
@@ -39,6 +42,14 @@ public class AuthEntity {
   
     public void changePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     @Override
