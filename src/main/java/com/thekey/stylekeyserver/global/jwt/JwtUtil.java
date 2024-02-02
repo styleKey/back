@@ -65,20 +65,6 @@ public class JwtUtil {
                         .compact();
     }
 
-    public String generateTokenFromAuthentication(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        return BEARER_PREFIX + 
-                Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("auth", authorities)
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 30))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
     public String createRefreshToken(String userEmail) {
         Date date = new Date();
 
