@@ -21,6 +21,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.thekey.stylekeyserver.global.jwt.JwtAuthFilter;
 import com.thekey.stylekeyserver.global.jwt.JwtUtil;
+import com.thekey.stylekeyserver.global.oauth.CustomOAuth2UserService;
+import com.thekey.stylekeyserver.global.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.thekey.stylekeyserver.global.oauth.OAuth2AuthenticationFailureHandler;
+import com.thekey.stylekeyserver.global.oauth.OAuth2AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +32,9 @@ import com.thekey.stylekeyserver.global.jwt.JwtUtil;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
 
     @Bean
@@ -44,6 +51,12 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -70,7 +83,23 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/oauth2/**").permitAll()
+                // .anyRequest().authenticated()
+                .and()
+
+                .oauth2Login()
+                    .authorizationEndpoint().baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+                .and()
+                    .redirectionEndpoint()
+                    .baseUri("/login/oauth2/code/google")
+                .and()
+                    .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler)
+                    
+                
 
                 .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
