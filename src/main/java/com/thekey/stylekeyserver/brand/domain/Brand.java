@@ -40,7 +40,7 @@ public class Brand {
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stylepoint_id")
+    @JoinColumn(name = "style_point_id")
     @JsonIgnore
     private StylePoint stylePoint;
 
