@@ -31,16 +31,21 @@ public class ItemResponse {
     @Schema(description = "카테고리 ID", example = "1")
     private Long categoryId;
 
+    @Schema(description = "코디룩 ID", example = "1")
+    private Long coordinateLookId;
+
     @Builder
-    public ItemResponse(Long id, String title, String sales_link, String image, Long brandId, Long categoryId) {
+    public ItemResponse(Long id, String title, String sales_link, String image, Long brandId, Long categoryId, Long coordinateLookId) {
         this.id = id;
         this.title = title;
         this.sales_link = sales_link;
         this.image = image;
         this.brandId = brandId;
         this.categoryId = categoryId;
+        this.coordinateLookId = coordinateLookId;
     }
 
+    /*TODO: 아이템 단건 조회 시 해당 코디룩 ID도 같이 넣으면 좋을거같음*/
     public static ItemResponse of(Item item) {
         return ItemResponse.builder()
                 .id(item.getId())
@@ -49,6 +54,7 @@ public class ItemResponse {
                 .image(item.getImage())
                 .brandId(item.getBrand().getId())
                 .categoryId(item.getCategory().getId())
+                .coordinateLookId(item.getCoordinateLook().getId())
                 .build();
     }
 }
