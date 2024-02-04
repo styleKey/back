@@ -6,11 +6,15 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AuthResponseDto {
-    private String member_id;
+    private String user_id;
+    private final String access_token;
+    private final String refresh_token;
 
-    public static AuthResponseDto of(String member_id) {
+    public static AuthResponseDto of(String user_id, String access_token, String refresh_token) {
         return AuthResponseDto.builder()
-                .member_id(member_id)
+                .user_id(user_id)
+                .access_token(access_token)
+                .refresh_token(refresh_token)
                 .build();
     }
 }
