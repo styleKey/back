@@ -1,12 +1,13 @@
 package com.thekey.stylekeyserver.coordinatelook.service;
 
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
-import com.thekey.stylekeyserver.coordinatelook.dto.CoordinateLookDto;
+import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;
+import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
 import java.util.List;
 
 public interface CoordinateLookAdminService {
 
-    CoordinateLook create(CoordinateLookDto requestDto);
+    CoordinateLook create(CoordinateLookRequest requestDto);
 
     CoordinateLook findById(Long id);
 
@@ -14,13 +15,13 @@ public interface CoordinateLookAdminService {
 
     List<CoordinateLook> findByStylePointId(Long id);
 
-    CoordinateLook update(Long id, CoordinateLookDto requestDto);
+    CoordinateLook update(Long id, CoordinateLookRequest requestDto);
 
     void deleteById(Long id);
 
     void deleteItemFromCoordinateLook(Long coordinateLookId, Long itemId);
 
-    CoordinateLookDto convertToDto(CoordinateLook coordinateLook);
+//    CoordinateLookResponse convertToDto(CoordinateLook coordinateLook);
 
-    CoordinateLookDto convertToResponseDto(CoordinateLook coordinateLook);
+//    CoordinateLookResponse convertToResponseDto(CoordinateLook coordinateLook);
 }

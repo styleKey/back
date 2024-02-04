@@ -1,14 +1,14 @@
-package com.thekey.stylekeyserver.coordinatelook.dto;
+package com.thekey.stylekeyserver.coordinatelook.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
-import com.thekey.stylekeyserver.item.dto.ItemDto;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import io.swagger.v3.oas.annotations.Hidden;
+import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.dto.response.ItemResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
-public class CoordinateLookDto {
+public class CoordinateLookDetailsResponse {
 
-    @Hidden
+    @Schema(description = "코디룩 ID", example = "1")
     private Long id;
 
     @Schema(description = "코디룩 제목", example = "유니크 코디룩1")
@@ -31,10 +31,10 @@ public class CoordinateLookDto {
     private Long stylePointId;
 
     @Schema(description = "아이템 목록")
-    private List<ItemDto> items;
+    private List<ItemResponse> items;
 
     @Builder
-    public CoordinateLookDto(Long id, String title, String image, Long stylePointId, List<ItemDto> items) {
+    public CoordinateLookDetailsResponse(Long id, String title, String image, Long stylePointId, List<ItemResponse> items) {
         this.id = id;
         this.title = title;
         this.image = image;
@@ -43,15 +43,22 @@ public class CoordinateLookDto {
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public List<ItemDto> getItems() {
+    public List<ItemResponse> getItems() {
         return items;
     }
 
-    public CoordinateLook toEntity(StylePoint stylePoint) {
-        return CoordinateLook.builder()
-                .title(this.title)
-                .image(this.image)
-                .stylePoint(stylePoint)
+    public static CoordinateLookDetailsResponse of(CoordinateLook coordinateLook, List<Item> items) {
+        List<ItemResponse> itemResponses = items.stream()
+                .map(ItemResponse::of)
+                .collect(Collectors.toList());
+
+        return CoordinateLookDetailsResponse.builder()
+                .id(coordinateLook.getId())
+                .title(coordinateLook.getTitle())
+                .image(coordinateLook.getImage())
+                .stylePointId(coordinateLook.getStylePoint().getId())
+                .items(itemResponses)
                 .build();
     }
 }
+

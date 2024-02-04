@@ -3,7 +3,6 @@ package com.thekey.stylekeyserver.coordinatelook.controller;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookDetailsResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;
-import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
 import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,29 +12,19 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "CoordinateLook", description = "CoordinateLook API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/coordinate-looks")
-public class CoordinateLookAdminController {
+@RequestMapping("/api/coordinate-looks")
+public class CoordinateLookApiController {
 
     private final CoordinateLookAdminService coordinateLookAdminService;
 
-    @PostMapping
-    @Operation(summary = "Create CoordinateLook", description = "코디룩 정보 등록")
-    public ResponseEntity<CoordinateLookResponse> create(@RequestBody CoordinateLookRequest requestDto) {
-        CoordinateLook coordinateLook = coordinateLookAdminService.create(requestDto);
-        return ResponseEntity.ok(CoordinateLookResponse.of(coordinateLook));
-    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One CoordinateLook With Items", description = "코디룩 단건 조회. 해당 코디룩 안에 속한 아이템을 함께 반환한다.")
@@ -78,32 +67,5 @@ public class CoordinateLookAdminController {
                 .filter(list -> !list.isEmpty())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).body(coordinateLookResponses));
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Update CoordinateLook", description = "코디룩 정보 수정")
-    public ResponseEntity<CoordinateLookResponse> update(@PathVariable Long id,
-                                                         @RequestBody CoordinateLookRequest requestDto) {
-        if (id == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        CoordinateLook updated = coordinateLookAdminService.update(id, requestDto);
-        return ResponseEntity.ok(CoordinateLookResponse.of(updated));
-    }
-
-    @DeleteMapping("/{coordinateLookId}/items/{itemId}")
-    @Operation(summary = "Delete Item From CoordinateLookId", description = "코디룩에 속한 아이템 삭제")
-    public ResponseEntity<Void> deleteItemFromCoordinateLook(@PathVariable Long coordinateLookId,
-                                                             @PathVariable Long itemId) {
-        coordinateLookAdminService.deleteItemFromCoordinateLook(coordinateLookId, itemId);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete CoordinateLook ", description = "코디룩 정보 삭제")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        coordinateLookAdminService.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 }
