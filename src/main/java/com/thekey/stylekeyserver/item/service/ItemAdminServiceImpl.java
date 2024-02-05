@@ -8,7 +8,7 @@ import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
 import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
-import com.thekey.stylekeyserver.item.dto.ItemDto;
+import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     private final CategoryService categoryService;
 
     @Override
-    public Item create(ItemDto requestDto) {
+    public Item create(ItemRequest requestDto) {
         Category category = categoryService.findById(requestDto.getCategoryId());
         Brand brand = brandAdminService.findById(requestDto.getBrandId());
         return itemRepository.save(requestDto.toEntity(brand, category));
@@ -50,7 +50,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     }
 
     @Override
-    public Item update(Long id, ItemDto requestDto) {
+    public Item update(Long id, ItemRequest requestDto) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + id));
 
@@ -71,15 +71,4 @@ public class ItemAdminServiceImpl implements ItemAdminService {
         itemRepository.deleteById(id);
     }
 
-    @Override
-    public ItemDto convertToDto(Item item) {
-        return ItemDto.builder()
-                .id(item.getId())
-                .title(item.getTitle())
-                .sales_link(item.getSales_link())
-                .image(item.getImage())
-                .brandId(item.getBrand().getId())
-                .categoryId(item.getCategory().getId())
-                .build();
-    }
 }

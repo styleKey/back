@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Item", description = "Item API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/items")
-public class ItemAdminController {
+@RequestMapping("/api/items")
+public class ItemApiController {
 
     private final ItemAdminService itemAdminService;
     private final CoordinateLookAdminService coordinateLookAdminService;
@@ -66,4 +66,5 @@ public class ItemAdminController {
 
         return ResponseEntity.ok(responses);
     }
+
 }
