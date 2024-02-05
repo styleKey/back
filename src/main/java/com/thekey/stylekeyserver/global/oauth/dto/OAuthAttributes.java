@@ -41,7 +41,7 @@ public class OAuthAttributes {
         Map<String, Object> account = (Map<String, Object>) response.get("profile");
 
         return OAuthAttributes.builder()
-                .name((String) account.get("nickname"))
+                .name((String) account.get("profile_nickname"))
                 .email((String) response.get("email"))
                 .provider("Kakao")
                 .attributes(attributes)
