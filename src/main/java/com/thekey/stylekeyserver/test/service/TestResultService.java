@@ -1,7 +1,7 @@
 package com.thekey.stylekeyserver.test.service;
 
-import com.thekey.stylekeyserver.auth.entity.AuthEntity;
-import com.thekey.stylekeyserver.auth.repository.AuthRepository;
+import com.thekey.stylekeyserver.auth.domain.Users;
+import com.thekey.stylekeyserver.auth.repository.UserRepository;
 import com.thekey.stylekeyserver.stylepoint.StylePointErrorMessage;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
@@ -22,13 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class TestResultService {
 
     private final TestResultRepository testResultRepository;
-    private final AuthRepository authRepository;
+    private final UserRepository userRepository;
     private final StylePointRepository stylePointRepository;
 
     @Transactional
-    public TestResponse createTestResult(TestResultRequest request) {
-
-        AuthEntity user = authRepository.findByUserId(request.getUserId()).orElseThrow();
+    public TestResponse createTestResult(TestResultRequest request, String userId) {
+        Users user = userRepository.findByEmail(userId).orElseThrow();
 
         StylePoint stylePoint = stylePointRepository.findById(request.getStylePointId())
             .orElseThrow(() -> new EntityNotFoundException(
@@ -40,7 +39,7 @@ public class TestResultService {
     }
 
     public List<TestResultResponse> getTestResult(String userId) {
-        AuthEntity user = authRepository.findByUserId(userId).orElseThrow();
+        Users user = userRepository.findByEmail(userId).orElseThrow();
         List<TestResult> testResults = testResultRepository.findAllByUser(user);
 
         return testResults.stream()
@@ -50,7 +49,7 @@ public class TestResultService {
 
     @Transactional
     public void deleteTestResult(Long testResultId, String userId) {
-        AuthEntity user = authRepository.findByUserId(userId).orElseThrow();
+        Users user = userRepository.findByEmail(userId).orElseThrow();
         testResultRepository.deleteByUserAndId(user, testResultId);
     }
 }
