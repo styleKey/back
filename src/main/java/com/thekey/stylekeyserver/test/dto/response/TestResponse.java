@@ -27,7 +27,7 @@ public class TestResponse {
     public static TestResponse of(TestResult testResult) {
         return TestResponse.builder()
             .id(testResult.getId())
-            .userId(testResult.getUser().getUserId())
+            .userId(testResult.getUser().getEmail())
             .stylePoint(testResult.getStylePoint())
             .score(testResult.getScore())
             .build();
