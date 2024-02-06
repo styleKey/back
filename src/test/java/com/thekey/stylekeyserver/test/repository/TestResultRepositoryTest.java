@@ -3,8 +3,10 @@ package com.thekey.stylekeyserver.test.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
+import com.thekey.stylekeyserver.auth.domain.Users;
+import com.thekey.stylekeyserver.auth.domain.enums.Role;
 import com.thekey.stylekeyserver.auth.entity.AuthEntity;
-import com.thekey.stylekeyserver.auth.repository.AuthRepository;
+import com.thekey.stylekeyserver.auth.repository.UserRepository;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
 import com.thekey.stylekeyserver.test.entity.TestResult;
@@ -13,15 +15,17 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@DataJpaTest
+@SpringBootTest
+@Transactional
 class TestResultRepositoryTest {
 
     @Autowired
-    AuthRepository authRepository;
+    UserRepository userRepository;
 
     @Autowired
     StylePointRepository stylePointRepository;
@@ -33,7 +37,13 @@ class TestResultRepositoryTest {
     @Test
     void findAllByUser() {
         //given
-        AuthEntity user = authRepository.save(AuthEntity.of("testUser", "1234", OffsetDateTime.now()));
+        Users user = userRepository.save(Users.builder()
+            .email("test@gmail.com")
+            .name("testUser")
+            .password(null)
+            .role(Role.USER)
+            .provider("Google")
+            .build());
 
         StylePoint stylePoint1 = StylePoint.builder().
             title("글램")
@@ -78,7 +88,13 @@ class TestResultRepositoryTest {
     @Test
     void deleteByUserAndId() {
         //given
-        AuthEntity user = authRepository.save(AuthEntity.of("testUser", "1234", OffsetDateTime.now()));
+        Users user = userRepository.save(Users.builder()
+            .email("test@gmail.com")
+            .name("testUser")
+            .password(null)
+            .role(Role.USER)
+            .provider("Google")
+            .build());
 
         StylePoint stylePoint1 = StylePoint.builder().
             title("글램")
