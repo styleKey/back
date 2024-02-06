@@ -43,7 +43,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             String token = tokenProvider.createToken(userEmail);
     
             targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
-                    .queryParam("token", token)
+                    .queryParam("token", token.substring(7))
                     .build().toUriString();
         } else if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
