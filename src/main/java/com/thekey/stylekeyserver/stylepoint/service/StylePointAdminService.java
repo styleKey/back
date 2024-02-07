@@ -1,7 +1,7 @@
 package com.thekey.stylekeyserver.stylepoint.service;
 
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import com.thekey.stylekeyserver.stylepoint.dto.StylePointDto;
+import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import java.util.List;
 
 public interface StylePointAdminService {
@@ -10,6 +10,6 @@ public interface StylePointAdminService {
 
     List<StylePoint> findAll();
 
-    StylePoint update(Long id, StylePointDto requestDto);
+    StylePoint update(Long id, StylePointRequest requestDto);
 
 }

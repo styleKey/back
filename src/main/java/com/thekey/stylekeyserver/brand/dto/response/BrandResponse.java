@@ -1,10 +1,8 @@
-package com.thekey.stylekeyserver.brand.dto;
+package com.thekey.stylekeyserver.brand.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.brand.domain.Brand;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
-public class BrandDto {
+public class BrandResponse {
 
-    @Hidden
+    @Schema(description = "브랜드 ID", example = "1")
     private Long id;
 
     @Schema(description = "브랜드 이름", example = "솔티페블")
@@ -37,8 +35,8 @@ public class BrandDto {
     private Long stylePointId;
 
     @Builder
-    public BrandDto(Long id, String title, String title_eng, String description, String site_url, String image,
-                    Long stylePointId) {
+    public BrandResponse(Long id, String title, String title_eng, String description, String site_url, String image,
+                         Long stylePointId) {
         this.id = id;
         this.title = title;
         this.title_eng = title_eng;
@@ -48,14 +46,15 @@ public class BrandDto {
         this.stylePointId = stylePointId;
     }
 
-    public Brand toEntity(StylePoint stylePoint) {
-        return Brand.builder()
-                .title(this.title)
-                .title_eng(this.title_eng)
-                .description(this.description)
-                .site_url(this.site_url)
-                .image(this.image)
-                .stylePoint(stylePoint)
+    public static BrandResponse of(Brand brand) {
+        return BrandResponse.builder()
+                .id(brand.getId())
+                .title(brand.getTitle())
+                .title_eng(brand.getTitle_eng())
+                .description(brand.getDescription())
+                .site_url(brand.getSite_url())
+                .image(brand.getImage())
+                .stylePointId(brand.getStylePoint().getId())
                 .build();
     }
 }

@@ -2,11 +2,11 @@ package com.thekey.stylekeyserver.coordinatelook.service;
 
 import com.thekey.stylekeyserver.coordinatelook.CoordinateLookErrorMessage;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
-import com.thekey.stylekeyserver.coordinatelook.dto.CoordinateLookDto;
+import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
 import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
-import com.thekey.stylekeyserver.item.dto.ItemDto;
+import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
@@ -14,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,13 +28,13 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     private final ItemAdminService itemAdminService;
 
     @Override
-    public CoordinateLook create(CoordinateLookDto requestDto) {
+    public CoordinateLook create(CoordinateLookRequest requestDto) {
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
         CoordinateLook savedCoordinateLook = coordinateLookRepository.save(requestDto.toEntity(stylePoint));
 
         if (requestDto.getItems() != null) {
             List<Item> items = new ArrayList<>();
-            for (ItemDto itemDto : requestDto.getItems()) {
+            for (ItemRequest itemDto : requestDto.getItems()) {
                 Item createdItem = itemAdminService.create(itemDto);
                 items.add(createdItem);
             }
@@ -65,7 +64,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     }
 
     @Override
-    public CoordinateLook update(Long id, CoordinateLookDto requestDto) {
+    public CoordinateLook update(Long id, CoordinateLookRequest requestDto) {
         CoordinateLook coordinateLook = coordinateLookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + id));
@@ -77,7 +76,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
                 requestDto.toEntity(stylePoint).getStylePoint());
 
         if (requestDto.getItems() != null) {
-            for (ItemDto itemRequestDto : requestDto.getItems()) {
+            for (ItemRequest itemRequestDto : requestDto.getItems()) {
                 itemAdminService.update(itemRequestDto.getId(), itemRequestDto);
             }
         }
@@ -114,42 +113,6 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
         } catch (NoSuchElementException e) {
             throw new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + itemId);
         }
-    }
-
-    @Override
-    public CoordinateLookDto convertToDto(CoordinateLook coordinateLook) {
-        return CoordinateLookDto.builder()
-                .id(coordinateLook.getId())
-                .title(coordinateLook.getTitle())
-                .image(coordinateLook.getImage())
-                .stylePointId(coordinateLook.getStylePoint().getId())
-                .build();
-    }
-
-    @Override
-    public CoordinateLookDto convertToResponseDto(CoordinateLook coordinateLook) {
-        List<ItemDto> itemResponseDtos = convertItemsToDtoList(coordinateLook.getItems());
-
-        return CoordinateLookDto.builder()
-                .id(coordinateLook.getId())
-                .title(coordinateLook.getTitle())
-                .image(coordinateLook.getImage())
-                .stylePointId(coordinateLook.getStylePoint().getId())
-                .items(itemResponseDtos)
-                .build();
-    }
-
-    private List<ItemDto> convertItemsToDtoList(List<Item> items) {
-        return items.stream()
-                .map(item -> ItemDto.builder()
-                        .id(item.getId())
-                        .title(item.getTitle())
-                        .sales_link(item.getSales_link())
-                        .image(item.getImage())
-                        .brandId(item.getBrand().getId())
-                        .categoryId(item.getCategory().getId())
-                        .build())
-                .collect(Collectors.toList());
     }
 
 }

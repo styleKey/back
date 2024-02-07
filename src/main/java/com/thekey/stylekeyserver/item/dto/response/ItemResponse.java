@@ -1,9 +1,7 @@
-package com.thekey.stylekeyserver.item.dto;
+package com.thekey.stylekeyserver.item.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.thekey.stylekeyserver.brand.domain.Brand;
-import com.thekey.stylekeyserver.category.domain.Category;
 import com.thekey.stylekeyserver.item.domain.Item;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -13,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
-public class ItemDto {
+public class ItemResponse {
 
     @Schema(description = "아이템 ID", example = "1")
     private Long id;
@@ -33,24 +31,30 @@ public class ItemDto {
     @Schema(description = "카테고리 ID", example = "1")
     private Long categoryId;
 
+    @Schema(description = "코디룩 ID", example = "1")
+    private Long coordinateLookId;
+
     @Builder
-    public ItemDto(Long id, String title, String sales_link, String image, Long brandId, Long categoryId) {
+    public ItemResponse(Long id, String title, String sales_link, String image, Long brandId, Long categoryId, Long coordinateLookId) {
         this.id = id;
         this.title = title;
         this.sales_link = sales_link;
         this.image = image;
         this.brandId = brandId;
         this.categoryId = categoryId;
+        this.coordinateLookId = coordinateLookId;
     }
 
-    public Item toEntity(Brand brand, Category category) {
-        return Item.builder()
-                .image(this.image)
-                .title(this.title)
-                .sales_link(this.sales_link)
-                .image(this.image)
-                .brand(brand)
-                .category(category)
+    /*TODO: 아이템 단건 조회 시 해당 코디룩 ID도 같이 넣으면 좋을거같음*/
+    public static ItemResponse of(Item item) {
+        return ItemResponse.builder()
+                .id(item.getId())
+                .title(item.getTitle())
+                .sales_link(item.getSales_link())
+                .image(item.getImage())
+                .brandId(item.getBrand().getId())
+                .categoryId(item.getCategory().getId())
+                .coordinateLookId(item.getCoordinateLook().getId())
                 .build();
     }
 }

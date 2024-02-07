@@ -84,7 +84,7 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
-                // .anyRequest().authenticated()
+                .anyRequest().authenticated()
                 .and()
 
                 .oauth2Login()
