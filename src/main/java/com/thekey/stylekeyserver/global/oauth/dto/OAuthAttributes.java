@@ -3,6 +3,7 @@ package com.thekey.stylekeyserver.global.oauth.dto;
 import java.util.Map;
 
 import com.thekey.stylekeyserver.auth.domain.Users;
+import com.thekey.stylekeyserver.auth.domain.enums.OAuthProvider;
 import com.thekey.stylekeyserver.auth.domain.enums.Role;
 
 import lombok.Builder;
@@ -16,6 +17,7 @@ public class OAuthAttributes {
     private String name;
     private String email;
     private String provider;
+    private OAuthProvider oAuthProvider;
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if ("kakao".equals(registrationId)) {
@@ -49,12 +51,12 @@ public class OAuthAttributes {
                 .build();
     }
 
-    // public Users toEntity() {
-    //     return Users.builder()
-    //             .name(name)
-    //             .email(email)
-    //             .provider(provider)
-    //             .role(Role.USER)
-    //             .build();
-    // }
+    public Users toEntity() {
+        return Users.builder()
+                .name(name)
+                .email(email)
+                .provider(provider)
+                .role(Role.USER)
+                .build();
+    }
 }

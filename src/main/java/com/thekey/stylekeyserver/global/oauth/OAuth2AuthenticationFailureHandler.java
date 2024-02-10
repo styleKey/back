@@ -1,5 +1,7 @@
 package com.thekey.stylekeyserver.global.oauth;
 
+import static com.thekey.stylekeyserver.global.oauth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+
 import java.io.IOException;
 
 import org.springframework.security.core.AuthenticationException;
@@ -13,8 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import static com.thekey.stylekeyserver.global.oauth.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 
 @Component

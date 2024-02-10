@@ -30,20 +30,23 @@ public class Users {
 
     private OAuthProvider oAuthProvider;
 
-    // private String provider;
+    private String provider;
 
     @Builder
-    public Users(String email, String name, OAuthProvider oAuthProvider) {
-        this.email = email;
+    public Users(Long id, String name, String email, Role role, OAuthProvider oAuthProvider, String provider) {
+        this.id = id;
         this.name = name;
+        this.email = email;
+        this.role = role;
         this.oAuthProvider = oAuthProvider;
+        this.provider = provider; 
     }
 
-    // public Users update(String name, String provider) {
-    //     this.name = name;
-    //     this.provider = provider;
-    //     return this;
-    // }
+    public Users update(String name, String provider) {
+        this.name = name;
+        this.provider = provider;
+        return this;
+    }
 
     public String getRoleKey() {
         return this.role.getKey();

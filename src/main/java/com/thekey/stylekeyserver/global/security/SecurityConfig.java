@@ -86,19 +86,19 @@ public class SecurityConfig {
                 .requestMatchers("/api/oauth/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .anyRequest().authenticated()
-                // .and()
+                .and()
 
-                // .oauth2Login()
-                //     .authorizationEndpoint().baseUri("/oauth2/authorize")
-                //     .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
-                // .and()
-                //     .redirectionEndpoint()
-                //     .baseUri("/oauth/callback/kakao") // /login/oauth2/code/**
-                // .and()
-                //     .userInfoEndpoint().userService(customOAuth2UserService)
-                // .and()
-                //     .successHandler(oAuth2AuthenticationSuccessHandler)
-                //     .failureHandler(oAuth2AuthenticationFailureHandler)
+                .oauth2Login()
+                    .authorizationEndpoint().baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+                .and()
+                    .redirectionEndpoint()
+                    .baseUri("/login/oauth2/code/**") // /login/oauth2/code/** // /oauth/callback/kakao
+                .and()
+                    .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler)
                     
                 
 
