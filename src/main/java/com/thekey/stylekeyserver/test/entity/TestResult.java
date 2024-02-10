@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.test.entity;
 
-import com.thekey.stylekeyserver.auth.entity.AuthEntity;
+import com.thekey.stylekeyserver.auth.domain.Users;
 import com.thekey.stylekeyserver.base.BaseTimeEntity;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import jakarta.persistence.Column;
@@ -28,8 +28,8 @@ public class TestResult extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
-    private AuthEntity user;
+    @JoinColumn(name = "email")
+    private Users user;
 
     @ManyToOne
     @JoinColumn(name = "style_point_id")
@@ -38,7 +38,7 @@ public class TestResult extends BaseTimeEntity {
     private Integer score;
 
     @Builder
-    private TestResult(AuthEntity user, StylePoint stylePoint, Integer score) {
+    private TestResult(Users user, StylePoint stylePoint, Integer score) {
         this.user = user;
         this.stylePoint = stylePoint;
         this.score = score;
