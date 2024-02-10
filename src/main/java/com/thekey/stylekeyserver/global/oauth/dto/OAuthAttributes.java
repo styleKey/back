@@ -49,12 +49,12 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public Users toEntity() {
-        return Users.builder()
-                .name(name)
-                .email(email)
-                .provider(provider)
-                .role(Role.USER)
-                .build();
-    }
+    // public Users toEntity() {
+    //     return Users.builder()
+    //             .name(name)
+    //             .email(email)
+    //             .provider(provider)
+    //             .role(Role.USER)
+    //             .build();
+    // }
 }

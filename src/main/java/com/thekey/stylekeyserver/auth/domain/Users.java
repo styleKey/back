@@ -1,5 +1,6 @@
 package com.thekey.stylekeyserver.auth.domain;
 
+import com.thekey.stylekeyserver.auth.domain.enums.OAuthProvider;
 import com.thekey.stylekeyserver.auth.domain.enums.Role;
 
 import jakarta.persistence.Entity;
@@ -27,23 +28,22 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String provider;
+    private OAuthProvider oAuthProvider;
+
+    // private String provider;
 
     @Builder
-    public Users(Long id, String name, String email, String password, Role role, String provider) {
-        this.id = id;
-        this.name = name;
+    public Users(String email, String name, OAuthProvider oAuthProvider) {
         this.email = email;
-        this.password = password;
-        this.role = role;
-        this.provider = provider;
+        this.name = name;
+        this.oAuthProvider = oAuthProvider;
     }
 
-    public Users update(String name, String provider) {
-        this.name = name;
-        this.provider = provider;
-        return this;
-    }
+    // public Users update(String name, String provider) {
+    //     this.name = name;
+    //     this.provider = provider;
+    //     return this;
+    // }
 
     public String getRoleKey() {
         return this.role.getKey();
