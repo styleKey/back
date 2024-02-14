@@ -40,7 +40,7 @@ class TestResultRepositoryTest {
         Users user = userRepository.save(Users.builder()
             .email("test@gmail.com")
             .name("testUser")
-            .password(null)
+            // .password(null)
             .role(Role.USER)
             .provider("Google")
             .build());
@@ -91,7 +91,7 @@ class TestResultRepositoryTest {
         Users user = userRepository.save(Users.builder()
             .email("test@gmail.com")
             .name("testUser")
-            .password(null)
+            // .password(null)
             .role(Role.USER)
             .provider("Google")
             .build());
