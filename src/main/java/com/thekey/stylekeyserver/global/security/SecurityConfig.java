@@ -85,6 +85,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/oauth/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/api/test-question").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
