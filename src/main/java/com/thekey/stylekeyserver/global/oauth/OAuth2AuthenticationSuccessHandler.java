@@ -40,10 +40,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         if (authentication.getPrincipal() instanceof DefaultOAuth2User) {
             DefaultOAuth2User oAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
             String userEmail = oAuth2User.getAttribute("email");
-            String token = tokenProvider.createToken(userEmail);
+            String accessToken = tokenProvider.createToken(userEmail);
+            String refreshToken = tokenProvider.createRefreshToken(userEmail);
     
             targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
-                    .queryParam("token", token.substring(7))
+                    .queryParam("accessToken", accessToken.substring(7))
+                    .queryParam("refreshToken", refreshToken.substring(7))
                     .build().toUriString();
         } else if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();

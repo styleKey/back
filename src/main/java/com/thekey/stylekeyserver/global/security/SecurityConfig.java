@@ -83,6 +83,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/oauth/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -92,7 +93,7 @@ public class SecurityConfig {
                     .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
                 .and()
                     .redirectionEndpoint()
-                    .baseUri("/login/oauth2/code/google")
+                    .baseUri("/login/oauth2/code/**") // /login/oauth2/code/** // /oauth/callback/kakao
                 .and()
                     .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()

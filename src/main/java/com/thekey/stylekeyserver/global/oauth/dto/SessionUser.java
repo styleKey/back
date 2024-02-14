@@ -31,7 +31,7 @@ public class SessionUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return null;
     }
 
     @Override

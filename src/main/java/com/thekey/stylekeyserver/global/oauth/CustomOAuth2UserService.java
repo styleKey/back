@@ -1,7 +1,9 @@
 package com.thekey.stylekeyserver.global.oauth;
 
 import java.util.Collections;
+import java.util.Set;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -24,6 +26,33 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         this.userRepository = userRepository;
     }
 
+    // @Override
+    // public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    //     OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+    //     OAuth2User oAuth2User = delegate.loadUser(userRequest);
+
+    //     String registrationId = userRequest.getClientRegistration().getRegistrationId();
+    //     String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+
+    //     OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+
+    //     Users user = saveOrUpdate(attributes);
+
+    //     return new DefaultOAuth2User(
+    //             Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
+    //             attributes.getAttributes(),
+    //             attributes.getNameAttributeKey()
+    //     );
+    // }
+
+    // private Users saveOrUpdate(OAuthAttributes attributes) {
+    //     Users user = userRepository.findByEmail(attributes.getEmail())
+    //             .map(entity -> entity.update(attributes.getName(), attributes.getProvider()))
+    //             .orElse(attributes.toEntity());
+
+    //     return userRepository.save(user); 
+    // }
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
@@ -36,8 +65,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         Users user = saveOrUpdate(attributes);
 
+        // 여기서 수정: SimpleGrantedAuthority 생성 방식 변경
+        Set<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey()));
+
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
+                authorities,
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey()
         );
