@@ -29,5 +29,5 @@ public class TestQuestion {
     private String content;
 
     @OneToMany(mappedBy = "testQuestion", cascade = CascadeType.ALL)
-    private List<TestAnswer> answers = new ArrayList<>();
+    private List<TestAnswer> testAnswers = new ArrayList<>();
 }
