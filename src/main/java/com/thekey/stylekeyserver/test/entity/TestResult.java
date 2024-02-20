@@ -61,4 +61,11 @@ public class TestResult extends BaseTimeEntity {
             .limit(2)
             .toList();
     }
+
+    public boolean isOwner(String userId) {
+        if (userId == null) {
+            return false;
+        }
+        return user.getName().equals(userId);
+    }
 }
