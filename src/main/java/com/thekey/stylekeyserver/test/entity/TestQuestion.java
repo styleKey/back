@@ -28,6 +28,6 @@ public class TestQuestion {
     @Column(name = "test_question_content")
     private String content;
 
-    @OneToMany(mappedBy = "testQuestion", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "testQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TestAnswer> testAnswers = new ArrayList<>();
 }
