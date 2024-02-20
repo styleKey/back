@@ -2,9 +2,7 @@ package com.thekey.stylekeyserver.test.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.thekey.stylekeyserver.auth.domain.Users;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import com.thekey.stylekeyserver.test.entity.TestResult;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,21 +14,10 @@ import lombok.Setter;
 @JsonNaming(SnakeCaseStrategy.class)
 public class TestResultRequest {
 
-    private Long stylePointId;
-    private Integer score;
+    private List<Long> answerIds;
 
     @Builder
-    private TestResultRequest(Long stylePointId, Integer score) {
-        this.stylePointId = stylePointId;
-        this.score = score;
-    }
-
-    @Builder
-    public static TestResult toEntity(Users user, StylePoint stylePoint, TestResultRequest request) {
-        return TestResult.builder()
-            .user(user)
-            .stylePoint(stylePoint)
-            .score(request.getScore())
-            .build();
+    private TestResultRequest(List<Long> answerIds) {
+        this.answerIds = answerIds;
     }
 }
