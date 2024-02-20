@@ -2,16 +2,16 @@ package com.thekey.stylekeyserver.test.service;
 
 import com.thekey.stylekeyserver.auth.domain.Users;
 import com.thekey.stylekeyserver.auth.repository.UserRepository;
-import com.thekey.stylekeyserver.stylepoint.StylePointErrorMessage;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
-import com.thekey.stylekeyserver.test.dto.response.TestResponse;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
+import com.thekey.stylekeyserver.test.entity.TestAnswerDetail;
 import com.thekey.stylekeyserver.test.entity.TestResult;
+import com.thekey.stylekeyserver.test.repository.TestAnswerRepository;
 import com.thekey.stylekeyserver.test.repository.TestResultRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,21 +21,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class TestResultService {
 
-    private final TestResultRepository testResultRepository;
     private final UserRepository userRepository;
-    private final StylePointRepository stylePointRepository;
+    private final TestResultRepository testResultRepository;
+    private final TestAnswerRepository testAnswerRepository;
 
     @Transactional
-    public TestResponse createTestResult(TestResultRequest request, String userId) {
+    public void createTestResult(TestResultRequest request, String userId) {
         Users user = userRepository.findByEmail(userId).orElseThrow();
+        Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
+        TestResult testResult = TestResult.create(user, stylePointScores);
 
-        StylePoint stylePoint = stylePointRepository.findById(request.getStylePointId())
-            .orElseThrow(() -> new EntityNotFoundException(
-                StylePointErrorMessage.NOT_FOUND_STYLE_POINT.get() + request.getStylePointId()));
+        testResultRepository.save(testResult);
+    }
 
-        TestResult testResult = TestResultRequest.toEntity(user, stylePoint, request);
-
-        return TestResponse.of(testResultRepository.save(testResult));
+    private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {
+        return request.getAnswerIds().stream()
+            .map(answerId -> testAnswerRepository.findById(answerId).orElseThrow())
+            .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
+            .collect(Collectors.toMap(
+                TestAnswerDetail::getStylePoint,
+                TestAnswerDetail::getScore,
+                Integer::sum));
     }
 
     public List<TestResultResponse> getTestResult(String userId) {
