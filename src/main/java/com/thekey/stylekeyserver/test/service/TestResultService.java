@@ -53,9 +53,21 @@ public class TestResultService {
             .toList();
     }
 
+    public TestResultResponse findTestResult(String userId, Long testResultId) {
+        TestResult testResult = testResultRepository.findById(testResultId).orElseThrow();
+        validateOwner(userId, testResult);
+        return TestResultResponse.of(testResult);
+    }
+
     @Transactional
     public void deleteTestResult(Long testResultId, String userId) {
         Users user = userRepository.findByEmail(userId).orElseThrow();
         testResultRepository.deleteByUserAndId(user, testResultId);
+    }
+
+    private void validateOwner(String userId, TestResult testResult) {
+        if (!testResult.isOwner(userId)) {
+            throw new IllegalArgumentException();
+        }
     }
 }
