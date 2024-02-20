@@ -37,20 +37,30 @@ public class TestController {
 
     @Operation(summary = "Create Test-Result", description = "테스트 결과 생성")
     @PostMapping("/test")
-    public ResponseEntity<Void> saveTestResult(@RequestBody TestResultRequest request, @AuthenticationPrincipal SessionUser user) {
+    public ResponseEntity<Void> saveTestResult(@RequestBody TestResultRequest request,
+        @AuthenticationPrincipal SessionUser user) {
         testResultService.createTestResult(request, user.getUsername());
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Read One Test-Result", description = "테스트 결과 단건 조회")
+    @GetMapping("/test-result/{testResultId}")
+    public ResponseEntity<TestResultResponse> getTestResults(
+        @PathVariable Long testResultId, @AuthenticationPrincipal SessionUser user) {
+        TestResultResponse testResult = testResultService.findTestResult(user.getUsername(), testResultId);
+        return ResponseEntity.ok(testResult);
     }
 
     @Operation(summary = "Read All Test-Result", description = "테스트 결과 전체 조회")
     @GetMapping("/test-result/list")
     public ResponseEntity<List<TestResultResponse>> getTestResults(@AuthenticationPrincipal SessionUser user) {
-        return ResponseEntity.ok(testResultService.getTestResult(user.getUsername()));
+        return ResponseEntity.ok(testResultService.getTestResults(user.getUsername()));
     }
 
     @Operation(summary = "Delete Test-Result", description = "테스트 결과 삭제")
     @DeleteMapping("/test-result/{testResultId}")
-    public ResponseEntity<Void> deleteTestResult(@PathVariable Long testResultId, @AuthenticationPrincipal SessionUser user) {
+    public ResponseEntity<Void> deleteTestResult(@PathVariable Long testResultId,
+        @AuthenticationPrincipal SessionUser user) {
         testResultService.deleteTestResult(testResultId, user.getUsername());
         return ResponseEntity.ok().build();
     }
