@@ -3,6 +3,8 @@ package com.thekey.stylekeyserver.test.service;
 import com.thekey.stylekeyserver.auth.domain.Users;
 import com.thekey.stylekeyserver.auth.repository.UserRepository;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.test.ApiException;
+import com.thekey.stylekeyserver.test.TestErrorMessage;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
 import com.thekey.stylekeyserver.test.entity.TestAnswerDetail;
@@ -37,7 +39,8 @@ public class TestResultService {
 
     private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {
         return request.getAnswerIds().stream()
-            .map(answerId -> testAnswerRepository.findById(answerId).orElseThrow())
+            .map(answerId -> testAnswerRepository.findById(answerId)
+                .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_ANSWER_NOT_FOUND)))
             .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
             .collect(Collectors.toMap(
                 TestAnswerDetail::getStylePoint,
@@ -55,7 +58,8 @@ public class TestResultService {
     }
 
     public TestResultResponse findTestResult(String userId, Long testResultId) {
-        TestResult testResult = testResultRepository.findById(testResultId).orElseThrow();
+        TestResult testResult = testResultRepository.findById(testResultId)
+            .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_RESULT_NOT_FOUND));
         validateOwner(userId, testResult);
         return TestResultResponse.of(testResult);
     }
@@ -68,7 +72,7 @@ public class TestResultService {
 
     private void validateOwner(String userId, TestResult testResult) {
         if (!testResult.isOwner(userId)) {
-            throw new IllegalArgumentException();
+            throw new ApiException(TestErrorMessage.UNAUTHORIZED_TEST_RESULT);
         }
     }
 }
