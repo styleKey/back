@@ -26,12 +26,13 @@ public class TestResultService {
     private final TestAnswerRepository testAnswerRepository;
 
     @Transactional
-    public void createTestResult(TestResultRequest request, String userId) {
+    public Long createTestResult(TestResultRequest request, String userId) {
         Users user = userRepository.findByEmail(userId).orElseThrow();
         Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
         TestResult testResult = TestResult.create(user, stylePointScores);
 
-        testResultRepository.save(testResult);
+        TestResult savedTestResult = testResultRepository.save(testResult);
+        return savedTestResult.getId();
     }
 
     private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {

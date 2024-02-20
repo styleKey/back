@@ -8,6 +8,7 @@ import com.thekey.stylekeyserver.test.service.TestQuestionService;
 import com.thekey.stylekeyserver.test.service.TestResultService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +40,8 @@ public class TestController {
     @PostMapping("/test")
     public ResponseEntity<Void> saveTestResult(@RequestBody TestResultRequest request,
         @AuthenticationPrincipal SessionUser user) {
-        testResultService.createTestResult(request, user.getUsername());
-        return ResponseEntity.ok().build();
+        Long testResultId = testResultService.createTestResult(request, user.getUsername());
+        return ResponseEntity.created(URI.create("/api/test-result/" + testResultId)).build();
     }
 
     @Operation(summary = "Read One Test-Result", description = "테스트 결과 단건 조회")
