@@ -44,7 +44,7 @@ public class TestResultService {
                 Integer::sum));
     }
 
-    public List<TestResultResponse> getTestResult(String userId) {
+    public List<TestResultResponse> getTestResults(String userId) {
         Users user = userRepository.findByEmail(userId).orElseThrow();
         List<TestResult> testResults = testResultRepository.findAllByUser(user);
 
