@@ -37,22 +37,22 @@ public class TestResult extends BaseTimeEntity {
         this.id = id;
         this.user = user;
         this.testResultDetails = stylePointScores.entrySet().stream()
-            .map(entry -> TestResultDetail.of(this, entry.getKey(), entry.getValue()))
-            .toList();
+                .map(entry -> TestResultDetail.of(this, entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     public static TestResult create(User user, Map<StylePoint, Integer> stylePointScores) {
         return TestResult.builder()
-            .user(user)
-            .stylePointScores(stylePointScores)
-            .build();
+                .user(user)
+                .stylePointScores(stylePointScores)
+                .build();
     }
 
     public List<TestResultDetail> calculateTopTwoStylePoint() {
         return this.testResultDetails.stream()
-            .sorted(Comparator.comparing(TestResultDetail::getScore).reversed())
-            .limit(2)
-            .toList();
+                .sorted(Comparator.comparing(TestResultDetail::getScore).reversed())
+                .limit(2)
+                .toList();
     }
 
     public boolean isOwner(String userId) {

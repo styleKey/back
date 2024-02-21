@@ -40,9 +40,9 @@ public class TestResultDetail {
 
     public static TestResultDetail of(TestResult testResult, StylePoint stylePoint, Integer score) {
         return TestResultDetail.builder()
-            .testResult(testResult)
-            .stylePoint(stylePoint)
-            .score(score)
-            .build();
+                .testResult(testResult)
+                .stylePoint(stylePoint)
+                .score(score)
+                .build();
     }
 }
