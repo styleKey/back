@@ -63,8 +63,6 @@ public class BrandAdminServiceImpl implements BrandAdminService {
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
         String oldImageUrl = brand.getImageUrl();
-        System.out.println("========================");
-        System.out.println(oldImageUrl);
         if(oldImageUrl != null) {
             s3Service.deleteFile(oldImageUrl);
         }
@@ -79,8 +77,6 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
         return brand;
     }
-
-
     @Override
     public void delete(Long id) {
         brandRepository.deleteById(id);
