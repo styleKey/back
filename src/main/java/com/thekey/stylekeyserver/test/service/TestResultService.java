@@ -29,7 +29,7 @@ public class TestResultService {
 
     @Transactional
     public Long createTestResult(TestResultRequest request, String userId) {
-        User user = userRepository.findByUserId(userId).orElseThrow();
+        User user = userRepository.findByUserId(userId);
         Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
         TestResult testResult = TestResult.create(user, stylePointScores);
 
@@ -49,7 +49,7 @@ public class TestResultService {
     }
 
     public List<TestResultResponse> getTestResults(String userId) {
-        User user = userRepository.findByUserId(userId).orElseThrow();
+        User user = userRepository.findByUserId(userId);
         List<TestResult> testResults = testResultRepository.findAllByUser(user);
 
         return testResults.stream()
@@ -66,7 +66,7 @@ public class TestResultService {
 
     @Transactional
     public void deleteTestResult(Long testResultId, String userId) {
-        User user = userRepository.findByUserId(userId).orElseThrow();
+        User user = userRepository.findByUserId(userId);
         testResultRepository.deleteByUserAndId(user, testResultId);
     }
 
