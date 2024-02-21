@@ -3,8 +3,9 @@ package com.thekey.stylekeyserver.category.service;
 import com.thekey.stylekeyserver.category.CategoryErrorMessage;
 import com.thekey.stylekeyserver.category.domain.Category;
 import com.thekey.stylekeyserver.category.repository.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import javax.persistence.*;
+import javax.transaction.Transactional;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

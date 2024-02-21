@@ -10,7 +10,7 @@ import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;

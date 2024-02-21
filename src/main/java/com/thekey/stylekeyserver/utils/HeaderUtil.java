@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.utils;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public class HeaderUtil {
 

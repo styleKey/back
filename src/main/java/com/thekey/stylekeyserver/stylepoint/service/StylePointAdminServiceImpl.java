@@ -4,8 +4,9 @@ import com.thekey.stylekeyserver.stylepoint.StylePointErrorMessage;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import javax.persistence.*;
+import javax.transaction.Transactional;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

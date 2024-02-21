@@ -1,13 +1,14 @@
 package com.thekey.stylekeyserver.oauth.repository;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.thekey.stylekeyserver.utils.CookieUtil;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 public class OAuth2AuthorizationRequestBasedOnCookieRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
@@ -37,6 +38,11 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository implements Author
         if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
             CookieUtil.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds);
         }
+    }
+
+    @Override
+    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
+        return this.loadAuthorizationRequest(request);
     }
 
     @Override
