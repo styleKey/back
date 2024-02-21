@@ -1,10 +1,12 @@
 package com.thekey.stylekeyserver.test.entity;
 
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,14 +22,19 @@ public class TestAnswer {
     @Column(name = "test_answer_content")
     private String content;
 
-    @Column(name = "test_answer_image")
-    private String image;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "style_point_id")
-    private StylePoint stylePoint;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_question_id")
     private TestQuestion testQuestion;
+
+    @OneToMany(mappedBy = "testAnswer", cascade = CascadeType.ALL)
+    private List<TestAnswerDetail> testAnswerDetails = new ArrayList<>();
+
+    // 연관관계 편의 메서드 //
+    public void relate(TestQuestion testQuestion) {
+        if (this.testQuestion != null) {
+            this.testQuestion.getTestAnswers().remove(this);
+        }
+        this.testQuestion = testQuestion;
+        testQuestion.getTestAnswers().add(this);
+    }
 }

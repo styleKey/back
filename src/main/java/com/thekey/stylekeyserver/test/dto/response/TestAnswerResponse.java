@@ -10,25 +10,20 @@ import lombok.Getter;
 @JsonNaming(SnakeCaseStrategy.class)
 public class TestAnswerResponse {
 
-    private Long id;
+    private Long answerId;
     private String content;
-    private String image;
-    private Long stylePointId;
 
     @Builder
-    private TestAnswerResponse(Long id, String content, String image, Long stylePointId) {
-        this.id = id;
+    private TestAnswerResponse(Long answerId, String content) {
+        this.answerId = answerId;
         this.content = content;
-        this.image = image;
-        this.stylePointId = stylePointId;
     }
+
 
     public static TestAnswerResponse of(TestAnswer testAnswer) {
         return TestAnswerResponse.builder()
-            .id(testAnswer.getId())
+            .answerId(testAnswer.getId())
             .content(testAnswer.getContent())
-            .image(testAnswer.getImage())
-            .stylePointId(testAnswer.getStylePoint().getId())
             .build();
     }
 }

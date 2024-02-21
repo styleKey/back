@@ -1,32 +1,30 @@
-// package com.thekey.stylekeyserver.test.dto.response;
+package com.thekey.stylekeyserver.test.dto.response;
 
-// import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
-// import com.fasterxml.jackson.databind.annotation.JsonNaming;
-// import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-// import com.thekey.stylekeyserver.test.entity.TestResult;
-// import lombok.Builder;
-// import lombok.Getter;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.thekey.stylekeyserver.test.entity.TestResult;
+import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
 
-// @Getter
-// @JsonNaming(SnakeCaseStrategy.class)
-// public class TestResultResponse {
+@Getter
+@JsonNaming(SnakeCaseStrategy.class)
+public class TestResultResponse {
 
-//     private Long id;
-//     private StylePoint stylePoint;
-//     private Integer score;
+    List<TestResultDetailResponse> testResultDetails;
 
-//     @Builder
-//     private TestResultResponse(Long id, StylePoint stylePoint, Integer score) {
-//         this.id = id;
-//         this.stylePoint = stylePoint;
-//         this.score = score;
-//     }
+    @Builder
+    private TestResultResponse(List<TestResultDetailResponse> testResultDetails) {
+        this.testResultDetails = testResultDetails;
+    }
 
-//     public static TestResultResponse of(TestResult testResult) {
-//         return TestResultResponse.builder()
-//             .id(testResult.getId())
-//             .stylePoint(testResult.getStylePoint())
-//             .score(testResult.getScore())
-//             .build();
-//     }
-// }
+    public static TestResultResponse of(TestResult testResult) {
+        List<TestResultDetailResponse> topTwoDetails = testResult.calculateTopTwoStylePoint().stream()
+            .map(TestResultDetailResponse::of)
+            .toList();
+
+        return TestResultResponse.builder()
+            .testResultDetails(topTwoDetails)
+            .build();
+    }
+}

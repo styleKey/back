@@ -1,55 +1,78 @@
-// package com.thekey.stylekeyserver.test.service;
+package com.thekey.stylekeyserver.test.service;
 
-// import com.thekey.stylekeyserver.oauth.domain.Users;
-// import com.thekey.stylekeyserver.oauth.repository.UserRepository;
-// import com.thekey.stylekeyserver.stylepoint.StylePointErrorMessage;
-// import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-// import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
-// import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
-// import com.thekey.stylekeyserver.test.dto.response.TestResponse;
-// import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
-// import com.thekey.stylekeyserver.test.entity.TestResult;
-// import com.thekey.stylekeyserver.test.repository.TestResultRepository;
-// import jakarta.persistence.EntityNotFoundException;
-// import java.util.List;
-// import lombok.RequiredArgsConstructor;
-// import org.springframework.stereotype.Service;
-// import org.springframework.transaction.annotation.Transactional;
+import com.thekey.stylekeyserver.auth.entity.User;
+import com.thekey.stylekeyserver.auth.repository.UserRepository;
+import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.test.ApiException;
+import com.thekey.stylekeyserver.test.TestErrorMessage;
+import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
+import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
+import com.thekey.stylekeyserver.test.entity.TestAnswerDetail;
+import com.thekey.stylekeyserver.test.entity.TestResult;
+import com.thekey.stylekeyserver.test.repository.TestAnswerRepository;
+import com.thekey.stylekeyserver.test.repository.TestResultRepository;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-// @Service
-// @RequiredArgsConstructor
-// @Transactional(readOnly = true)
-// public class TestResultService {
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class TestResultService {
 
-//     private final TestResultRepository testResultRepository;
-//     private final UserRepository userRepository;
-//     private final StylePointRepository stylePointRepository;
+    private final UserRepository userRepository;
+    private final TestResultRepository testResultRepository;
+    private final TestAnswerRepository testAnswerRepository;
 
-//     @Transactional
-//     public TestResponse createTestResult(TestResultRequest request, String userId) {
-//         Users user = userRepository.findByEmail(userId).orElseThrow();
+    @Transactional
+    public Long createTestResult(TestResultRequest request, String userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
+        Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
+        TestResult testResult = TestResult.create(user, stylePointScores);
 
-//         StylePoint stylePoint = stylePointRepository.findById(request.getStylePointId())
-//             .orElseThrow(() -> new EntityNotFoundException(
-//                 StylePointErrorMessage.NOT_FOUND_STYLE_POINT.get() + request.getStylePointId()));
+        TestResult savedTestResult = testResultRepository.save(testResult);
+        return savedTestResult.getId();
+    }
 
-//         TestResult testResult = TestResultRequest.toEntity(user, stylePoint, request);
+    private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {
+        return request.getAnswerIds().stream()
+            .map(answerId -> testAnswerRepository.findById(answerId)
+                .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_ANSWER_NOT_FOUND)))
+            .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
+            .collect(Collectors.toMap(
+                TestAnswerDetail::getStylePoint,
+                TestAnswerDetail::getScore,
+                Integer::sum));
+    }
 
-//         return TestResponse.of(testResultRepository.save(testResult));
-//     }
+    public List<TestResultResponse> getTestResults(String userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
+        List<TestResult> testResults = testResultRepository.findAllByUser(user);
 
-//     public List<TestResultResponse> getTestResult(String userId) {
-//         Users user = userRepository.findByEmail(userId).orElseThrow();
-//         List<TestResult> testResults = testResultRepository.findAllByUser(user);
+        return testResults.stream()
+            .map(TestResultResponse::of)
+            .toList();
+    }
 
-//         return testResults.stream()
-//             .map(TestResultResponse::of)
-//             .toList();
-//     }
+    public TestResultResponse findTestResult(String userId, Long testResultId) {
+        TestResult testResult = testResultRepository.findById(testResultId)
+            .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_RESULT_NOT_FOUND));
+        validateOwner(userId, testResult);
+        return TestResultResponse.of(testResult);
+    }
 
-//     @Transactional
-//     public void deleteTestResult(Long testResultId, String userId) {
-//         Users user = userRepository.findByEmail(userId).orElseThrow();
-//         testResultRepository.deleteByUserAndId(user, testResultId);
-//     }
-// }
+    @Transactional
+    public void deleteTestResult(Long testResultId, String userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
+        testResultRepository.deleteByUserAndId(user, testResultId);
+    }
+
+    private void validateOwner(String userId, TestResult testResult) {
+        if (!testResult.isOwner(userId)) {
+            throw new ApiException(TestErrorMessage.UNAUTHORIZED_TEST_RESULT);
+        }
+    }
+}

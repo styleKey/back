@@ -1,46 +1,64 @@
-// package com.thekey.stylekeyserver.test.entity;
+package com.thekey.stylekeyserver.test.entity;
 
-// import com.thekey.stylekeyserver.base.BaseTimeEntity;
-// import com.thekey.stylekeyserver.oauth.domain.Users;
-// import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-// import jakarta.persistence.Column;
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.JoinColumn;
-// import jakarta.persistence.ManyToOne;
-// import jakarta.persistence.Table;
-// import lombok.AccessLevel;
-// import lombok.Builder;
-// import lombok.Getter;
-// import lombok.NoArgsConstructor;
+import com.thekey.stylekeyserver.auth.entity.User;
+import com.thekey.stylekeyserver.base.BaseTimeEntity;
+import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-// @Entity
-// @Table(name = "test_result")
-// @Getter
-// @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// public class TestResult extends BaseTimeEntity {
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     @Column(name = "test_result_id")
-//     private Long id;
+@Entity
+@Table(name = "test_result")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class TestResult extends BaseTimeEntity {
 
-//     @ManyToOne
-//     @JoinColumn(name = "email")
-//     private Users user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "test_result_id")
+    private Long id;
 
-//     @ManyToOne
-//     @JoinColumn(name = "style_point_id")
-//     private StylePoint stylePoint;
+    @ManyToOne
+    @JoinColumn(name = "email")
+    private User user;
 
-//     private Integer score;
+    @OneToMany(mappedBy = "testResult", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TestResultDetail> testResultDetails = new ArrayList<>();
 
-//     @Builder
-//     private TestResult(Users user, StylePoint stylePoint, Integer score) {
-//         this.user = user;
-//         this.stylePoint = stylePoint;
-//         this.score = score;
-//     }
-// }
+    @Builder
+    private TestResult(Long id, User user, Map<StylePoint, Integer> stylePointScores) {
+        this.id = id;
+        this.user = user;
+        this.testResultDetails = stylePointScores.entrySet().stream()
+            .map(entry -> TestResultDetail.of(this, entry.getKey(), entry.getValue()))
+            .toList();
+    }
+
+    public static TestResult create(User user, Map<StylePoint, Integer> stylePointScores) {
+        return TestResult.builder()
+            .user(user)
+            .stylePointScores(stylePointScores)
+            .build();
+    }
+
+    public List<TestResultDetail> calculateTopTwoStylePoint() {
+        return this.testResultDetails.stream()
+            .sorted(Comparator.comparing(TestResultDetail::getScore).reversed())
+            .limit(2)
+            .toList();
+    }
+
+    public boolean isOwner(String userId) {
+        if (userId == null) {
+            return false;
+        }
+        return user.getUserId().equals(userId);
+    }
+}
