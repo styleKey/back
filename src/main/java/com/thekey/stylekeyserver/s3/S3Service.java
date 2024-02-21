@@ -1,6 +1,7 @@
 package com.thekey.stylekeyserver.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +29,7 @@ public class S3Service {
     @Value("${cloud.aws.s3.item}")
     private String itemFolder;
 
-    public String uploadFile(MultipartFile file, String imageType) {
+    public String uploadFile(MultipartFile file, String imageType) throws Exception {
         try {
             String folderName = getFolderName(imageType);
             String fileName = generateFileName(file, folderName);
@@ -41,12 +42,16 @@ public class S3Service {
             uploadFileTos3bucket(fileName, convertedFile);
             return getFileUrl(fileName);
 
-        } catch (FileAlreadyExistsException e) {
-            return S3ErrorMessage.FILE_ALREADY_EXISTS.get();
         } catch (Exception e) {
             e.printStackTrace();
-            return S3ErrorMessage.FILE_UPLOAD_FAILED.get();
+            throw new Exception(S3ErrorMessage.FILE_UPLOAD_FAILED.get());
         }
+    }
+
+
+    public void deleteFile(String fileUrl) {
+        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+        s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
     private String getFolderName(String imageType) {

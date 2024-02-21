@@ -6,6 +6,7 @@ import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,12 +35,13 @@ public class BrandAdminController {
     @Operation(summary = "Create Brand", description = "브랜드 정보 등록")
     public ResponseEntity<BrandResponse> createBrand(@RequestPart BrandRequest requestDto,
                                                      @RequestPart("imageFile") MultipartFile imageFile) {
-        Optional<Brand> optional = Optional.ofNullable(brandAdminService.create(requestDto, imageFile));
-
-        return optional.map(createdBrand -> {
-            BrandResponse response = BrandResponse.of(createdBrand);
+        try {
+            Brand brand = brandAdminService.create(requestDto, imageFile);
+            BrandResponse response = BrandResponse.of(brand);
             return ResponseEntity.ok(response);
-        }).orElse(ResponseEntity.notFound().build());
+        } catch (RuntimeException | FileAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @GetMapping("/{id}")
@@ -85,12 +86,14 @@ public class BrandAdminController {
     @PutMapping("/{id}")
     @Operation(summary = "Update Brand", description = "브랜드 정보 수정")
     public ResponseEntity<BrandResponse> updateBrand(@PathVariable Long id,
-                                                     @RequestBody BrandRequest requestDto) {
-        if (id == null) {
+                                                     @RequestPart BrandRequest requestDto,
+                                                     @RequestPart("imageFile") MultipartFile imageFile)
+            throws Exception {
+        if (id == null || imageFile == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<Brand> optional = Optional.ofNullable(brandAdminService.update(id, requestDto));
+        Optional<Brand> optional = Optional.ofNullable(brandAdminService.update(id, requestDto, imageFile));
         return optional.map(brand -> {
             BrandResponse response = BrandResponse.of(brand);
             return ResponseEntity.ok(response);
