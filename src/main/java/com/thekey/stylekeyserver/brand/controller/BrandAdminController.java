@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Brand", description = "Brand API")
 @RestController
@@ -31,8 +33,9 @@ public class BrandAdminController {
 
     @PostMapping
     @Operation(summary = "Create Brand", description = "브랜드 정보 등록")
-    public ResponseEntity<BrandResponse> createBrand(@RequestBody BrandRequest requestDto) {
-        Optional<Brand> optional = Optional.ofNullable(brandAdminService.create(requestDto));
+    public ResponseEntity<BrandResponse> createBrand(@RequestPart BrandRequest requestDto,
+                                                     @RequestPart("imageFile") MultipartFile imageFile) {
+        Optional<Brand> optional = Optional.ofNullable(brandAdminService.create(requestDto, imageFile));
 
         return optional.map(createdBrand -> {
             BrandResponse response = BrandResponse.of(createdBrand);

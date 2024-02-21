@@ -4,6 +4,7 @@ import com.thekey.stylekeyserver.brand.BrandErrorMessage;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
+import com.thekey.stylekeyserver.s3.S3Service;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +12,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -19,11 +21,14 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
     private final BrandRepository brandRepository;
     private final StylePointAdminService stylePointAdminService;
+    private final S3Service s3Service;
 
     @Override
-    public Brand create(BrandRequest requestDto) {
+    public Brand create(BrandRequest requestDto, MultipartFile imageFile) {
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
-        return brandRepository.save(requestDto.toEntity(stylePoint));
+        String imageUrl = s3Service.uploadFile(imageFile, "brand");
+
+        return brandRepository.save(requestDto.toEntity(stylePoint, imageUrl));
     }
 
     @Override
@@ -48,14 +53,14 @@ public class BrandAdminServiceImpl implements BrandAdminService {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
 
-        StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
-
-        brand.update(requestDto.getTitle(),
-                requestDto.getTitle_eng(),
-                requestDto.getDescription(),
-                requestDto.getSite_url(),
-                requestDto.getImage(),
-                requestDto.toEntity(stylePoint).getStylePoint());
+//        StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
+//
+//        brand.update(requestDto.getTitle(),
+//                requestDto.getTitle_eng(),
+//                requestDto.getDescription(),
+//                requestDto.getSite_url(),
+//                requestDto.getImage(),
+//                requestDto.toEntity(stylePoint).getStylePoint());
 
         return brand;
     }

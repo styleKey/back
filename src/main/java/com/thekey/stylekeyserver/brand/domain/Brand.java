@@ -30,14 +30,11 @@ public class Brand {
     @Column(name = "brand_title_eng")
     private String title_eng;
 
-    @Column(name = "brand_description")
-    private String description;
-
     @Column(name = "brand_site_url")
     private String site_url;
 
-    @Column(name = "brand_image")
-    private String image;
+    @Column(name = "brand_image_url")
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "style_point_id")
@@ -45,23 +42,21 @@ public class Brand {
     private StylePoint stylePoint;
 
     @Builder
-    public Brand(String title, String title_eng, String description, String site_url, String image,
+    public Brand(String title, String title_eng, String site_url, String imageUrl,
                  StylePoint stylePoint) {
         this.title = title;
         this.title_eng = title_eng;
-        this.description = description;
         this.site_url = site_url;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.stylePoint = stylePoint;
     }
 
-    public void update(String title, String title_eng, String description, String site_url, String image,
+    public void update(String title, String title_eng, String site_url, String image,
                        StylePoint stylePoint) {
         this.title = title;
         this.title_eng = title_eng;
-        this.description = description;
         this.site_url = site_url;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.stylePoint = stylePoint;
     }
 }
