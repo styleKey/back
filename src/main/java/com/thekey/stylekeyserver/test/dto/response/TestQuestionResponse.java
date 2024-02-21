@@ -11,22 +11,22 @@ import lombok.Getter;
 @JsonNaming(SnakeCaseStrategy.class)
 public class TestQuestionResponse {
 
-    private Long id;
+    private Long questionId;
     private String content;
     private List<TestAnswerResponse> answers;
 
     @Builder
-    private TestQuestionResponse(Long id, String content, List<TestAnswerResponse> answers) {
-        this.id = id;
+    private TestQuestionResponse(Long questionId, String content, List<TestAnswerResponse> answers) {
+        this.questionId = questionId;
         this.content = content;
         this.answers = answers;
     }
 
     public static TestQuestionResponse of(TestQuestion testQuestion) {
         return TestQuestionResponse.builder()
-            .id(testQuestion.getId())
+            .questionId(testQuestion.getId())
             .content(testQuestion.getContent())
-            .answers(testQuestion.getAnswers().stream()
+            .answers(testQuestion.getTestAnswers().stream()
                 .map(TestAnswerResponse::of)
                 .toList())
             .build();

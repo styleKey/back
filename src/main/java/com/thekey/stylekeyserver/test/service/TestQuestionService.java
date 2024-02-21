@@ -15,8 +15,8 @@ public class TestQuestionService {
 
     private final TestQuestionRepository testQuestionRepository;
 
-    public List<TestQuestionResponse> getTestQuestion() {
-        List<TestQuestion> testQuestions = testQuestionRepository.findAll();
+    public List<TestQuestionResponse> getTestQuestions() {
+        List<TestQuestion> testQuestions = testQuestionRepository.findAllWithAnswers();
         return testQuestions.stream()
             .map(TestQuestionResponse::of)
             .toList();

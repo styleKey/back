@@ -3,12 +3,12 @@ package com.thekey.stylekeyserver.test.controller;
 import com.thekey.stylekeyserver.global.oauth.dto.SessionUser;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestQuestionResponse;
-import com.thekey.stylekeyserver.test.dto.response.TestResponse;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
 import com.thekey.stylekeyserver.test.service.TestQuestionService;
 import com.thekey.stylekeyserver.test.service.TestResultService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,26 +31,37 @@ public class TestController {
     private final TestResultService testResultService;
 
     @Operation(summary = "Read All Test-Question", description = "테스트 질문지 전체 조회")
-    @GetMapping("/test-question")
+    @GetMapping("/test-questions")
     public ResponseEntity<List<TestQuestionResponse>> getTestQuestions() {
-        return ResponseEntity.ok(testQuestionService.getTestQuestion());
+        return ResponseEntity.ok(testQuestionService.getTestQuestions());
     }
 
     @Operation(summary = "Create Test-Result", description = "테스트 결과 생성")
     @PostMapping("/test")
-    public ResponseEntity<TestResponse> saveTestResult(@RequestBody TestResultRequest request, @AuthenticationPrincipal SessionUser user) {
-        return ResponseEntity.ok(testResultService.createTestResult(request, user.getUsername()));
+    public ResponseEntity<Void> saveTestResult(@RequestBody TestResultRequest request,
+        @AuthenticationPrincipal SessionUser user) {
+        Long testResultId = testResultService.createTestResult(request, user.getUsername());
+        return ResponseEntity.created(URI.create("/api/test-result/" + testResultId)).build();
+    }
+
+    @Operation(summary = "Read One Test-Result", description = "테스트 결과 단건 조회")
+    @GetMapping("/test-result/{testResultId}")
+    public ResponseEntity<TestResultResponse> getTestResults(
+        @PathVariable Long testResultId, @AuthenticationPrincipal SessionUser user) {
+        TestResultResponse testResult = testResultService.findTestResult(user.getUsername(), testResultId);
+        return ResponseEntity.ok(testResult);
     }
 
     @Operation(summary = "Read All Test-Result", description = "테스트 결과 전체 조회")
     @GetMapping("/test-result/list")
     public ResponseEntity<List<TestResultResponse>> getTestResults(@AuthenticationPrincipal SessionUser user) {
-        return ResponseEntity.ok(testResultService.getTestResult(user.getUsername()));
+        return ResponseEntity.ok(testResultService.getTestResults(user.getUsername()));
     }
 
     @Operation(summary = "Delete Test-Result", description = "테스트 결과 삭제")
     @DeleteMapping("/test-result/{testResultId}")
-    public ResponseEntity<Void> deleteTestResult(@PathVariable Long testResultId, @AuthenticationPrincipal SessionUser user) {
+    public ResponseEntity<Void> deleteTestResult(@PathVariable Long testResultId,
+        @AuthenticationPrincipal SessionUser user) {
         testResultService.deleteTestResult(testResultId, user.getUsername());
         return ResponseEntity.ok().build();
     }
