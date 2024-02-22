@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.category.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

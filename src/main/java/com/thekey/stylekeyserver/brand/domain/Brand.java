@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.brand.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

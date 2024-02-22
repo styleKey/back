@@ -2,16 +2,15 @@ package com.thekey.stylekeyserver.auth.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thekey.stylekeyserver.oauth.entity.ProviderType;
 import com.thekey.stylekeyserver.oauth.entity.RoleType;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "USER")
+@Table(name = "`USER`")
 public class User {
     @JsonIgnore
     @Id

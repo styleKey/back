@@ -4,10 +4,11 @@ import com.thekey.stylekeyserver.stylepoint.StylePointErrorMessage;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
-import javax.persistence.*;
-import javax.transaction.Transactional;
+import jakarta.persistence.*;
 
 import java.util.List;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,9 +3,10 @@ package com.thekey.stylekeyserver.coordinatelook.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

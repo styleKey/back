@@ -1,10 +1,10 @@
 package com.thekey.stylekeyserver.stylepoint.domain;
 
-import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
 @Entity
 @Getter
