@@ -47,7 +47,7 @@ public class BrandAdminController {
         try {
             Brand brand = brandAdminService.create(requestDto, imageFile);
             BrandResponse response = BrandResponse.of(brand);
-            return ResponseEntity.ok(ApiResponseDto.of(SuccessType.CREATE_SUCCESS, response));
+            return ResponseEntity.ok(ApiResponseDto.of(SuccessType.SUCCESS, response));
         } catch (FileAlreadyExistsException e) {
             return ResponseEntity.ok(ApiResponseDto.of(ErrorType.FILE_ALREADY_EXISTS));
         } catch (IOException e) {
@@ -59,13 +59,13 @@ public class BrandAdminController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One Brand", description = "브랜드 정보 단건 조회")
-    public ResponseEntity<BrandResponse> getBrand(@PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto> getBrand(@PathVariable Long id) {
         Optional<Brand> optional = Optional.ofNullable(brandAdminService.findById(id));
 
         return optional.map(brand -> {
             BrandResponse responseDto = BrandResponse.of(brand);
-            return ResponseEntity.ok(responseDto);
-        }).orElse(ResponseEntity.notFound().build());
+            return ResponseEntity.ok(ApiResponseDto.of(SuccessType.SUCCESS, responseDto));
+        }).orElse(ResponseEntity.ok(ApiResponseDto.of(ErrorType.BAD_REQUEST)));
     }
 
     @GetMapping
@@ -98,7 +98,7 @@ public class BrandAdminController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Brand", description = "브랜드 정보 수정")
-    public ResponseEntity<BrandResponse> updateBrand(@PathVariable Long id,
+    public ResponseEntity<ApiResponseDto> updateBrand(@PathVariable Long id,
                                                      @RequestPart BrandRequest requestDto,
                                                      @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
             throws Exception {
@@ -109,15 +109,15 @@ public class BrandAdminController {
         Optional<Brand> optional = Optional.ofNullable(brandAdminService.update(id, requestDto, imageFile));
         return optional.map(brand -> {
             BrandResponse response = BrandResponse.of(brand);
-            return ResponseEntity.ok(response);
-        }).orElse(ResponseEntity.notFound().build());
+            return ResponseEntity.ok(ApiResponseDto.of(SuccessType.SUCCESS, response));
+        }).orElse(ResponseEntity.ok(ApiResponseDto.of(ErrorType.BAD_REQUEST)));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Brand", description = "브랜드 정보 삭제")
-    public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto> deleteBrand(@PathVariable Long id) {
         brandAdminService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponseDto.of(SuccessType.SUCCESS));
     }
 
 }

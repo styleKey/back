@@ -8,6 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorType {
 
+    /* 기본 요청 에러 메시지 */
+    BAD_REQUEST(201, "불가능한 요청입니다."),
+
     /* 로그인 관련 에러 메시지 */
     NOT_VALID_REQUEST(400,  "유효하지 않은 요청입니다."),
     NOT_VALID_TOKEN(400,"유효한 토큰이 아닙니다."),
