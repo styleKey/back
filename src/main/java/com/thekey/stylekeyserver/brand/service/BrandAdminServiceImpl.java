@@ -57,7 +57,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
         String oldImageUrl = brand.getImageUrl();
         if (oldImageUrl != null) {
-            s3Service.deleteFile(oldImageUrl);
+            s3Service.deleteFile(oldImageUrl, "brand");
             String newImageUrl = s3Service.uploadFile(imageFile, "brand");
             brand.updateImage(newImageUrl);
         }
@@ -75,7 +75,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
         String imageFile = brand.getImageUrl();
-        s3Service.deleteFile(imageFile);
+        s3Service.deleteFile(imageFile, "brand");
         brandRepository.deleteById(id);
     }
 

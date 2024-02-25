@@ -51,10 +51,9 @@ public class S3Service {
         return getFileUrl(fileName);
     }
 
-    public void deleteFile(String fileUrl) {
+    public boolean deleteFile(String fileUrl, String imageType) {
         try {
-            String bucketName = "stylekeybucket";  // 설정에서 제공된 버킷 이름
-            String folderName = "brand";  // 설정에서 제공된 폴더 이름
+            String folderName = getFolderName(imageType).replaceAll("/", ""); // 설정에서 제공된 폴더 이름
 
             URL url = new URL(fileUrl);
             String fileName = url.getPath().substring(1);  // 앞에 있는 '/' 제거
@@ -62,19 +61,16 @@ public class S3Service {
             String fullFileName = folderName + fileName.substring(fileName.indexOf("/"));
 
             String decodedFullFileName = URLDecoder.decode(fullFileName, StandardCharsets.UTF_8.toString());
-            s3Client.deleteObject(new DeleteObjectRequest(bucketName, decodedFullFileName));
+            s3Client.deleteObject(new DeleteObjectRequest(bucket, decodedFullFileName));
+            return true;
+
         } catch (AmazonServiceException e) {
-            System.err.println(e.getErrorMessage());
+            return false;
         } catch (UnsupportedEncodingException | MalformedURLException e) {
-            System.err.println("URL decoding failed: " + e.getMessage());
+            System.out.println(S3ErrorMessage.URL_DECODING_FAILED);
+           return false;
         }
     }
-
-
-//    public void deleteFile(String fileUrl, String imageType) {
-//        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-//        s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
-//    }
 
     private String getFolderName(String imageType) {
         switch (imageType) {
