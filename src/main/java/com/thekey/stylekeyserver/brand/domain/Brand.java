@@ -51,12 +51,15 @@ public class Brand {
         this.stylePoint = stylePoint;
     }
 
-    public void update(String title, String title_eng, String site_url, String imageUrl,
-                       StylePoint stylePoint) {
+    public void update(String title, String title_eng, String site_url, StylePoint stylePoint) {
         this.title = title;
         this.title_eng = title_eng;
         this.site_url = site_url;
-        this.imageUrl = imageUrl;
         this.stylePoint = stylePoint;
     }
+
+    public void updateImage(String newImageUrl) {
+        this.imageUrl = newImageUrl;
+    }
+
 }

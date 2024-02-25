@@ -1,5 +1,6 @@
 package com.thekey.stylekeyserver.s3;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -8,6 +9,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,11 +51,30 @@ public class S3Service {
         return getFileUrl(fileName);
     }
 
-
     public void deleteFile(String fileUrl) {
-        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-        s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        try {
+            String bucketName = "stylekeybucket";  // 설정에서 제공된 버킷 이름
+            String folderName = "brand";  // 설정에서 제공된 폴더 이름
+
+            URL url = new URL(fileUrl);
+            String fileName = url.getPath().substring(1);  // 앞에 있는 '/' 제거
+
+            String fullFileName = folderName + fileName.substring(fileName.indexOf("/"));
+
+            String decodedFullFileName = URLDecoder.decode(fullFileName, StandardCharsets.UTF_8.toString());
+            s3Client.deleteObject(new DeleteObjectRequest(bucketName, decodedFullFileName));
+        } catch (AmazonServiceException e) {
+            System.err.println(e.getErrorMessage());
+        } catch (UnsupportedEncodingException | MalformedURLException e) {
+            System.err.println("URL decoding failed: " + e.getMessage());
+        }
     }
+
+
+//    public void deleteFile(String fileUrl, String imageType) {
+//        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+//        s3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+//    }
 
     private String getFolderName(String imageType) {
         switch (imageType) {

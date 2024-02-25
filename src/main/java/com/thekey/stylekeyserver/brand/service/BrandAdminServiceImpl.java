@@ -55,11 +55,10 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
-        if(imageFile != null) {
+        String oldImageUrl = brand.getImageUrl();
+        if (oldImageUrl != null) {
+            s3Service.deleteFile(oldImageUrl);
             String newImageUrl = s3Service.uploadFile(imageFile, "brand");
-            if(brand.getImageUrl() != null) {
-                s3Service.deleteFile(brand.getImageUrl());
-            }
             brand.updateImage(newImageUrl);
         }
 
@@ -74,7 +73,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Override
     public void delete(Long id) {
         Brand brand = brandRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
         String imageFile = brand.getImageUrl();
         s3Service.deleteFile(imageFile);
         brandRepository.deleteById(id);
