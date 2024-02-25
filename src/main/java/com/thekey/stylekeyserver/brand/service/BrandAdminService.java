@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface BrandAdminService {
 
-    Brand create(BrandRequest requestDto, MultipartFile imageFile) throws FileAlreadyExistsException;
+    Brand create(BrandRequest requestDto, MultipartFile imageFile) throws Exception;
 
     Brand findById(Long id);
 

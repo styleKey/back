@@ -4,13 +4,11 @@ import com.thekey.stylekeyserver.brand.BrandErrorMessage;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
-import com.thekey.stylekeyserver.s3.S3ErrorMessage;
 import com.thekey.stylekeyserver.s3.S3Service;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,14 +24,9 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     private final S3Service s3Service;
 
     @Override
-    public Brand create(BrandRequest requestDto, MultipartFile imageFile) throws FileAlreadyExistsException {
+    public Brand create(BrandRequest requestDto, MultipartFile imageFile) throws Exception {
         String imageUrl = null;
-        try {
-           imageUrl = s3Service.uploadFile(imageFile, "brand");
-        } catch (Exception e) {
-            throw new RuntimeException(S3ErrorMessage.FILE_UPLOAD_FAILED.get());
-        }
-
+        imageUrl = s3Service.uploadFile(imageFile, "brand");
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
         return brandRepository.save(requestDto.toEntity(stylePoint, imageUrl));
     }
@@ -62,23 +55,28 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
-        String oldImageUrl = brand.getImageUrl();
-        if(oldImageUrl != null) {
-            s3Service.deleteFile(oldImageUrl);
+        if(imageFile != null) {
+            String newImageUrl = s3Service.uploadFile(imageFile, "brand");
+            if(brand.getImageUrl() != null) {
+                s3Service.deleteFile(brand.getImageUrl());
+            }
+            brand.updateImage(newImageUrl);
         }
-
-        String newImageUrl = s3Service.uploadFile(imageFile, "brand");
 
         brand.update(requestDto.getTitle(),
                 requestDto.getTitle_eng(),
                 requestDto.getSite_url(),
-                newImageUrl,
                 stylePoint);
 
         return brand;
     }
+
     @Override
     public void delete(Long id) {
+        Brand brand = brandRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
+        String imageFile = brand.getImageUrl();
+        s3Service.deleteFile(imageFile);
         brandRepository.deleteById(id);
     }
 

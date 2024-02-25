@@ -4,8 +4,12 @@ import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
+import com.thekey.stylekeyserver.global.response.ApiResponseDto;
+import com.thekey.stylekeyserver.global.response.ErrorType;
+import com.thekey.stylekeyserver.global.response.SuccessType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.Optional;
@@ -33,14 +37,23 @@ public class BrandAdminController {
 
     @PostMapping
     @Operation(summary = "Create Brand", description = "브랜드 정보 등록")
-    public ResponseEntity<BrandResponse> createBrand(@RequestPart BrandRequest requestDto,
-                                                     @RequestPart("imageFile") MultipartFile imageFile) {
+    public ResponseEntity<ApiResponseDto> createBrand(@RequestPart BrandRequest requestDto,
+                                                      @RequestPart("imageFile") MultipartFile imageFile) {
+
+        if (imageFile == null || imageFile.isEmpty()) {
+            return ResponseEntity.ok(ApiResponseDto.of(ErrorType.INVALID_IMAGE_FORMAT));
+        }
+
         try {
             Brand brand = brandAdminService.create(requestDto, imageFile);
             BrandResponse response = BrandResponse.of(brand);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException | FileAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.ok(ApiResponseDto.of(SuccessType.CREATE_SUCCESS, response));
+        } catch (FileAlreadyExistsException e) {
+            return ResponseEntity.ok(ApiResponseDto.of(ErrorType.FILE_ALREADY_EXISTS));
+        } catch (IOException e) {
+            return ResponseEntity.ok(ApiResponseDto.of(ErrorType.INVALID_IMAGE_FORMAT));
+        } catch (Exception e) {
+            return ResponseEntity.ok(ApiResponseDto.of(ErrorType.FILE_UPLOAD_FAILED));
         }
     }
 
@@ -87,9 +100,9 @@ public class BrandAdminController {
     @Operation(summary = "Update Brand", description = "브랜드 정보 수정")
     public ResponseEntity<BrandResponse> updateBrand(@PathVariable Long id,
                                                      @RequestPart BrandRequest requestDto,
-                                                     @RequestPart("imageFile") MultipartFile imageFile)
+                                                     @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
             throws Exception {
-        if (id == null || imageFile == null) {
+        if (id == null) {
             return ResponseEntity.badRequest().build();
         }
 

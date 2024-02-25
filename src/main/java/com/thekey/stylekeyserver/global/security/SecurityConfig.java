@@ -27,7 +27,7 @@ import com.thekey.stylekeyserver.global.oauth.OAuth2AuthenticationFailureHandler
 import com.thekey.stylekeyserver.global.oauth.OAuth2AuthenticationSuccessHandler;
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -66,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return (web) -> web.ignoring()
-               .requestMatchers(PathRequest.toH2Console()) 
+               .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
@@ -74,37 +74,39 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http.cors();
-        http.csrf().disable();                 
-        http.formLogin().disable();           
+        http.csrf().disable();
+        http.formLogin().disable();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .requestMatchers("/swagger-ui/**").permitAll()
-                .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/oauth/**").permitAll()
-                .requestMatchers("/oauth2/**").permitAll()
-                .requestMatchers("/api/test-question").permitAll()
-                .anyRequest().authenticated()
-                .and()
+//                .requestMatchers("/swagger-ui/**").permitAll()
+//                .requestMatchers("/v3/api-docs/**").permitAll()
+//                .requestMatchers("/api/auth/**").permitAll()
+//                .requestMatchers("/api/oauth/**").permitAll()
+//                .requestMatchers("/oauth2/**").permitAll()
+//                .requestMatchers("/api/test-question").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+                .requestMatchers("/**").permitAll()
+                .anyRequest().authenticated();
 
-                .oauth2Login()
-                    .authorizationEndpoint().baseUri("/oauth2/authorize")
-                    .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
-                .and()
-                    .redirectionEndpoint()
-                    .baseUri("/login/oauth2/code/**") // /login/oauth2/code/** // /oauth/callback/kakao
-                .and()
-                    .userInfoEndpoint().userService(customOAuth2UserService)
-                .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
-                    .failureHandler(oAuth2AuthenticationFailureHandler)
-                    
-                
-
-                .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//                .oauth2Login()
+//                    .authorizationEndpoint().baseUri("/oauth2/authorize")
+//                    .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+//                .and()
+//                    .redirectionEndpoint()
+//                    .baseUri("/login/oauth2/code/**") // /login/oauth2/code/** // /oauth/callback/kakao
+//                .and()
+//                    .userInfoEndpoint().userService(customOAuth2UserService)
+//                .and()
+//                    .successHandler(oAuth2AuthenticationSuccessHandler)
+//                    .failureHandler(oAuth2AuthenticationFailureHandler)
+//
+//
+//
+//                .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+//                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
