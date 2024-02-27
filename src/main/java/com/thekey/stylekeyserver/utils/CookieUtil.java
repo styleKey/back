@@ -3,11 +3,15 @@ package com.thekey.stylekeyserver.utils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.SerializationUtils;
 
 
 import java.util.Base64;
 import java.util.Optional;
+
+import static com.thekey.stylekeyserver.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.ACCESS_TOKEN;
+import static com.thekey.stylekeyserver.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
 
 
 public class CookieUtil {
@@ -62,5 +66,24 @@ public class CookieUtil {
         );
     }
 
+    public static void addCookiesToHeaders(HttpServletRequest request, HttpServletResponse response) {
+        Optional<Cookie> accessTokenCookie = getCookie(request, ACCESS_TOKEN);
+        Optional<Cookie> refreshTokenCookie = getCookie(request, REFRESH_TOKEN);
+
+        accessTokenCookie.ifPresent(cookie ->
+                response.addHeader(HttpHeaders.SET_COOKIE, getCookieString(cookie))
+        );
+
+        refreshTokenCookie.ifPresent(cookie ->
+                response.addHeader(HttpHeaders.SET_COOKIE, getCookieString(cookie))
+        );
+    }
+
+    private static String getCookieString(Cookie cookie) {
+        return cookie.getName() + "=" + cookie.getValue()
+                + "; Path=" + cookie.getPath()
+                + "; Max-Age=" + cookie.getMaxAge()
+                + "; HttpOnly";
+    }
 }
 
