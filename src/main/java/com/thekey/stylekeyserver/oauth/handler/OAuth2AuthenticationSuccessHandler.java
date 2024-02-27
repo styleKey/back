@@ -34,8 +34,7 @@ import com.thekey.stylekeyserver.utils.CookieUtil;
 
 import lombok.RequiredArgsConstructor;
 
-import static com.thekey.stylekeyserver.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static com.thekey.stylekeyserver.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;;
+import static com.thekey.stylekeyserver.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.*;
 
 @Component
 @RequiredArgsConstructor
@@ -54,6 +53,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
+
+        CookieUtil.addCookiesToHeaders(request, response);
 
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
@@ -105,6 +106,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+
+        CookieUtil.addCookie(response, ACCESS_TOKEN, accessToken.getToken(), cookieMaxAge);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
