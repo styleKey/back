@@ -32,6 +32,7 @@ import com.thekey.stylekeyserver.oauth.service.CustomUserDetailsService;
 import com.thekey.stylekeyserver.oauth.token.AuthTokenProvider;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.web.servlet.function.RequestPredicates.headers;
 
@@ -63,6 +64,9 @@ public class SecurityConfig {
         corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
         corsConfig.setAllowCredentials(true);
         corsConfig.setMaxAge(corsConfig.getMaxAge());
+
+        corsConfig.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+        corsConfig.setExposedHeaders(Collections.singletonList("Authorization"));
 
         corsConfigSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigSource;
@@ -136,10 +140,7 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/oauth/**").permitAll()
-                .requestMatchers("/oauth2/**").permitAll()
-                .requestMatchers("/api/test-question").permitAll()
+                .requestMatchers("/api/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
