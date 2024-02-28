@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
         return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
-    @ExceptionHandler({AmazonServiceException.class, UnsupportedEncodingException.class, MalformedURLException.class, FileAlreadyExistsException.class})
+    @ExceptionHandler(AmazonServiceException.class)
     public ApiResponse handleAmazonServiceException(Exception e) {
         return ApiResponse.of(HttpStatus.SERVICE_UNAVAILABLE, ErrorCode.FILE_UPLOAD_FAILED.getMessage());
     }
@@ -27,9 +27,13 @@ public class GlobalExceptionHandler {
         return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
-    @ExceptionHandler({RuntimeException.class, Exception.class})
-    public ApiResponse handleRuntimeException(IOException e) {
+    @ExceptionHandler(RuntimeException.class)
+    public ApiResponse handleRuntimeException(RuntimeException e) {
         return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    public ApiResponse handleException(Exception e) {
+        return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
+    }
 }
