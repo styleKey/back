@@ -40,7 +40,6 @@ public class S3Service {
     public Image uploadFile(MultipartFile file, Type imageType) throws IOException {
         String fileName = generateFileName(file, imageType);
 
-        // 동일한 이름의 파일이 이미 존재하는지 확인한다.
         if (s3Client.doesObjectExist(bucket, fileName)) {
             throw new FileAlreadyExistsException(S3ErrorMessage.FILE_ALREADY_EXISTS.getMessage());
         }
