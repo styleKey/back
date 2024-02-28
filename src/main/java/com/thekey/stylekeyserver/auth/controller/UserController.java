@@ -24,6 +24,6 @@ public class UserController {
 
         User user = userService.getUser(principal.getUsername());
 
-        return ApiResponse.success("user", user);
+        return ApiResponse.success(user);
     }
 }
