@@ -3,11 +3,11 @@ package com.thekey.stylekeyserver.auth.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.thekey.stylekeyserver.auth.domain.Users;
+import com.thekey.stylekeyserver.auth.entity.User;
 
-public interface UserRepository extends JpaRepository<Users, Long> {
-    Users findByEmailAndPassword(String email, String password);
-    Optional<Users> findByEmail(String email);
-    boolean existsUsersByEmail(String email);
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByUserId(String userId);
 }

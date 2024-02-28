@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.test.service;
 
-import com.thekey.stylekeyserver.auth.domain.Users;
+import com.thekey.stylekeyserver.auth.entity.User;
 import com.thekey.stylekeyserver.auth.repository.UserRepository;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.test.ApiException;
@@ -29,7 +29,7 @@ public class TestResultService {
 
     @Transactional
     public Long createTestResult(TestResultRequest request, String userId) {
-        Users user = userRepository.findByEmail(userId).orElseThrow();
+        User user = userRepository.findByUserId(userId);
         Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
         TestResult testResult = TestResult.create(user, stylePointScores);
 
@@ -39,34 +39,34 @@ public class TestResultService {
 
     private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {
         return request.getAnswerIds().stream()
-            .map(answerId -> testAnswerRepository.findById(answerId)
-                .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_ANSWER_NOT_FOUND)))
-            .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
-            .collect(Collectors.toMap(
-                TestAnswerDetail::getStylePoint,
-                TestAnswerDetail::getScore,
-                Integer::sum));
+                .map(answerId -> testAnswerRepository.findById(answerId)
+                        .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_ANSWER_NOT_FOUND)))
+                .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
+                .collect(Collectors.toMap(
+                        TestAnswerDetail::getStylePoint,
+                        TestAnswerDetail::getScore,
+                        Integer::sum));
     }
 
     public List<TestResultResponse> getTestResults(String userId) {
-        Users user = userRepository.findByEmail(userId).orElseThrow();
+        User user = userRepository.findByUserId(userId);
         List<TestResult> testResults = testResultRepository.findAllByUser(user);
 
         return testResults.stream()
-            .map(TestResultResponse::of)
-            .toList();
+                .map(TestResultResponse::of)
+                .toList();
     }
 
     public TestResultResponse findTestResult(String userId, Long testResultId) {
         TestResult testResult = testResultRepository.findById(testResultId)
-            .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_RESULT_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_RESULT_NOT_FOUND));
         validateOwner(userId, testResult);
         return TestResultResponse.of(testResult);
     }
 
     @Transactional
     public void deleteTestResult(Long testResultId, String userId) {
-        Users user = userRepository.findByEmail(userId).orElseThrow();
+        User user = userRepository.findByUserId(userId);
         testResultRepository.deleteByUserAndId(user, testResultId);
     }
 

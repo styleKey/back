@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.test.controller;
 
-import com.thekey.stylekeyserver.global.oauth.dto.SessionUser;
+import com.thekey.stylekeyserver.oauth.entity.UserPrincipal;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestQuestionResponse;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
@@ -39,30 +39,30 @@ public class TestController {
     @Operation(summary = "Create Test-Result", description = "테스트 결과 생성")
     @PostMapping("/test")
     public ResponseEntity<Void> saveTestResult(@RequestBody TestResultRequest request,
-        @AuthenticationPrincipal SessionUser user) {
-        Long testResultId = testResultService.createTestResult(request, user.getUsername());
+                                               @AuthenticationPrincipal UserPrincipal user) {
+        Long testResultId = testResultService.createTestResult(request, user.getUserId());
         return ResponseEntity.created(URI.create("/api/test-result/" + testResultId)).build();
     }
 
     @Operation(summary = "Read One Test-Result", description = "테스트 결과 단건 조회")
     @GetMapping("/test-result/{testResultId}")
     public ResponseEntity<TestResultResponse> getTestResults(
-        @PathVariable Long testResultId, @AuthenticationPrincipal SessionUser user) {
-        TestResultResponse testResult = testResultService.findTestResult(user.getUsername(), testResultId);
+            @PathVariable Long testResultId, @AuthenticationPrincipal UserPrincipal user) {
+        TestResultResponse testResult = testResultService.findTestResult(user.getUserId(), testResultId);
         return ResponseEntity.ok(testResult);
     }
 
     @Operation(summary = "Read All Test-Result", description = "테스트 결과 전체 조회")
     @GetMapping("/test-result/list")
-    public ResponseEntity<List<TestResultResponse>> getTestResults(@AuthenticationPrincipal SessionUser user) {
-        return ResponseEntity.ok(testResultService.getTestResults(user.getUsername()));
+    public ResponseEntity<List<TestResultResponse>> getTestResults(@AuthenticationPrincipal UserPrincipal user) {
+        return ResponseEntity.ok(testResultService.getTestResults(user.getUserId()));
     }
 
     @Operation(summary = "Delete Test-Result", description = "테스트 결과 삭제")
     @DeleteMapping("/test-result/{testResultId}")
     public ResponseEntity<Void> deleteTestResult(@PathVariable Long testResultId,
-        @AuthenticationPrincipal SessionUser user) {
-        testResultService.deleteTestResult(testResultId, user.getUsername());
+                                                 @AuthenticationPrincipal UserPrincipal user) {
+        testResultService.deleteTestResult(testResultId, user.getUserId());
         return ResponseEntity.ok().build();
     }
 }
