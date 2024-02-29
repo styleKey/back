@@ -13,31 +13,33 @@ import lombok.NoArgsConstructor;
 @JsonNaming(SnakeCaseStrategy.class)
 public class CoordinateLookResponse {
 
-    @Schema(description = "코디룩 ID", example = "1")
+    @Schema(description = "코디룩 ID")
     private Long id;
 
-    @Schema(description = "코디룩 제목", example = "유니크 코디룩1")
+    @Schema(description = "코디룩 제목")
     private String title;
 
-    @Schema(description = "코디룩 이미지 URL", example = "coordinate_look_image")
-    private String image;
+    @Schema(description = "코디룩 이미지 URL")
+    private String coordinateLookImageUrl;
 
-    @Schema(description = "스타일포인트 ID", example = "1")
+    @Schema(description = "스타일포인트 ID")
     private Long stylePointId;
 
     @Builder
-    public CoordinateLookResponse(Long id, String title, String image, Long stylePointId) {
+    public CoordinateLookResponse(Long id, String title, String coordinateLookImageUrl, Long stylePointId) {
         this.id = id;
         this.title = title;
-        this.image = image;
+        this.coordinateLookImageUrl = coordinateLookImageUrl;
         this.stylePointId = stylePointId;
     }
 
     public static CoordinateLookResponse of(CoordinateLook coordinateLook) {
+        String imageUrl = coordinateLook.getImage().getUrl();
+
         return CoordinateLookResponse.builder()
                 .id(coordinateLook.getId())
                 .title(coordinateLook.getTitle())
-                .image(coordinateLook.getImage())
+                .coordinateLookImageUrl(imageUrl)
                 .stylePointId(coordinateLook.getStylePoint().getId())
                 .build();
     }

@@ -17,22 +17,18 @@ import lombok.NoArgsConstructor;
 @JsonNaming(SnakeCaseStrategy.class)
 public class CoordinateLookRequest {
 
-    @Schema(description = "코디룩 제목", example = "유니크 코디룩1")
+    @Schema(description = "코디룩 제목")
     private String title;
 
-    @Schema(description = "코디룩 이미지 URL", example = "coordinate_look_image")
-    private String image;
-
-    @Schema(description = "스타일포인트 ID", example = "1")
+    @Schema(description = "스타일포인트 ID")
     private Long stylePointId;
 
     @Schema(description = "아이템 목록")
     private List<ItemRequest> items;
 
     @Builder
-    public CoordinateLookRequest(String title, String image, Long stylePointId, List<ItemRequest> items) {
+    public CoordinateLookRequest(String title, Long stylePointId, List<ItemRequest> items) {
         this.title = title;
-        this.image = image;
         this.stylePointId = stylePointId;
         this.items = items;
     }
@@ -45,7 +41,6 @@ public class CoordinateLookRequest {
     public CoordinateLook toEntity(StylePoint stylePoint) {
         return CoordinateLook.builder()
                 .title(this.title)
-                .image(this.image)
                 .stylePoint(stylePoint)
                 .build();
     }

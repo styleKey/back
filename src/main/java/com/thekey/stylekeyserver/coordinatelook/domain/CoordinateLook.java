@@ -1,6 +1,7 @@
 package com.thekey.stylekeyserver.coordinatelook.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import java.util.ArrayList;
@@ -26,8 +27,9 @@ public class CoordinateLook {
     @Column(name = "coordinate_look_title")
     private String title;
 
-    @Column(name = "coordinate_look_image")
-    private String image;
+    @OneToOne
+    @JoinColumn(name = "coordinate_look_image_id")
+    private Image image;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "style_point_id")
@@ -39,20 +41,26 @@ public class CoordinateLook {
     private List<Item> items = new ArrayList<>();
 
     @Builder
-    public CoordinateLook(String title, String image, StylePoint stylePoint) {
+    public CoordinateLook(String title, Image image, StylePoint stylePoint) {
         this.title = title;
         this.image = image;
         this.stylePoint = stylePoint;
     }
 
-    public void update(String title, String image, StylePoint stylePoint) {
+    public void update(String title, StylePoint stylePoint) {
         this.title = title;
-        this.image = image;
         this.stylePoint = stylePoint;
     }
 
     public void addItem(Item item) {
         items.add(item);
         item.setCoordinateLook(this);
+    }
+
+    public void setImage(Image newImage) {
+        if(this.image != null) {
+            this.image.setUnused();
+        }
+        this.image = newImage;
     }
 }
