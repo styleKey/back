@@ -26,19 +26,19 @@ public class BrandResponse {
     private String site_url;
 
     @Schema(description = "브랜드 이미지 URL")
-    private String imageUrl;
+    private String brandImageUrl;
 
     @Schema(description = "스타일 포인트 ID")
     private Long stylePointId;
 
     @Builder
-    public BrandResponse(Long id, String title, String title_eng, String site_url, String imageUrl,
+    public BrandResponse(Long id, String title, String title_eng, String site_url, String brandImageUrl,
                          Long stylePointId) {
         this.id = id;
         this.title = title;
         this.title_eng = title_eng;
         this.site_url = site_url;
-        this.imageUrl = imageUrl;
+        this.brandImageUrl = brandImageUrl;
         this.stylePointId = stylePointId;
     }
 
@@ -50,7 +50,7 @@ public class BrandResponse {
                 .title(brand.getTitle())
                 .title_eng(brand.getTitle_eng())
                 .site_url(brand.getSite_url())
-                .imageUrl(imageUrl)
+                .brandImageUrl(imageUrl)
                 .stylePointId(brand.getStylePoint().getId())
                 .build();
     }
