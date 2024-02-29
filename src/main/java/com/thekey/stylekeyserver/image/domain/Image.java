@@ -1,6 +1,8 @@
 package com.thekey.stylekeyserver.image.domain;
 
 import com.thekey.stylekeyserver.brand.domain.Brand;
+import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.item.domain.Item;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -43,6 +45,12 @@ public class Image {
 
     @OneToOne(mappedBy = "image")
     private Brand brand;
+
+    @OneToOne(mappedBy = "image")
+    private Item item;
+
+    @OneToOne(mappedBy = "image")
+    private CoordinateLook coordinateLook;
 
     @Builder
     public Image(String url, Type type, String fileName, Boolean isUsed) {
