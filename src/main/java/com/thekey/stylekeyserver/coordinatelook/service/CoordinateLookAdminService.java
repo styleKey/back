@@ -3,11 +3,16 @@ package com.thekey.stylekeyserver.coordinatelook.service;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
+import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
+import java.io.IOException;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface CoordinateLookAdminService {
 
-    CoordinateLook create(CoordinateLookRequest requestDto);
+    CoordinateLook create(CoordinateLookRequest requestDto,
+                          MultipartFile coordinateLookImageFile,
+                          List<MultipartFile> itemImageFiles) throws Exception;
 
     CoordinateLook findById(Long id);
 
@@ -15,13 +20,13 @@ public interface CoordinateLookAdminService {
 
     List<CoordinateLook> findByStylePointId(Long id);
 
-    CoordinateLook update(Long id, CoordinateLookRequest requestDto);
+    CoordinateLook update(Long id, CoordinateLookRequest requestDto,
+                          MultipartFile coordinateLookImageFile) throws IOException;
 
-    void deleteById(Long id);
+    CoordinateLook updateItem(Long coordinateLookId, Long itemId, ItemRequest requestDto,
+                              MultipartFile itemImageFile) throws IOException;
+
+    void delete(Long id);
 
     void deleteItemFromCoordinateLook(Long coordinateLookId, Long itemId);
-
-//    CoordinateLookResponse convertToDto(CoordinateLook coordinateLook);
-
-//    CoordinateLookResponse convertToResponseDto(CoordinateLook coordinateLook);
 }
