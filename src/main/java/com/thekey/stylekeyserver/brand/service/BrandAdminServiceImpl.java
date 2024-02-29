@@ -67,16 +67,19 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
-        Image oldImage = brand.getImage();
-        if (oldImage != null) {
-            oldImage.setUnused();
-            imageRepository.save(oldImage);
+        if(!imageFile.isEmpty()) {
+            Image oldImage = brand.getImage();
+            if (oldImage != null) {
+                oldImage.setUnused();
+                imageRepository.save(oldImage);
 
-            Image newImage = s3Service.uploadFile(imageFile, Type.BRAND);
-            imageRepository.save(newImage);
-            brand.setImage(newImage);
-            brandRepository.save(brand);
+                Image newImage = s3Service.uploadFile(imageFile, Type.BRAND);
+                imageRepository.save(newImage);
+                brand.setImage(newImage);
+                brandRepository.save(brand);
+            }
         }
+
         brand.update(requestDto.getTitle(),
                 requestDto.getTitle_eng(),
                 requestDto.getSite_url(),
