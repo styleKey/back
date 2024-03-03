@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "test_result_datail")
+@Table(name = "test_result_detail")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TestResultDetail {
