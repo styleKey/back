@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.s3;
+package com.thekey.stylekeyserver.common.s3;
 
 import lombok.Getter;
 

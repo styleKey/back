@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.config.properties;
+package com.thekey.stylekeyserver.common.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

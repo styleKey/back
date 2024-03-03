@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.config.security;
+package com.thekey.stylekeyserver.common.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
-package com.thekey.stylekeyserver.common;
+package com.thekey.stylekeyserver.common.exception;
 
 import com.amazonaws.AmazonServiceException;
-import com.thekey.stylekeyserver.s3.S3ErrorMessage;
+import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;

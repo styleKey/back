@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.config.security;
+package com.thekey.stylekeyserver.common.security;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,13 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.thekey.stylekeyserver.auth.repository.UserRefreshTokenRepository;
-import com.thekey.stylekeyserver.config.properties.AppProperties;
-import com.thekey.stylekeyserver.config.properties.CorsProperties;
-import com.thekey.stylekeyserver.oauth.entity.RoleType;
+import com.thekey.stylekeyserver.common.properties.AppProperties;
+import com.thekey.stylekeyserver.common.properties.CorsProperties;
 import com.thekey.stylekeyserver.oauth.exception.RestAuthenticationEntryPoint;
 import com.thekey.stylekeyserver.oauth.filter.TokenAuthenticationFilter;
 import com.thekey.stylekeyserver.oauth.handler.OAuth2AuthenticationFailureHandler;
@@ -33,8 +31,6 @@ import com.thekey.stylekeyserver.oauth.token.AuthTokenProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.springframework.web.servlet.function.RequestPredicates.headers;
 
 
 @Configuration
@@ -141,20 +137,21 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/*").permitAll()
+                .requestMatchers("/admin/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
 
                 .oauth2Login()
-                    .authorizationEndpoint().baseUri("/oauth2/authorization")
-                    .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                .authorizationEndpoint().baseUri("/oauth2/authorization")
+                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
                 .and()
-                    .redirectionEndpoint()
-                    .baseUri("/login/oauth2/code/*") // /login/oauth2/code/**, /*/oauth2/code/* // /oauth/callback/kakao ///oauth/redirect
+                .redirectionEndpoint()
+                .baseUri("/login/oauth2/code/*") // /login/oauth2/code/**, /*/oauth2/code/* // /oauth/callback/kakao ///oauth/redirect
                 .and()
-                    .userInfoEndpoint().userService(oAuth2UserService)
+                .userInfoEndpoint().userService(oAuth2UserService)
                 .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler())
-                    .failureHandler(oAuth2AuthenticationFailureHandler())
+                .successHandler(oAuth2AuthenticationSuccessHandler())
+                .failureHandler(oAuth2AuthenticationFailureHandler())
 
 
 
