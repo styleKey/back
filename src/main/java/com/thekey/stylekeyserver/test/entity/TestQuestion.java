@@ -21,6 +21,9 @@ public class TestQuestion {
     @Column(name = "test_question_content")
     private String content;
 
+    @Column(name = "test_question_image_url")
+    private String imageUrl;
+
     @OneToMany(mappedBy = "testQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TestAnswer> testAnswers = new ArrayList<>();
 }
