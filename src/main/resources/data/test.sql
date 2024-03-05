@@ -1,13 +1,19 @@
 -- TEST_QUESTION
-INSERT INTO TEST_QUESTION (TEST_QUESTION_CONTENT)
-VALUES ('약속 시간에 늦어 급하게 옷을 입고 나간 당신, 지금 입고 있는 옷의 색깔은?'),
-       ('외출을 위해 옷장 앞에 선 당신, 선호하는 옷의 핏은?'),
-       ('플리마켓에서 마음에 드는 가방을 발견했다! 당신이 선택한 가방의 스타일은?'),
-       ('우연히 지나가다가 보게 된 신발이 자꾸 눈에 아른거려… 이건 너무 내 스타일이야!'),
-       ('오랜만에 맞이한 휴일! 시간에 쫓기지 않는 여유로운 하루, 어떻게 보내면 좋을까?'),
-       ('계절도 바뀌어가니 옷을 사야겠어! 어디에서 쇼핑을 할까?'),
-       ('마음에 드는 옷이 너무 많아! 이 중에 하나만 골라야 한다면… 가장 중요하게 생각하는 요소는?'),
-       ('내가 좋아하는 패션 유튜버가 오랜만에 영상을 올렸어! 어떤 영상이 올라왔을까?');
+INSERT INTO TEST_QUESTION (TEST_QUESTION_CONTENT, TEST_QUESTION_IMAGE_URL)
+VALUES ('약속 시간에 늦어 급하게 옷을 입고 나간 당신, 지금 입고 있는 옷의 색깔은?',
+        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q1.jpg'),
+       ('외출을 위해 옷장 앞에 선 당신, 선호하는 옷의 핏은?', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q2.jpg'),
+       ('플리마켓에서 마음에 드는 가방을 발견했다! 당신이 선택한 가방의 스타일은?',
+        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q3.jpg'),
+       ('우연히 지나가다가 보게 된 신발이 자꾸 눈에 아른거려… 이건 너무 내 스타일이야!',
+        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q4.jpg'),
+       ('오랜만에 맞이한 휴일! 시간에 쫓기지 않는 여유로운 하루, 어떻게 보내면 좋을까?',
+        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q5.jpg'),
+       ('계절도 바뀌어가니 옷을 사야겠어! 어디에서 쇼핑을 할까?', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q6.jpg'),
+       ('마음에 드는 옷이 너무 많아! 이 중에 하나만 골라야 한다면… 가장 중요하게 생각하는 요소는?',
+        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q7.jpg'),
+       ('내가 좋아하는 패션 유튜버가 오랜만에 영상을 올렸어! 어떤 영상이 올라왔을까?',
+        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q8.jpg');
 
 -- TEST_ANSWER
 INSERT INTO test_answer(test_answer_content, test_question_id)
@@ -41,7 +47,7 @@ VALUES ('"무난한게 최고야!” 무채색 계열의 컬러', 1),
        ('"사랑스럽고 부드러운 이미지가 중요해!"', 7),
        ('[직장인 vlog] 일주일 동안 입은 데일리 룩 모음. ZIP', 8),
        ('[GRWM] 같이 힙합 페스티벌 가요! #옷 추천 #코디', 8),
-       ('[하이틴 감성] 90년대 영화  클루리스 룩 따라 입기!', 8),
+       ('[하이틴 감성] 90년대 영화 클루리스 룩 따라 입기!', 8),
        ('[운동 vlog] 브랜드별 바람막이 리뷰! TOP 3 추천', 8);
 
 -- TEST_ANSWER_DETAIL
