@@ -3,6 +3,7 @@ package com.thekey.stylekeyserver.test.controller;
 import com.thekey.stylekeyserver.oauth.entity.UserPrincipal;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestQuestionResponse;
+import com.thekey.stylekeyserver.test.dto.response.TestResultCreateResponse;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
 import com.thekey.stylekeyserver.test.service.TestQuestionService;
 import com.thekey.stylekeyserver.test.service.TestResultService;
@@ -38,16 +39,16 @@ public class TestController {
 
     @Operation(summary = "Create Test-Result", description = "테스트 결과 생성")
     @PostMapping("/test")
-    public ResponseEntity<Void> saveTestResult(@RequestBody TestResultRequest request,
-                                               @AuthenticationPrincipal UserPrincipal user) {
+    public ResponseEntity<TestResultCreateResponse> saveTestResult(@RequestBody TestResultRequest request,
+        @AuthenticationPrincipal UserPrincipal user) {
         Long testResultId = testResultService.createTestResult(request, user.getUserId());
-        return ResponseEntity.created(URI.create("/api/test-result/" + testResultId)).build();
+        return ResponseEntity.ok(TestResultCreateResponse.of(testResultId));
     }
 
     @Operation(summary = "Read One Test-Result", description = "테스트 결과 단건 조회")
     @GetMapping("/test-result/{testResultId}")
     public ResponseEntity<TestResultResponse> getTestResults(
-            @PathVariable Long testResultId, @AuthenticationPrincipal UserPrincipal user) {
+        @PathVariable Long testResultId, @AuthenticationPrincipal UserPrincipal user) {
         TestResultResponse testResult = testResultService.findTestResult(user.getUserId(), testResultId);
         return ResponseEntity.ok(testResult);
     }
@@ -61,7 +62,7 @@ public class TestController {
     @Operation(summary = "Delete Test-Result", description = "테스트 결과 삭제")
     @DeleteMapping("/test-result/{testResultId}")
     public ResponseEntity<Void> deleteTestResult(@PathVariable Long testResultId,
-                                                 @AuthenticationPrincipal UserPrincipal user) {
+        @AuthenticationPrincipal UserPrincipal user) {
         testResultService.deleteTestResult(testResultId, user.getUserId());
         return ResponseEntity.ok().build();
     }
