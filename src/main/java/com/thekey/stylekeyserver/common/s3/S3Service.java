@@ -58,10 +58,9 @@ public class S3Service {
 
     public void deleteFile(String fileUrl, Type imageType)
             throws AmazonServiceException, UnsupportedEncodingException, MalformedURLException {
-        String folderName = getFolderName(imageType);
         URL url = new URL(fileUrl);
         String fileName = url.getPath();
-        String fullFileName = folderName + fileName.substring(fileName.indexOf("/"));
+        String fullFileName = fileName.substring(1);
         String decodedFullFileName = URLDecoder.decode(fullFileName, StandardCharsets.UTF_8.toString());
         s3Client.deleteObject(new DeleteObjectRequest(bucket, decodedFullFileName));
     }

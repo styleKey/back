@@ -9,12 +9,15 @@ import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminServi
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
+import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
-import com.thekey.stylekeyserver.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.S3Service;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -31,6 +34,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     private final ImageRepository imageRepository;
     private final BrandAdminService brandAdminService;
     private final CategoryService categoryService;
+    private final ImageService imageService;
     private final S3Service s3Service;
 
     @Override
@@ -86,6 +90,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
             if (oldImage != null) {
                 oldImage.setUnused();
                 imageRepository.save(oldImage);
+                imageService.deleteUnusedImages();
 
                 Image newImage = s3Service.uploadFile(imageFile, Type.ITEM);
                 imageRepository.save(newImage);
@@ -104,7 +109,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + id));
 
@@ -113,6 +118,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
         if (image != null) {
             image.setUnused();
             imageRepository.save(image);
+            imageService.deleteUnusedImages();
         }
         itemRepository.deleteById(id);
     }

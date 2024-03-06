@@ -4,6 +4,8 @@ import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminServi
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +20,6 @@ public interface ItemAdminService {
 
     Item update(Long coordinateLookId, Long itemId, ItemRequest requestDto, MultipartFile imageFile) throws IOException;
 
-    void delete(Long id);
+    void delete(Long id) throws MalformedURLException, UnsupportedEncodingException;
 
 }

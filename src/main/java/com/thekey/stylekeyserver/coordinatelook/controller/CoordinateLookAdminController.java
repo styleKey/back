@@ -1,7 +1,7 @@
 package com.thekey.stylekeyserver.coordinatelook.controller;
 
-import com.thekey.stylekeyserver.common.ApiResponse;
-import com.thekey.stylekeyserver.common.ErrorCode;
+import com.thekey.stylekeyserver.common.exception.ApiResponse;
+import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookDetailsResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;
@@ -11,6 +11,8 @@ import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -122,7 +124,7 @@ public class CoordinateLookAdminController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete CoordinateLook ", description = "코디룩 정보 삭제")
-    public ApiResponse<Void> delete(@PathVariable Long id) {
+    public ApiResponse<Void> delete(@PathVariable Long id) throws MalformedURLException, UnsupportedEncodingException {
         coordinateLookAdminService.delete(id);
         return ApiResponse.success();
     }

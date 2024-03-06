@@ -1,7 +1,7 @@
 package com.thekey.stylekeyserver.item.controller;
 
-import com.thekey.stylekeyserver.common.ApiResponse;
-import com.thekey.stylekeyserver.common.ErrorCode;
+import com.thekey.stylekeyserver.common.exception.ApiResponse;
+import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.response.ItemResponse;

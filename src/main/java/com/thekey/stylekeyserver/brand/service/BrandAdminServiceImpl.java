@@ -7,11 +7,14 @@ import com.thekey.stylekeyserver.brand.repository.BrandRepository;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
-import com.thekey.stylekeyserver.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.S3Service;
+import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     private final BrandRepository brandRepository;
     private final ImageRepository imageRepository;
     private final StylePointAdminService stylePointAdminService;
+    private final ImageService imageService;
     private final S3Service s3Service;
 
     @Override
@@ -72,6 +76,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
             if (oldImage != null) {
                 oldImage.setUnused();
                 imageRepository.save(oldImage);
+                imageService.deleteUnusedImages();
 
                 Image newImage = s3Service.uploadFile(imageFile, Type.BRAND);
                 imageRepository.save(newImage);
@@ -90,7 +95,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
 
@@ -99,6 +104,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
         if (image != null) {
             image.setUnused();
             imageRepository.save(image);
+            imageService.deleteUnusedImages();
         }
         brandRepository.deleteById(id);
     }

@@ -7,15 +7,18 @@ import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookReposit
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
+import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
-import com.thekey.stylekeyserver.s3.S3ErrorMessage;
-import com.thekey.stylekeyserver.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
+import com.thekey.stylekeyserver.common.s3.S3Service;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +39,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     private final StylePointAdminService stylePointAdminService;
     private final ItemAdminService itemAdminService;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
     private final S3Service s3Service;
 
     @Override
@@ -117,6 +121,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
             if (coordinateLookOldImage != null) {
                 coordinateLookOldImage.setUnused();
                 imageRepository.save(coordinateLookOldImage);
+                imageService.deleteUnusedImages();
 
                 Image newImage = s3Service.uploadFile(coordinateLookImageFile, Type.COORDINATE_LOOK);
                 imageRepository.save(newImage);
@@ -146,7 +151,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         CoordinateLook coordinateLook = coordinateLookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + id));
 
@@ -165,6 +170,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
             image.setUnused();
             imageRepository.save(image);
         }
+        imageService.deleteUnusedImages();
         coordinateLookRepository.deleteById(id);
     }
 
@@ -190,7 +196,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
             if (coordinateLook.getItems().isEmpty()) {
                 coordinateLookRepository.delete(coordinateLook);
             }
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | MalformedURLException | UnsupportedEncodingException e) {
             throw new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + itemId);
         }
     }

@@ -42,8 +42,8 @@ public class Image {
     @Column(name = "image_is_used")
     private Boolean isUsed;
 
-    @Column(name = "delete_at")
-    private LocalDateTime deleteAt;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @OneToOne(mappedBy = "image")
     private Brand brand;
@@ -64,6 +64,6 @@ public class Image {
 
     public void setUnused() {
         this.isUsed = false;
-        this.deleteAt = LocalDateTime.now().plusDays(1);
+        this.deletedAt = LocalDateTime.now().plusDays(1);
     }
 }
