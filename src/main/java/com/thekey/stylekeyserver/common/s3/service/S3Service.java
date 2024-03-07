@@ -1,9 +1,10 @@
-package com.thekey.stylekeyserver.common.s3;
+package com.thekey.stylekeyserver.common.s3.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import java.io.File;

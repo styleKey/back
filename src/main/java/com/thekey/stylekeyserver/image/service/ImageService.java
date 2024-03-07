@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.image.service;
 
-import com.thekey.stylekeyserver.common.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import java.io.UnsupportedEncodingException;

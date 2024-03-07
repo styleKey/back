@@ -7,7 +7,7 @@ import com.thekey.stylekeyserver.brand.repository.BrandRepository;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
-import com.thekey.stylekeyserver.common.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;

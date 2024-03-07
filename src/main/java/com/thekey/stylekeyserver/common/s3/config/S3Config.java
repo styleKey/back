@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.common.s3;
+package com.thekey.stylekeyserver.common.s3.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

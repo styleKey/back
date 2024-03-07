@@ -14,7 +14,7 @@ import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
-import com.thekey.stylekeyserver.common.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;

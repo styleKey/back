@@ -13,7 +13,7 @@ import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
 import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
-import com.thekey.stylekeyserver.common.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import java.io.IOException;

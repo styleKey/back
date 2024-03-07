@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.image.service;
 
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
-import com.thekey.stylekeyserver.common.s3.S3Service;
+import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
