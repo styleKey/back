@@ -19,16 +19,16 @@ public class ImageBatchService {
     private final ImageRepository imageRepository;
     private final S3Service s3Service;
 
-//    @Scheduled(cron = "0 0 0 * * *")  // 매일 새벽 0시에 실행
-//    public void deleteUnusedImages() throws MalformedURLException, UnsupportedEncodingException {
-//        List<Image> unusedImages = imageRepository.findByIsUsed(false);
-//
-//        for (Image image : unusedImages) {
-//            // 이미지가 24시간 이상 사용되지 않았다면 S3에서 이미지 파일 삭제
-//            if (image.getDeletedAt().isBefore(LocalDateTime.now())) {
-//                s3Service.deleteFile(image.getUrl(), image.getType());
-//                imageRepository.delete(image);
-//            }
-//        }
-//    }
+    @Scheduled(cron = "0 0 0 * * *")  // 매일 새벽 0시에 실행
+    public void deleteUnusedImages() throws MalformedURLException, UnsupportedEncodingException {
+        List<Image> unusedImages = imageRepository.findByIsUsed(false);
+
+        for (Image image : unusedImages) {
+            // 이미지가 24시간 이상 사용되지 않았다면 S3에서 이미지 파일 삭제
+            if (image.getDeletedAt().isBefore(LocalDateTime.now())) {
+                s3Service.deleteFile(image.getUrl(), image.getType());
+                imageRepository.delete(image);
+            }
+        }
+    }
 }
