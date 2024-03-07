@@ -1,5 +1,6 @@
 package com.thekey.stylekeyserver.coordinatelook.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(SnakeCaseStrategy.class)
 public class ApiCoordinateLookResponse {
 
