@@ -1,7 +1,7 @@
-package com.thekey.stylekeyserver.common;
+package com.thekey.stylekeyserver.common.exception;
 
 import com.amazonaws.AmazonServiceException;
-import com.thekey.stylekeyserver.s3.S3ErrorMessage;
+import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ApiResponse handleRuntimeException(RuntimeException e) {
-        return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
+        return ApiResponse.of(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

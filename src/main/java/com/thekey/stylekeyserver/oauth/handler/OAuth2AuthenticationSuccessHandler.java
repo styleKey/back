@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.thekey.stylekeyserver.auth.entity.UserRefreshToken;
 import com.thekey.stylekeyserver.auth.repository.UserRefreshTokenRepository;
-import com.thekey.stylekeyserver.config.properties.AppProperties;
+import com.thekey.stylekeyserver.common.properties.AppProperties;
 import com.thekey.stylekeyserver.oauth.entity.ProviderType;
 import com.thekey.stylekeyserver.oauth.entity.RoleType;
 import com.thekey.stylekeyserver.oauth.info.OAuth2UserInfo;

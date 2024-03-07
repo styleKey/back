@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thekey.stylekeyserver.auth.entity.User;
 import com.thekey.stylekeyserver.auth.service.UserService;
-import com.thekey.stylekeyserver.common.ApiResponse;
+import com.thekey.stylekeyserver.common.exception.ApiResponse;
 
 
 @RestController

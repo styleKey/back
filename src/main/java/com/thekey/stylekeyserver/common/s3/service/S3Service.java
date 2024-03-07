@@ -1,9 +1,10 @@
-package com.thekey.stylekeyserver.s3;
+package com.thekey.stylekeyserver.common.s3.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import java.io.File;
@@ -58,10 +59,9 @@ public class S3Service {
 
     public void deleteFile(String fileUrl, Type imageType)
             throws AmazonServiceException, UnsupportedEncodingException, MalformedURLException {
-        String folderName = getFolderName(imageType);
         URL url = new URL(fileUrl);
         String fileName = url.getPath();
-        String fullFileName = folderName + fileName.substring(fileName.indexOf("/"));
+        String fullFileName = fileName.substring(1);
         String decodedFullFileName = URLDecoder.decode(fullFileName, StandardCharsets.UTF_8.toString());
         s3Client.deleteObject(new DeleteObjectRequest(bucket, decodedFullFileName));
     }

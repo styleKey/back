@@ -1,6 +1,8 @@
 package com.thekey.stylekeyserver.image.domain;
 
 import com.thekey.stylekeyserver.brand.domain.Brand;
+import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.item.domain.Item;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "image")
 public class Image {
 
     @Id
@@ -38,11 +42,17 @@ public class Image {
     @Column(name = "image_is_used")
     private Boolean isUsed;
 
-    @Column(name = "delete_at")
-    private LocalDateTime deleteAt;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @OneToOne(mappedBy = "image")
     private Brand brand;
+
+    @OneToOne(mappedBy = "image")
+    private Item item;
+
+    @OneToOne(mappedBy = "image")
+    private CoordinateLook coordinateLook;
 
     @Builder
     public Image(String url, Type type, String fileName, Boolean isUsed) {
@@ -54,6 +64,6 @@ public class Image {
 
     public void setUnused() {
         this.isUsed = false;
-        this.deleteAt = LocalDateTime.now().plusDays(1);
+        this.deletedAt = LocalDateTime.now().plusDays(1);
     }
 }

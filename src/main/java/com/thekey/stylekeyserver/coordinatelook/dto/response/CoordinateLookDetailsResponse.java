@@ -25,7 +25,7 @@ public class CoordinateLookDetailsResponse {
     private String title;
 
     @Schema(description = "코디룩 이미지 URL", example = "coordinate_look_image")
-    private String image;
+    private String imageUrl;
 
     @Schema(description = "스타일포인트 ID", example = "1")
     private Long stylePointId;
@@ -34,10 +34,10 @@ public class CoordinateLookDetailsResponse {
     private List<ItemResponse> items;
 
     @Builder
-    public CoordinateLookDetailsResponse(Long id, String title, String image, Long stylePointId, List<ItemResponse> items) {
+    public CoordinateLookDetailsResponse(Long id, String title, String imageUrl, Long stylePointId, List<ItemResponse> items) {
         this.id = id;
         this.title = title;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.stylePointId = stylePointId;
         this.items = items;
     }
@@ -52,10 +52,12 @@ public class CoordinateLookDetailsResponse {
                 .map(ItemResponse::of)
                 .collect(Collectors.toList());
 
+        String imageUrl = coordinateLook.getImage().getUrl();
+
         return CoordinateLookDetailsResponse.builder()
                 .id(coordinateLook.getId())
                 .title(coordinateLook.getTitle())
-                .image(coordinateLook.getImage())
+                .imageUrl(imageUrl)
                 .stylePointId(coordinateLook.getStylePoint().getId())
                 .items(itemResponses)
                 .build();

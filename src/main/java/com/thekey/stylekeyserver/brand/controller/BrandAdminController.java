@@ -4,10 +4,12 @@ import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
-import com.thekey.stylekeyserver.common.ApiResponse;
-import com.thekey.stylekeyserver.common.ErrorCode;
+import com.thekey.stylekeyserver.common.exception.ApiResponse;
+import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,10 +36,10 @@ public class BrandAdminController {
     @PostMapping
     @Operation(summary = "Create Brand", description = "브랜드 정보 등록")
     public ApiResponse createBrand(@RequestPart BrandRequest requestDto,
-                                   @RequestPart("imageFile") MultipartFile imageFile) throws Exception {
+                                   @RequestPart("brand_imageFile") MultipartFile imageFile) throws Exception {
 
-        if (imageFile == null || imageFile.isEmpty()) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_IMAGE_FORMAT.getMessage());
+        if (imageFile.isEmpty()) {
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage());
         }
         brandAdminService.create(requestDto, imageFile);
         return ApiResponse.success();
@@ -56,7 +58,7 @@ public class BrandAdminController {
 
     @GetMapping
     @Operation(summary = "Read All Brands", description = "브랜드 정보 전체 조회")
-    public ApiResponse getBrands() {
+    public ApiResponse<List<BrandResponse>> getBrands() {
         List<Brand> brands = brandAdminService.findAll();
         List<BrandResponse> response = brands.stream()
                 .map(BrandResponse::of)
@@ -93,7 +95,8 @@ public class BrandAdminController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Brand", description = "브랜드 정보 삭제")
-    public ApiResponse deleteBrand(@PathVariable Long id) {
+    public ApiResponse<Void> deleteBrand(@PathVariable Long id)
+            throws MalformedURLException, UnsupportedEncodingException {
         brandAdminService.delete(id);
         return ApiResponse.success();
     }

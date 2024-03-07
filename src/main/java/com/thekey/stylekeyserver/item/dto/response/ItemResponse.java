@@ -13,45 +13,46 @@ import lombok.NoArgsConstructor;
 @JsonNaming(SnakeCaseStrategy.class)
 public class ItemResponse {
 
-    @Schema(description = "아이템 ID", example = "1")
+    @Schema(description = "아이템 ID")
     private Long id;
 
-    @Schema(description = "아이템 이름", example = "유니크 아이템1")
+    @Schema(description = "아이템 이름")
     private String title;
 
-    @Schema(description = "아이템 판매 링크", example = "http://m.odlyworkshop.com/product/good-grief-mesh-tee/374/category/72/display/1/")
+    @Schema(description = "아이템 판매 링크")
     private String sales_link;
 
-    @Schema(description = "아이템 이미지", example = "item_image")
-    private String image;
+    @Schema(description = "아이템 이미지")
+    private String itemImageUrl;
 
-    @Schema(description = "브랜드 ID", example = "3")
+    @Schema(description = "브랜드 ID")
     private Long brandId;
 
-    @Schema(description = "카테고리 ID", example = "1")
+    @Schema(description = "카테고리 ID")
     private Long categoryId;
 
-    @Schema(description = "코디룩 ID", example = "1")
+    @Schema(description = "코디룩 ID")
     private Long coordinateLookId;
 
     @Builder
-    public ItemResponse(Long id, String title, String sales_link, String image, Long brandId, Long categoryId, Long coordinateLookId) {
+    public ItemResponse(Long id, String title, String sales_link, String itemImageUrl, Long brandId, Long categoryId, Long coordinateLookId) {
         this.id = id;
         this.title = title;
         this.sales_link = sales_link;
-        this.image = image;
+        this.itemImageUrl = itemImageUrl;
         this.brandId = brandId;
         this.categoryId = categoryId;
         this.coordinateLookId = coordinateLookId;
     }
 
-    /*TODO: 아이템 단건 조회 시 해당 코디룩 ID도 같이 넣으면 좋을거같음*/
     public static ItemResponse of(Item item) {
+        String imageUrl = item.getImage().getUrl();
+
         return ItemResponse.builder()
                 .id(item.getId())
                 .title(item.getTitle())
                 .sales_link(item.getSales_link())
-                .image(item.getImage())
+                .itemImageUrl(imageUrl)
                 .brandId(item.getBrand().getId())
                 .categoryId(item.getCategory().getId())
                 .coordinateLookId(item.getCoordinateLook().getId())

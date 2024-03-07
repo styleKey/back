@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.common;
+package com.thekey.stylekeyserver.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

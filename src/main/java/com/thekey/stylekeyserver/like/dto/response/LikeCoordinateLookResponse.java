@@ -1,17 +1,16 @@
-package com.thekey.stylekeyserver.coordinatelook.dto.response;
+package com.thekey.stylekeyserver.like.dto.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@JsonNaming(SnakeCaseStrategy.class)
-public class CoordinateLookResponse {
+public class LikeCoordinateLookResponse {
 
     @Schema(description = "코디룩 ID")
     private Long id;
@@ -26,17 +25,17 @@ public class CoordinateLookResponse {
     private Long stylePointId;
 
     @Builder
-    public CoordinateLookResponse(Long id, String title, String coordinateLookImageUrl, Long stylePointId) {
+    public LikeCoordinateLookResponse(Long id, String title, String coordinateLookImageUrl, Long stylePointId) {
         this.id = id;
         this.title = title;
         this.coordinateLookImageUrl = coordinateLookImageUrl;
         this.stylePointId = stylePointId;
     }
 
-    public static CoordinateLookResponse of(CoordinateLook coordinateLook) {
+    public static LikeCoordinateLookResponse of(CoordinateLook coordinateLook) {
         String imageUrl = coordinateLook.getImage().getUrl();
 
-        return CoordinateLookResponse.builder()
+        return LikeCoordinateLookResponse.builder()
                 .id(coordinateLook.getId())
                 .title(coordinateLook.getTitle())
                 .coordinateLookImageUrl(imageUrl)

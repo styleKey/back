@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.category.domain.Category;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.image.domain.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "item")
 public class Item {
 
     @Id
@@ -26,8 +28,9 @@ public class Item {
     @Column(name = "item_sales_link")
     private String sales_link;
 
-    @Column(name = "item_image")
-    private String image;
+    @OneToOne
+    @JoinColumn(name = "item_image_id")
+    private Image image;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
@@ -43,7 +46,7 @@ public class Item {
     private Category category;
 
     @Builder
-    public Item(String title, String sales_link, String image, Brand brand, Category category) {
+    public Item(String title, String sales_link, Image image, Brand brand, Category category) {
         this.title = title;
         this.sales_link = sales_link;
         this.image = image;
@@ -51,12 +54,18 @@ public class Item {
         this.category = category;
     }
 
-    public void update(String title, String sales_link, String image, Brand brand, Category category) {
+    public void update(String title, String sales_link, Brand brand, Category category) {
         this.title = title;
         this.sales_link = sales_link;
-        this.image = image;
         this.brand = brand;
         this.category = category;
+    }
+
+    public void setImage(Image newImage) {
+        if(this.image != null) {
+            this.image.setUnused();
+        }
+        this.image = newImage;
     }
 
     public void setCoordinateLook(CoordinateLook coordinateLook) {
