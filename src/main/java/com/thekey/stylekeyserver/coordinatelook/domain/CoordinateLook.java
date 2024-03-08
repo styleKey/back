@@ -36,6 +36,9 @@ public class CoordinateLook {
     @JsonIgnore
     private StylePoint stylePoint;
 
+    @Column(name = "like_count")
+    private Integer likeCount;
+
     @OneToMany(mappedBy = "coordinateLook", cascade = CascadeType.ALL, orphanRemoval = true)    // 코디룩 엔티티를 삭제할 때 해당 엔티티에 속한 아이템들도 함께 삭제
     @JsonIgnore
     private List<Item> items = new ArrayList<>();
@@ -44,6 +47,7 @@ public class CoordinateLook {
     public CoordinateLook(String title, Image image, StylePoint stylePoint) {
         this.title = title;
         this.image = image;
+        this.likeCount = 0;
         this.stylePoint = stylePoint;
     }
 
@@ -62,5 +66,9 @@ public class CoordinateLook {
             this.image.setUnused();
         }
         this.image = newImage;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 }
