@@ -4,69 +4,104 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thekey.stylekeyserver.common.redis.RedisService;
 import com.thekey.stylekeyserver.coordinatelook.CoordinateLookErrorMessage;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookResponse;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
-import com.thekey.stylekeyserver.like.dto.response.LikeCoordinateLookResponse;
 import jakarta.persistence.EntityNotFoundException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class LikeCoordinateLookService {
 
+    private static final String USER_LIKES_KEY = "user:%s:likes";
+    private static final String COORDINATE_LOOK_LIKES_KEY = "coordinateLook:%s:likes";
+
     private final CoordinateLookRepository coordinateLookRepository;
     private final RedisService redisService;
 
-
-    @Transactional
     public void addLikeCoordinateLook(List<Long> coordinateLookIds, String userId)
             throws JsonProcessingException {
 
-        List<LikeCoordinateLookResponse> likeCoordinateLookResponses = new ArrayList<>();
+        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        Set<Long> userLikes = redisService.getData(userLikesKey);
+        if (userLikes == null) {
+            userLikes = new HashSet<>();
+        }
+
         for (Long coordinateLookId : coordinateLookIds) {
+
+            // 사용자가 이미 좋아요를 눌렀는지 확인
+            if (userLikes.contains(coordinateLookId)) {
+                continue;
+            }
+
+            String coordinateLookLikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
+            redisService.increaseLikeCount(String.valueOf(coordinateLookLikesKey));
+            userLikes.add(coordinateLookId);
+
+            // 좋아요 개수 증가 DB에 업데이트
             CoordinateLook coordinateLook = coordinateLookRepository.findById(coordinateLookId)
                     .orElseThrow(() -> new EntityNotFoundException(
                             CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get()
                     ));
-
-            LikeCoordinateLookResponse likeCoordinateLookResponse = LikeCoordinateLookResponse.of(coordinateLook);
-            likeCoordinateLookResponses.add(likeCoordinateLookResponse);
-
-            redisService.increaseLikeCount(String.valueOf(coordinateLookId));
-            redisService.setData("like:" + userId, likeCoordinateLookResponses);
+            coordinateLook.setLikeCount(coordinateLook.getLikeCount() + 1);
+            coordinateLookRepository.save(coordinateLook);
         }
+
+        redisService.setData(userLikesKey, userLikes);
     }
 
-    @Transactional(readOnly = true)
-    public List<LikeCoordinateLookResponse> getLikeCoordinateLooks(String userId) throws JsonProcessingException {
-        List<LikeCoordinateLookResponse> likeCoordinateLookResponses = redisService.getData("like:" + userId,
-                new TypeReference<List<LikeCoordinateLookResponse>>() {
-                });
-
-        if (likeCoordinateLookResponses != null) {
-            return likeCoordinateLookResponses;
-        } else {
-            return new ArrayList<>();
+    public List<ApiCoordinateLookResponse> getLikeCoordinateLooks(String userId) throws JsonProcessingException {
+        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        Set<Long> userLikes = redisService.getData(userLikesKey);
+        if (userLikes == null) {
+            return Collections.emptyList();
         }
+
+        // 코디룩 정보는 DB에서 조회
+        List<CoordinateLook> coordinateLooks = coordinateLookRepository.findAllById(userLikes);
+
+        // ApiCoordinateLookResponse 형태로 반환
+        return coordinateLooks.stream()
+                .map(coordinateLook -> {
+                    String coordinateLookLikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLook.getId());
+                    // 좋아요 개수는 캐시에서 조회
+                    Integer likeCount = redisService.getLikeCount(coordinateLookLikesKey);
+                    return ApiCoordinateLookResponse.of(coordinateLook, likeCount);
+                })
+                .collect(Collectors.toList());
     }
 
-    public Integer getLikeCount(Long coordinateLookId) {
-        return (Integer) redisService.getLikeCount(String.valueOf(coordinateLookId));
+    public Integer getCoordinateLookLikeCount(Long coordinateLookId) {
+        String coordinateLookKikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
+        return redisService.getLikeCount(coordinateLookKikesKey);
     }
 
     public void deleteLikeCoordinateLook(List<Long> coordinateLookIds, String userId) throws JsonProcessingException {
+        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        Set<Long> userLikes = redisService.getData(userLikesKey);
+        if (userLikes != null) {
+            for (Long coordinateLookId : coordinateLookIds) {
+                String coordinateLookLikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
+                redisService.decreaseLikeCount(coordinateLookLikesKey);
+                userLikes.remove(coordinateLookId);
 
-        for (Long coordinateLookId : coordinateLookIds) {
-            redisService.decreaseLikeCount(String.valueOf(coordinateLookId));
+                // 좋아요 개수 감소 DB에 업데이트
+                CoordinateLook coordinateLook = coordinateLookRepository.findById(coordinateLookId)
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get()
+                        ));
+
+                coordinateLook.setLikeCount(coordinateLook.getLikeCount() - 1);
+                coordinateLookRepository.save(coordinateLook);
+            }
         }
-
-        redisService.deleteData("like:" + userId, new TypeReference<List<LikeCoordinateLookResponse>>() {
-        });
+        redisService.deleteData(userLikesKey);
     }
-
 }
