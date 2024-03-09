@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LikeCoordinateLookService {
 
-    private static final String USER_LIKES_KEY = "user:%s:likes";
+    private static final String USER_LIKES_KEY = "user:%s:coordinateLook_likes";
     private static final String COORDINATE_LOOK_LIKES_KEY = "coordinateLook:%s:likes";
 
     private final CoordinateLookRepository coordinateLookRepository;
@@ -42,7 +42,7 @@ public class LikeCoordinateLookService {
             }
 
             String coordinateLookLikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
-            redisService.increaseLikeCount(String.valueOf(coordinateLookLikesKey));
+            redisService.increaseLikeCount(coordinateLookLikesKey);
             userLikes.add(coordinateLookId);
 
             // 좋아요 개수 증가 DB에 업데이트
@@ -74,8 +74,7 @@ public class LikeCoordinateLookService {
                     // 좋아요 개수는 캐시에서 조회
                     Integer likeCount = redisService.getLikeCount(coordinateLookLikesKey);
                     return ApiCoordinateLookResponse.of(coordinateLook, likeCount);
-                })
-                .collect(Collectors.toList());
+                }).collect(Collectors.toList());
     }
 
     public Integer getCoordinateLookLikeCount(Long coordinateLookId) {
@@ -102,6 +101,6 @@ public class LikeCoordinateLookService {
                 coordinateLookRepository.save(coordinateLook);
             }
         }
-        redisService.deleteData(userLikesKey);
+        redisService.setData(userLikesKey, userLikes);
     }
 }
