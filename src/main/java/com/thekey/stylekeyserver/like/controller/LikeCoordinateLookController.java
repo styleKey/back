@@ -30,12 +30,7 @@ public class LikeCoordinateLookController {
         return ApiResponse.success();
     }
 
-    @Operation(summary = "사용자가 좋아요한 코디룩 목록 조회")
-    @GetMapping("/api/users/likes/coordinate-looks")
-    public ApiResponse<List<ApiCoordinateLookResponse>> getLikeCoordinateLooks() throws JsonProcessingException {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ApiResponse.success(likeCoordinateLookService.getLikeCoordinateLooks(userId));
-    }
+
 
     @Operation(summary = "코디룩 좋아요 취소")
     @DeleteMapping("/api/coordinate-looks/likes")
