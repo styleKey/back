@@ -45,6 +45,9 @@ public class Item {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "like_count")
+    private Integer likeCount;
+
     @Builder
     public Item(String title, String sales_link, Image image, Brand brand, Category category) {
         this.title = title;
@@ -52,6 +55,7 @@ public class Item {
         this.image = image;
         this.brand = brand;
         this.category = category;
+        this.likeCount = 0;
     }
 
     public void update(String title, String sales_link, Brand brand, Category category) {
@@ -70,5 +74,9 @@ public class Item {
 
     public void setCoordinateLook(CoordinateLook coordinateLook) {
         this.coordinateLook = coordinateLook;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 }
