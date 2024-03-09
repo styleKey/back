@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @Operation(summary = "사용자가 좋아요한 아이템 목록 조회")
-    @GetMapping("likes/items")
+    @GetMapping("/likes/items")
     public ApiResponse<List<ApiItemResponse>> getLikeItems() throws JsonProcessingException {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         return ApiResponse.success(likeItemService.getLikeItems(userId));
