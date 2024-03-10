@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/items")
 public class ItemAdminController {
 
-    private final ItemAdminService itemAdminService;
-    private final CoordinateLookAdminService coordinateLookAdminService;
+    private ItemAdminService itemAdminService;
+
+    @Autowired
+    public void setItemAdminService(ItemAdminService itemAdminService) {
+        this.itemAdminService = itemAdminService;
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One Item", description = "아이템 정보 단건 조회")

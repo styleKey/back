@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/admin/coordinate-looks")
 public class CoordinateLookAdminController {
 
-    private final CoordinateLookAdminService coordinateLookAdminService;
+    private CoordinateLookAdminService coordinateLookAdminService;
+
+    @Autowired
+    public void setCoordinateLookAdminService(CoordinateLookAdminService coordinateLookAdminService) {
+        this.coordinateLookAdminService = coordinateLookAdminService;
+    }
 
     @PostMapping
     @Operation(summary = "Create CoordinateLook", description = "코디룩 정보 등록")

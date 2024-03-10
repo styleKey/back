@@ -27,6 +27,8 @@ import java.util.NoSuchElementException;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,10 +39,15 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
     private final CoordinateLookRepository coordinateLookRepository;
     private final StylePointAdminService stylePointAdminService;
-    private final ItemAdminService itemAdminService;
+    private ItemAdminService itemAdminService;
     private final ImageRepository imageRepository;
     private final ImageService imageService;
     private final S3Service s3Service;
+
+    @Autowired
+    public void setItemAdminService(@Lazy ItemAdminService itemAdminService) {
+        this.itemAdminService = itemAdminService;
+    }
 
     @Override
     @Transactional
@@ -153,12 +160,13 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     @Transactional
     public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         CoordinateLook coordinateLook = coordinateLookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + id));
 
         List<Item> items = coordinateLook.getItems();
-        for(Item item : items) {
+        for (Item item : items) {
             Image image = item.getImage();
-            if(image != null) {
+            if (image != null) {
                 image.setUnused();
                 imageRepository.save(image);
             }
@@ -166,7 +174,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
         Image image = coordinateLook.getImage();
 
-        if(image != null) {
+        if (image != null) {
             image.setUnused();
             imageRepository.save(image);
         }

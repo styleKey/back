@@ -22,6 +22,8 @@ import java.util.List;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +38,12 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     private final CategoryService categoryService;
     private final ImageService imageService;
     private final S3Service s3Service;
-    private final CoordinateLookAdminService coordinateLookAdminService;
+    private CoordinateLookAdminService coordinateLookAdminService;
+
+    @Autowired
+    public void setCoordinateLookAdminService(@Lazy CoordinateLookAdminService coordinateLookAdminService) {
+        this.coordinateLookAdminService = coordinateLookAdminService;
+    }
 
     @Override
     @Transactional
