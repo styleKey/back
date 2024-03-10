@@ -136,8 +136,11 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/*").permitAll()
-                .requestMatchers("/admin/*").permitAll()
+                .requestMatchers("/api/test-questions").permitAll()
+//                .requestMatchers("/admin/**").permitAll()
+                .requestMatchers("/api/test").authenticated()
+                .requestMatchers("/api/users").authenticated()
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
 

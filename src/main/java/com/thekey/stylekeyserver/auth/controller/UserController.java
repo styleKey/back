@@ -1,6 +1,8 @@
 package com.thekey.stylekeyserver.auth.controller;
 
+import com.thekey.stylekeyserver.oauth.entity.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,18 +14,14 @@ import com.thekey.stylekeyserver.common.exception.ApiResponse;
 
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
     @GetMapping
-    public ApiResponse getUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userService.getUser(principal.getUsername());
-
-        return ApiResponse.success(user);
+    public ApiResponse getUser(@AuthenticationPrincipal UserPrincipal user) {
+        User userDetails = userService.getUser(user.getUsername());
+        return ApiResponse.success(userDetails);
     }
 }
