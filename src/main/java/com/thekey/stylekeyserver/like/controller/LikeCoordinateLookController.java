@@ -24,7 +24,7 @@ public class LikeCoordinateLookController {
     public ApiResponse<Void> like(@RequestBody LikeCoordinateLookRequest request,
                                   @AuthenticationPrincipal UserPrincipal user) throws JsonProcessingException {
         likeCoordinateLookService.addLikeCoordinateLook(request.getCoordinateLookIds(), user.getUserId());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     @Operation(summary = "코디룩 좋아요 취소")
@@ -32,6 +32,6 @@ public class LikeCoordinateLookController {
     public ApiResponse<Void> unlike(@RequestBody LikeCoordinateLookRequest request,
                                     @AuthenticationPrincipal UserPrincipal user) throws JsonProcessingException {
         likeCoordinateLookService.deleteLikeCoordinateLook(request.getCoordinateLookIds(), user.getUserId());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }

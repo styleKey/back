@@ -39,10 +39,10 @@ public class BrandAdminController {
                                    @RequestPart("brand_imageFile") MultipartFile imageFile) throws Exception {
 
         if (imageFile.isEmpty()) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage());
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
         }
         brandAdminService.create(requestDto, imageFile);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     @GetMapping("/{id}")
@@ -52,8 +52,8 @@ public class BrandAdminController {
 
         return optional.map(brand -> {
             BrandResponse response = BrandResponse.of(brand);
-            return ApiResponse.success(response);
-        }).orElse(ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage()));
+            return ApiResponse.ok(response);
+        }).orElse(ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage()));
     }
 
     @GetMapping
@@ -64,7 +64,7 @@ public class BrandAdminController {
                 .map(BrandResponse::of)
                 .collect(Collectors.toList());
 
-        return ApiResponse.success(response);
+        return ApiResponse.ok(response);
     }
 
     @GetMapping("style-points/{id}")
@@ -75,7 +75,7 @@ public class BrandAdminController {
                 .map(BrandResponse::of)
                 .collect(Collectors.toList());
 
-        return ApiResponse.success(response);
+        return ApiResponse.ok(response);
     }
 
     @PutMapping("/{id}")
@@ -85,12 +85,12 @@ public class BrandAdminController {
                                    @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
             throws Exception {
         if (id == null) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage());
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
         }
 
         Brand brand = brandAdminService.update(id, requestDto, imageFile);
         BrandResponse response = BrandResponse.of(brand);
-        return ApiResponse.success(response);
+        return ApiResponse.ok(response);
     }
 
     @DeleteMapping("/{id}")
@@ -98,7 +98,7 @@ public class BrandAdminController {
     public ApiResponse<Void> deleteBrand(@PathVariable Long id)
             throws MalformedURLException, UnsupportedEncodingException {
         brandAdminService.delete(id);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
 }

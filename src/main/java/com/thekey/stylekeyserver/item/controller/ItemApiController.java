@@ -23,18 +23,18 @@ public class ItemApiController {
     @GetMapping("/{id}")
     @Operation(summary = "Read One Item", description = "아이템 정보 단건 조회")
     public ApiResponse<ApiItemResponse> getItem(@PathVariable Long id) {
-        return ApiResponse.success(itemService.getItemWithLikes(id));
+        return ApiResponse.ok(itemService.getItemWithLikes(id));
     }
 
     @GetMapping
     @Operation(summary = "Read All Items", description = "아이템 정보 전체 조회")
     public ApiResponse<List<ApiItemResponse>> getItems() {
-        return ApiResponse.success(itemService.getAllItemsWithLikes());
+        return ApiResponse.ok(itemService.getAllItemsWithLikes());
     }
 
     @GetMapping("/coordinate-looks/{id}")
     @Operation(summary = "Read All Items By CoordinateLookId", description = "코디룩 ID에 해당하는 아이템 목록 전체 조회")
     public ApiResponse<List<ApiItemResponse>> getItemsByCoordinateLookId(@PathVariable Long id) {
-        return ApiResponse.success(itemService.getItemWithLikesByCoordinateLookId(id));
+        return ApiResponse.ok(itemService.getItemWithLikesByCoordinateLookId(id));
     }
 }

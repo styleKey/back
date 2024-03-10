@@ -1,5 +1,8 @@
 package com.thekey.stylekeyserver.oauth.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.USER_NOT_FOUND;
+
+import com.thekey.stylekeyserver.common.exception.ApiException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

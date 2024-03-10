@@ -33,11 +33,12 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> of(HttpStatus status, String message) {
         return new ApiResponse<>(status, message);
     }
-    public static <T> ApiResponse<T> success(T data) {
+
+    public static <T> ApiResponse<T> ok(T data) {
         return of(HttpStatus.OK, SuccessCode.SUCCESS.getMessage(), data);
     }
 
-    public static <T> ApiResponse<T> success() {
+    public static <T> ApiResponse<T> ok() {
         return of(HttpStatus.OK, SuccessCode.SUCCESS.getMessage());
     }
 

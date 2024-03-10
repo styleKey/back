@@ -24,7 +24,7 @@ public class LikeItemController {
     public ApiResponse<Void> like(@RequestBody LikeItemRequest request,
                                   @AuthenticationPrincipal UserPrincipal user) throws JsonProcessingException {
         likeItemService.addLikeItem(request.getItemIds(), user.getUserId());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     @Operation(description = "아이템 좋아요 취소")
@@ -32,6 +32,6 @@ public class LikeItemController {
     public ApiResponse<Void> unlike(@RequestBody LikeItemRequest request,
                                     @AuthenticationPrincipal UserPrincipal user) throws JsonProcessingException {
         likeItemService.deleteLikeItem(request.getItemIds(), user.getUserId());
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }
