@@ -68,8 +68,11 @@ public class TestResultService {
     }
 
     private User findUser(String userId) {
-        return userRepository.findByUserId(userId)
-            .orElseThrow(() -> new ApiException(AUTHENTICATED_FAIL));
+        User findUser = userRepository.findByUserId(userId);
+        if (findUser == null) {
+            throw new ApiException(AUTHENTICATED_FAIL);
+        }
+        return findUser;
     }
 
     private void validateOwner(String userId, TestResult testResult) {
