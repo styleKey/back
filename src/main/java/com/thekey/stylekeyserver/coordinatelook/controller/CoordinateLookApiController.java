@@ -3,9 +3,7 @@ package com.thekey.stylekeyserver.coordinatelook.controller;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookDetailsResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookResponse;
-import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
 import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookService;
-import com.thekey.stylekeyserver.like.service.LikeCoordinateLookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/coordinate-looks")
 public class CoordinateLookApiController {
 
-    private final CoordinateLookAdminService coordinateLookAdminService;
-    private final LikeCoordinateLookService likeCoordinateLookService;
     private final CoordinateLookService coordinateLookService;
 
     @GetMapping("/{id}")

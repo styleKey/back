@@ -4,8 +4,8 @@ import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookDetailsResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookResponse;
 import com.thekey.stylekeyserver.like.service.LikeCoordinateLookService;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,28 +23,19 @@ public class CoordinateLookService {
     }
 
     public List<ApiCoordinateLookResponse> getAllCoordinateLooksWithLikes() {
-        List<CoordinateLook> coordinateLooks = coordinateLookAdminService.findAll();
-        List<ApiCoordinateLookResponse> response = new ArrayList<>();
-
-        for (CoordinateLook coordinateLook : coordinateLooks) {
-            Integer likeCount = likeCoordinateLookService.getCoordinateLookLikeCount(coordinateLook.getId());
-            ApiCoordinateLookResponse coordinateLookResponse = ApiCoordinateLookResponse.of(coordinateLook, likeCount);
-            response.add(coordinateLookResponse);
-        }
-
-        return response;
+        return coordinateLookAdminService.findAll().stream()
+                .map(this::buildApiCoordinateLookResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<ApiCoordinateLookResponse> getCoordinateLookWithLikesByStylePointId(Long id) {
-        List<CoordinateLook> coordinateLooks = coordinateLookAdminService.findByStylePointId(id);
-        List<ApiCoordinateLookResponse> response = new ArrayList<>();
+    public List<ApiCoordinateLookResponse> getCoordinateLookWithLikesByStylePointId(Long stylePointId) {
+        return coordinateLookAdminService.findByStylePointId(stylePointId).stream()
+                .map(this::buildApiCoordinateLookResponse)
+                .collect(Collectors.toList());
+    }
 
-        for (CoordinateLook coordinateLook : coordinateLooks) {
-            Integer likeCount = likeCoordinateLookService.getCoordinateLookLikeCount(id);
-            ApiCoordinateLookResponse coordinateLookResponse = ApiCoordinateLookResponse.of(coordinateLook, likeCount);
-            response.add(coordinateLookResponse);
-        }
-
-        return response;
+    private ApiCoordinateLookResponse buildApiCoordinateLookResponse(CoordinateLook coordinateLook) {
+        Integer likeCount = likeCoordinateLookService.getCoordinateLookLikeCount(coordinateLook.getId());
+        return ApiCoordinateLookResponse.of(coordinateLook, likeCount);
     }
 }
