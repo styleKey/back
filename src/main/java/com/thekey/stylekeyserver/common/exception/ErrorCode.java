@@ -31,6 +31,10 @@ public enum ErrorCode {
     USER_ACCOUNT_NOT_EXIST(NOT_FOUND, "계정 정보가 존재하지 않습니다."),
     USER_NOT_FOUND(NOT_FOUND, "사용자가 존재하지 않습니다."),
 
+    /* 인증 관련 */
+    AUTHENTICATED_FAIL(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
+    AUTHORIZED_FAIL(HttpStatus.FORBIDDEN, "인가 권한이 없는 사용자입니다."),
+
     /* 패션 콘텐츠 관리 관련 */
     FILE_UPLOAD_FAILED(BAD_REQUEST, "이미지 등록이 실패하였습니다."),
     FAIL_FILE_UPDATE(BAD_REQUEST, "이미지 수정이 실패하였습니다."),
