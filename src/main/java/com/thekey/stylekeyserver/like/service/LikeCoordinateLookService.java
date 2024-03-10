@@ -28,7 +28,7 @@ public class LikeCoordinateLookService {
     public void addLikeCoordinateLook(List<Long> coordinateLookIds, String userId)
             throws JsonProcessingException {
 
-        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getData(userLikesKey);
         if (userLikes == null) {
             userLikes = new HashSet<>();
@@ -41,7 +41,7 @@ public class LikeCoordinateLookService {
                 continue;
             }
 
-            String coordinateLookLikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
+            String coordinateLookLikesKey = getCoordinateLookLikesKey(coordinateLookId);
             redisService.increaseLikeCount(coordinateLookLikesKey);
             userLikes.add(coordinateLookId);
 
@@ -58,7 +58,7 @@ public class LikeCoordinateLookService {
     }
 
     public List<ApiCoordinateLookResponse> getLikeCoordinateLooks(String userId) throws JsonProcessingException {
-        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getData(userLikesKey);
         if (userLikes == null) {
             return Collections.emptyList();
@@ -70,7 +70,7 @@ public class LikeCoordinateLookService {
         // ApiCoordinateLookResponse 형태로 반환
         return coordinateLooks.stream()
                 .map(coordinateLook -> {
-                    String coordinateLookLikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLook.getId());
+                    String coordinateLookLikesKey = getCoordinateLookLikesKey(coordinateLook.getId());
                     // 좋아요 개수는 캐시에서 조회
                     Integer likeCount = redisService.getLikeCount(coordinateLookLikesKey);
                     return ApiCoordinateLookResponse.of(coordinateLook, likeCount);
@@ -78,16 +78,15 @@ public class LikeCoordinateLookService {
     }
 
     public Integer getCoordinateLookLikeCount(Long coordinateLookId) {
-        String coordinateLookKikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
-        return redisService.getLikeCount(coordinateLookKikesKey);
+        return redisService.getLikeCount(getCoordinateLookLikesKey(coordinateLookId));
     }
 
     public void deleteLikeCoordinateLook(List<Long> coordinateLookIds, String userId) throws JsonProcessingException {
-        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getData(userLikesKey);
         if (userLikes != null) {
             for (Long coordinateLookId : coordinateLookIds) {
-                String coordinateLookLikesKey = String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
+                String coordinateLookLikesKey = getCoordinateLookLikesKey(coordinateLookId);
                 redisService.decreaseLikeCount(coordinateLookLikesKey);
                 userLikes.remove(coordinateLookId);
 
@@ -102,5 +101,13 @@ public class LikeCoordinateLookService {
             }
         }
         redisService.setData(userLikesKey, userLikes);
+    }
+
+    private static String getUserLikesKey(String userId) {
+        return String.format(USER_LIKES_KEY, userId);
+    }
+
+    private static String getCoordinateLookLikesKey(Long coordinateLookId) {
+        return String.format(COORDINATE_LOOK_LIKES_KEY, coordinateLookId);
     }
 }

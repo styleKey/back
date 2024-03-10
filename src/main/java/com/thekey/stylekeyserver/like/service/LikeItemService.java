@@ -26,23 +26,24 @@ public class LikeItemService {
     private final RedisService redisService;
 
     public void addLikeItem(List<Long> itemIds, String userId) throws JsonProcessingException {
-        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getData(userLikesKey);
-        if(userLikes == null) {
+        if (userLikes == null) {
             userLikes = new HashSet<>();
         }
 
-        for(Long itemId : itemIds) {
-            if(userLikes.contains(itemId)) {
+        for (Long itemId : itemIds) {
+            if (userLikes.contains(itemId)) {
                 continue;
             }
 
-            String itemLikesKey = String.format(ITEM_LIKES_KEY, itemId);
+            String itemLikesKey = getItemLikesKey(itemId);
             redisService.increaseLikeCount(itemLikesKey);
             userLikes.add(itemId);
 
-            Item item = itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get()));
-            item.setLikeCount(item.getLikeCount() +1);
+            Item item = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get()));
+            item.setLikeCount(item.getLikeCount() + 1);
             itemRepository.save(item);
         }
 
@@ -50,10 +51,10 @@ public class LikeItemService {
     }
 
     public List<ApiItemResponse> getLikeItems(String userId) throws JsonProcessingException {
-        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getData(userLikesKey);
 
-        if(userLikes == null) {
+        if (userLikes == null) {
             return Collections.emptyList();
         }
 
@@ -61,33 +62,42 @@ public class LikeItemService {
 
         return items.stream()
                 .map(item -> {
-                    String itemLikesKey = String.format(ITEM_LIKES_KEY, item.getId());
+                    String itemLikesKey = getItemLikesKey(item.getId());
                     Integer likeCount = redisService.getLikeCount(itemLikesKey);
                     return ApiItemResponse.of(item, likeCount);
                 }).collect(Collectors.toList());
     }
 
+
     public Integer getItemLikeCount(Long itemId) {
-        String itemLikesKey = String.format(ITEM_LIKES_KEY, itemId);
-        return redisService.getLikeCount(itemLikesKey);
+        return redisService.getLikeCount(getItemLikesKey(itemId));
     }
 
     public void deleteLikeItem(List<Long> itemIds, String userId) throws JsonProcessingException {
-        String userLikesKey = String.format(USER_LIKES_KEY, userId);
+        String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getData(userLikesKey);
 
-        if(userLikes != null) {
-            for(Long itemId : itemIds) {
-                String itemLikesKey = String.format(ITEM_LIKES_KEY, itemId);
+        if (userLikes != null) {
+            for (Long itemId : itemIds) {
+                String itemLikesKey = getItemLikesKey(itemId);
                 redisService.decreaseLikeCount(itemLikesKey);
                 userLikes.remove(itemId);
 
-                Item item = itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get()));
-                item.setLikeCount(item.getLikeCount() -1);
+                Item item = itemRepository.findById(itemId)
+                        .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get()));
+                item.setLikeCount(item.getLikeCount() - 1);
                 itemRepository.save(item);
             }
         }
 
         redisService.setData(userLikesKey, userLikes);
+    }
+
+    private static String getUserLikesKey(String userId) {
+        return String.format(USER_LIKES_KEY, userId);
+    }
+
+    private static String getItemLikesKey(Long item) {
+        return String.format(ITEM_LIKES_KEY, item);
     }
 }
