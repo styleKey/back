@@ -26,7 +26,7 @@ public class TestResult extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "email")
+    @JoinColumn(name = "USER_SEQ")
     private User user;
 
     @OneToMany(mappedBy = "testResult", cascade = CascadeType.ALL, orphanRemoval = true)
