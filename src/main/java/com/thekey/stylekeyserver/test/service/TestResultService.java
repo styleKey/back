@@ -1,10 +1,13 @@
 package com.thekey.stylekeyserver.test.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.TEST_ANSWER_NOT_FOUND;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.TEST_RESULT_NOT_FOUND;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.UNAUTHORIZED_TEST_RESULT;
+
 import com.thekey.stylekeyserver.auth.entity.User;
 import com.thekey.stylekeyserver.auth.repository.UserRepository;
+import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
-import com.thekey.stylekeyserver.test.ApiException;
-import com.thekey.stylekeyserver.test.TestErrorMessage;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
 import com.thekey.stylekeyserver.test.entity.TestAnswerDetail;
@@ -39,13 +42,13 @@ public class TestResultService {
 
     private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {
         return request.getAnswerIds().stream()
-                .map(answerId -> testAnswerRepository.findById(answerId)
-                        .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_ANSWER_NOT_FOUND)))
-                .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
-                .collect(Collectors.toMap(
-                        TestAnswerDetail::getStylePoint,
-                        TestAnswerDetail::getScore,
-                        Integer::sum));
+            .map(answerId -> testAnswerRepository.findById(answerId)
+                .orElseThrow(() -> new ApiException(TEST_ANSWER_NOT_FOUND)))
+            .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
+            .collect(Collectors.toMap(
+                TestAnswerDetail::getStylePoint,
+                TestAnswerDetail::getScore,
+                Integer::sum));
     }
 
     public List<TestResultResponse> getTestResults(String userId) {
@@ -53,13 +56,13 @@ public class TestResultService {
         List<TestResult> testResults = testResultRepository.findAllByUser(user);
 
         return testResults.stream()
-                .map(TestResultResponse::of)
-                .toList();
+            .map(TestResultResponse::of)
+            .toList();
     }
 
     public TestResultResponse findTestResult(String userId, Long testResultId) {
         TestResult testResult = testResultRepository.findById(testResultId)
-                .orElseThrow(() -> new ApiException(TestErrorMessage.TEST_RESULT_NOT_FOUND));
+            .orElseThrow(() -> new ApiException(TEST_RESULT_NOT_FOUND));
         validateOwner(userId, testResult);
         return TestResultResponse.of(testResult);
     }
@@ -72,7 +75,7 @@ public class TestResultService {
 
     private void validateOwner(String userId, TestResult testResult) {
         if (!testResult.isOwner(userId)) {
-            throw new ApiException(TestErrorMessage.UNAUTHORIZED_TEST_RESULT);
+            throw new ApiException(UNAUTHORIZED_TEST_RESULT);
         }
     }
 }
