@@ -3,7 +3,7 @@ INSERT INTO TEST_QUESTION (TEST_QUESTION_CONTENT, TEST_QUESTION_IMAGE_URL)
 VALUES ('약속 시간에 늦어 급하게 옷을 입고 나간 당신, \n지금 입고 있는 옷의 색깔은?',
         'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q1.jpg'),
        ('외출을 위해 옷장 앞에 선 당신, \n선호하는 옷의 핏은?', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q2.jpg'),
-       ('플리마켓에서 마음에 드는 가방을 \n발견했다! \n당신이 선택한 가방의 스타일은?',
+       ('플리마켓에서 마음에 드는 가방을 발견했다! \n당신이 선택한 가방의 스타일은?',
         'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q3.jpg'),
        ('우연히 지나가다가 보게 된 신발이 \n자꾸 눈에 아른거려… \n이건 너무 내 스타일이야!',
         'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q4.jpg'),
