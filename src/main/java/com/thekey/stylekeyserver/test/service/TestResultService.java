@@ -32,12 +32,18 @@ public class TestResultService {
     private final TestAnswerRepository testAnswerRepository;
 
     @Transactional
-    public Long createTestResult(TestResultRequest request, String userId) {
+    public Long createAndSaveTestResultForUser(TestResultRequest request, String userId) {
         User user = findUser(userId);
         Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
         TestResult testResult = TestResult.create(user, stylePointScores);
         TestResult savedTestResult = testResultRepository.save(testResult);
         return savedTestResult.getId();
+    }
+
+    public TestResultResponse createTestResultWithoutUser(TestResultRequest request) {
+        Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
+        TestResult testResult = TestResult.createWithoutUser(stylePointScores);
+        return TestResultResponse.of(testResult);
     }
 
     public List<TestResultResponse> getTestResults(String userId) {

@@ -39,12 +39,16 @@ public class TestController {
 
     @Operation(summary = "Create Test-Result", description = "테스트 결과 생성")
     @PostMapping("/test")
-    public ApiResponse<CreateResponse> saveTestResult(
+    public ApiResponse<Object> saveTestResult(
         @RequestBody @Validated TestResultRequest request,
         @AuthenticationPrincipal UserPrincipal user
     ) {
-        Long testResultId = testResultService.createTestResult(request, user.getUserId());
-        return ApiResponse.ok(CreateResponse.of(testResultId));
+        if (user != null) {
+            Long testResultId = testResultService.createAndSaveTestResultForUser(request, user.getUserId());
+            return ApiResponse.ok(CreateResponse.of(testResultId));
+        } else {
+            return ApiResponse.ok(testResultService.createTestResultWithoutUser(request));
+        }
     }
 
     @Operation(summary = "Read One Test-Result", description = "테스트 결과 단건 조회")
