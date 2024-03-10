@@ -1,5 +1,8 @@
 package com.thekey.stylekeyserver.oauth.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.USER_NOT_FOUND;
+
+import com.thekey.stylekeyserver.common.exception.ApiException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,10 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserId(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Can not find username.");
-        }
+        User user = userRepository.findByUserId(username)
+            .orElseThrow(() -> new ApiException(USER_NOT_FOUND));
         return UserPrincipal.create(user);
     }
 }

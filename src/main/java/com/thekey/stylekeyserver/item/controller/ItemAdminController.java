@@ -39,8 +39,8 @@ public class ItemAdminController {
 
         return optional.map(item -> {
             ItemResponse response = ItemResponse.of(item);
-            return ApiResponse.success(response);
-        }).orElse(ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage()));
+            return ApiResponse.ok(response);
+        }).orElse(ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage()));
     }
 
     @GetMapping
@@ -51,7 +51,7 @@ public class ItemAdminController {
                 .map(ItemResponse::of)
                 .collect(Collectors.toList());
 
-        return ApiResponse.success(responses);
+        return ApiResponse.ok(responses);
     }
 
     @GetMapping("/coordinate-looks/{id}")
@@ -62,6 +62,6 @@ public class ItemAdminController {
                 .map(ItemResponse::of)
                 .toList();
 
-        return ApiResponse.success(responses);
+        return ApiResponse.ok(responses);
     }
 }
