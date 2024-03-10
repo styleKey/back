@@ -1,31 +1,32 @@
 package com.thekey.stylekeyserver.oauth.token;
 
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 
+import com.thekey.stylekeyserver.oauth.service.CustomUserDetailsService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import com.thekey.stylekeyserver.oauth.exception.TokenValidFailedException;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Slf4j
+@AllArgsConstructor
 public class AuthTokenProvider {
 
     private final Key key;
+    private final CustomUserDetailsService customUserDetailsService;
+
     private static final String AUTHORITIES_KEY = "role";
 
-    public AuthTokenProvider(String secret) {
+
+    public AuthTokenProvider(String secret, CustomUserDetailsService customUserDetailsService) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     public AuthToken createAuthToken(String id, Date expiry) {
@@ -43,17 +44,8 @@ public class AuthTokenProvider {
     public Authentication getAuthentication(AuthToken authToken) {
 
         if(authToken.validate()) {
-
-            Claims claims = authToken.getTokenClaims();
-            Collection<? extends GrantedAuthority> authorities =
-                    Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
-
-            log.debug("claims subject := [{}]", claims.getSubject());
-            User principal = new User(claims.getSubject(), "", authorities);
-
-            return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(authToken.getTokenClaims().getSubject());
+            return new UsernamePasswordAuthenticationToken(userDetails, authToken, userDetails.getAuthorities());
         } else {
             throw new TokenValidFailedException();
         }
