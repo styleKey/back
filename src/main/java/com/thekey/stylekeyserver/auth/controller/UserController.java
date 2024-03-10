@@ -31,20 +31,20 @@ public class UserController {
     @GetMapping
     public ApiResponse getUser(@AuthenticationPrincipal UserPrincipal user) {
         User userDetails = userService.getUser(user.getUsername());
-        return ApiResponse.success(userDetails);
+        return ApiResponse.ok(userDetails);
     }
 
     @Operation(summary = "사용자가 좋아요한 코디룩 목록 조회")
     @GetMapping("/likes/coordinate-looks")
     public ApiResponse<List<ApiCoordinateLookResponse>> getLikeCoordinateLooks(@AuthenticationPrincipal UserPrincipal user)
             throws JsonProcessingException {
-        return ApiResponse.success(likeCoordinateLookService.getLikeCoordinateLooks(user.getUserId()));
+        return ApiResponse.ok(likeCoordinateLookService.getLikeCoordinateLooks(user.getUserId()));
     }
 
     @Operation(summary = "사용자가 좋아요한 아이템 목록 조회")
     @GetMapping("/likes/items")
     public ApiResponse<List<ApiItemResponse>> getLikeItems(@AuthenticationPrincipal UserPrincipal user)
             throws JsonProcessingException {
-        return ApiResponse.success(likeItemService.getLikeItems(user.getUserId()));
+        return ApiResponse.ok(likeItemService.getLikeItems(user.getUserId()));
     }
 }

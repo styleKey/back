@@ -24,18 +24,18 @@ public class CoordinateLookApiController {
     @GetMapping("/{id}")
     @Operation(summary = "Read One CoordinateLook With Items", description = "코디룩 단건 조회. 해당 코디룩 안에 속한 아이템을 함께 반환한다.")
     public ApiResponse<ApiCoordinateLookDetailsResponse> getCoordinateLook(@PathVariable Long id) {
-        return ApiResponse.success(coordinateLookService.getCoordinateLookWithLikes(id));
+        return ApiResponse.ok(coordinateLookService.getCoordinateLookWithLikes(id));
     }
 
     @GetMapping
     @Operation(summary = "Read All CoordinateLook", description = "코디룩 정보 전체 조회")
     public ApiResponse<List<ApiCoordinateLookResponse>> getCoordinateLooks() {
-        return ApiResponse.success(coordinateLookService.getAllCoordinateLooksWithLikes());
+        return ApiResponse.ok(coordinateLookService.getAllCoordinateLooksWithLikes());
     }
 
     @GetMapping("/style-points/{id}")
     @Operation(summary = "Read All CoordinateLooks By StylePointId", description = "스타일포인트 ID에 해당하는 코디룩 목록 전체 조회")
     public ApiResponse<List<ApiCoordinateLookResponse>> getCoordinateLooksByStylePointId(@PathVariable Long id) {
-        return ApiResponse.success(coordinateLookService.getCoordinateLookWithLikesByStylePointId(id));
+        return ApiResponse.ok(coordinateLookService.getCoordinateLookWithLikesByStylePointId(id));
     }
 }
