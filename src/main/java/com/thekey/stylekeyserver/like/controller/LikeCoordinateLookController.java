@@ -29,20 +29,20 @@ public class LikeCoordinateLookController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println("유저 정보: " + userId);
         likeCoordinateLookService.addLikeCoordinateLook(request.getCoordinateLookIds(), userId);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     @Operation(summary = "사용자가 좋아요한 코디룩 목록 조회")
     @GetMapping("/api/users/likes/coordinate-looks")
     public ApiResponse<List<LikeCoordinateLookResponse>> getLikeCoordinateLooks() throws JsonProcessingException {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ApiResponse.success(likeCoordinateLookService.getLikeCoordinateLooks(userId));
+        return ApiResponse.ok(likeCoordinateLookService.getLikeCoordinateLooks(userId));
     }
 
     @Operation(summary = "코디룩 별 좋아요 개수 조회")
     @GetMapping("/api/coordinate-looks/{id}/likes/count")
     public ApiResponse getLikeCount(@PathVariable Long id) {
-        return ApiResponse.success(likeCoordinateLookService.getLikeCount(id));
+        return ApiResponse.ok(likeCoordinateLookService.getLikeCount(id));
     }
 
     @Operation(summary = "코디룩 좋아요 취소")
@@ -50,6 +50,6 @@ public class LikeCoordinateLookController {
     public ApiResponse<Void> unlike(@RequestBody LikeCoordinateLookRequest request) throws JsonProcessingException {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         likeCoordinateLookService.deleteLikeCoordinateLook(request.getCoordinateLookIds(), userId);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }

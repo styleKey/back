@@ -43,10 +43,10 @@ public class CoordinateLookAdminController {
                               @RequestPart("item_imageFile") List<MultipartFile> itemImageFiles) throws Exception {
 
         if (coordinateLookImageFile.isEmpty() || itemImageFiles.isEmpty()) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage());
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
         }
         coordinateLookAdminService.create(requestDto, coordinateLookImageFile, itemImageFiles);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     @GetMapping("/{id}")
@@ -57,8 +57,8 @@ public class CoordinateLookAdminController {
         return optional.map(coordinateLook -> {
             CoordinateLookDetailsResponse response = CoordinateLookDetailsResponse.of(coordinateLook,
                     coordinateLook.getItems());
-            return ApiResponse.success(response);
-        }).orElse(ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage()));
+            return ApiResponse.ok(response);
+        }).orElse(ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage()));
     }
 
     @GetMapping
@@ -69,7 +69,7 @@ public class CoordinateLookAdminController {
                 .map(CoordinateLookResponse::of)
                 .collect(Collectors.toList());
 
-        return ApiResponse.success(response);
+        return ApiResponse.ok(response);
     }
 
     @GetMapping("/style-points/{id}")
@@ -80,7 +80,7 @@ public class CoordinateLookAdminController {
                 .map(CoordinateLookResponse::of)
                 .collect(Collectors.toList());
 
-        return ApiResponse.success(response);
+        return ApiResponse.ok(response);
     }
 
     @PutMapping("/{id}")
@@ -90,12 +90,12 @@ public class CoordinateLookAdminController {
             throws Exception {
 
         if (id == null) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage());
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
         }
 
         CoordinateLook coordinateLook = coordinateLookAdminService.update(id, requestDto, coordinateLookImageFile);
         CoordinateLookResponse response = CoordinateLookResponse.of(coordinateLook);
-        return ApiResponse.success(response);
+        return ApiResponse.ok(response);
     }
 
     @PutMapping("/{coordinateLookId}/items/{itemId}")
@@ -106,12 +106,12 @@ public class CoordinateLookAdminController {
                                                     @RequestPart(value = "item_imageFile", required = false) MultipartFile itemImageFile)
             throws IOException {
         if(coordinateLookId == null || itemId == null) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage());
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
         }
 
         CoordinateLook coordinateLook = coordinateLookAdminService.updateItem(coordinateLookId, itemId, requestDto, itemImageFile);
         CoordinateLookResponse response = CoordinateLookResponse.of(coordinateLook);
-        return ApiResponse.success(response);
+        return ApiResponse.ok(response);
     }
 
     @DeleteMapping("/{coordinateLookId}/items/{itemId}")
@@ -119,13 +119,13 @@ public class CoordinateLookAdminController {
     public ApiResponse<Void> deleteItemFromCoordinateLook(@PathVariable Long coordinateLookId,
                                                              @PathVariable Long itemId) {
         coordinateLookAdminService.deleteItemFromCoordinateLook(coordinateLookId, itemId);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete CoordinateLook ", description = "코디룩 정보 삭제")
     public ApiResponse<Void> delete(@PathVariable Long id) throws MalformedURLException, UnsupportedEncodingException {
         coordinateLookAdminService.delete(id);
-        return ApiResponse.success();
+        return ApiResponse.ok();
     }
 }
