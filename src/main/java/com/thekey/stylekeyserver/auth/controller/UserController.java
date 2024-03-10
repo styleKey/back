@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,15 +36,15 @@ public class UserController {
 
     @Operation(summary = "사용자가 좋아요한 코디룩 목록 조회")
     @GetMapping("/likes/coordinate-looks")
-    public ApiResponse<List<ApiCoordinateLookResponse>> getLikeCoordinateLooks() throws JsonProcessingException {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ApiResponse.success(likeCoordinateLookService.getLikeCoordinateLooks(userId));
+    public ApiResponse<List<ApiCoordinateLookResponse>> getLikeCoordinateLooks(@AuthenticationPrincipal UserPrincipal user)
+            throws JsonProcessingException {
+        return ApiResponse.success(likeCoordinateLookService.getLikeCoordinateLooks(user.getUserId()));
     }
 
     @Operation(summary = "사용자가 좋아요한 아이템 목록 조회")
     @GetMapping("/likes/items")
-    public ApiResponse<List<ApiItemResponse>> getLikeItems() throws JsonProcessingException {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ApiResponse.success(likeItemService.getLikeItems(userId));
+    public ApiResponse<List<ApiItemResponse>> getLikeItems(@AuthenticationPrincipal UserPrincipal user)
+            throws JsonProcessingException {
+        return ApiResponse.success(likeItemService.getLikeItems(user.getUserId()));
     }
 }
