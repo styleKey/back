@@ -36,6 +36,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     private final CategoryService categoryService;
     private final ImageService imageService;
     private final S3Service s3Service;
+    private final CoordinateLookAdminService coordinateLookAdminService;
 
     @Override
     @Transactional
@@ -66,8 +67,8 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Item> findAllByCoordinateLookId(Long id, CoordinateLookAdminService coordinateLookAdminService) {
-        CoordinateLook coordinateLook = coordinateLookAdminService.findById(id);
+    public List<Item> findAllByCoordinateLookId(Long coordinateLookId) {
+        CoordinateLook coordinateLook = coordinateLookAdminService.findById(coordinateLookId);
         return itemRepository.findItemByCoordinateLook(coordinateLook);
     }
 
