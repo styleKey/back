@@ -1,9 +1,9 @@
 package com.thekey.stylekeyserver.like.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.thekey.stylekeyserver.like.dto.request.LikeCoordinateLookRequest;
-import com.thekey.stylekeyserver.like.service.LikeCoordinateLookService;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
+import com.thekey.stylekeyserver.like.dto.request.LikeItemRequest;
+import com.thekey.stylekeyserver.like.service.LikeItemService;
 import com.thekey.stylekeyserver.oauth.entity.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -15,23 +15,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class LikeCoordinateLookController {
+public class LikeItemController {
 
-    private final LikeCoordinateLookService likeCoordinateLookService;
+    private final LikeItemService likeItemService;
 
-    @Operation(summary = "코디룩 좋아요")
-    @PostMapping("/api/coordinate-looks/likes")
-    public ApiResponse<Void> like(@RequestBody LikeCoordinateLookRequest request,
+    @Operation(description = "아이템 좋아요")
+    @PostMapping("/api/items/likes")
+    public ApiResponse<Void> like(@RequestBody LikeItemRequest request,
                                   @AuthenticationPrincipal UserPrincipal user) throws JsonProcessingException {
-        likeCoordinateLookService.addLikeCoordinateLook(request.getCoordinateLookIds(), user.getUserId());
+        likeItemService.addLikeItem(request.getItemIds(), user.getUserId());
         return ApiResponse.success();
     }
 
-    @Operation(summary = "코디룩 좋아요 취소")
-    @DeleteMapping("/api/coordinate-looks/likes")
-    public ApiResponse<Void> unlike(@RequestBody LikeCoordinateLookRequest request,
+    @Operation(description = "아이템 좋아요 취소")
+    @DeleteMapping("/api/items/likes")
+    public ApiResponse<Void> unlike(@RequestBody LikeItemRequest request,
                                     @AuthenticationPrincipal UserPrincipal user) throws JsonProcessingException {
-        likeCoordinateLookService.deleteLikeCoordinateLook(request.getCoordinateLookIds(), user.getUserId());
+        likeItemService.deleteLikeItem(request.getItemIds(), user.getUserId());
         return ApiResponse.success();
     }
 }

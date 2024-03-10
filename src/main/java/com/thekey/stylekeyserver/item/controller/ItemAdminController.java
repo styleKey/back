@@ -52,7 +52,7 @@ public class ItemAdminController {
     @GetMapping("/coordinate-looks/{id}")
     @Operation(summary = "Read All Items By CoordinateLookId", description = "코디룩 ID에 해당하는 아이템 목록 전체 조회")
     public ApiResponse<List<ItemResponse>> getItemsByCoordinateLookId(@PathVariable Long id) {
-        List<Item> items = itemAdminService.findAllByCoordinateLookId(id, coordinateLookAdminService);
+        List<Item> items = itemAdminService.findAllByCoordinateLookId(id);
         List<ItemResponse> responses = items.stream()
                 .map(ItemResponse::of)
                 .toList();

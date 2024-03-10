@@ -16,7 +16,7 @@ public interface ItemAdminService {
     Item findById(Long id);
 
     List<Item> findAll();
-    List<Item> findAllByCoordinateLookId(Long id, CoordinateLookAdminService coordinateLookAdminService);
+    List<Item> findAllByCoordinateLookId(Long id);
 
     Item update(Long coordinateLookId, Long itemId, ItemRequest requestDto, MultipartFile imageFile) throws IOException;
 
