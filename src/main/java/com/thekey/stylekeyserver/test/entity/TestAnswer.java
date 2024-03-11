@@ -26,7 +26,7 @@ public class TestAnswer {
     @JoinColumn(name = "test_question_id")
     private TestQuestion testQuestion;
 
-    @OneToMany(mappedBy = "testAnswer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "testAnswer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TestAnswerDetail> testAnswerDetails = new ArrayList<>();
 
     // 연관관계 편의 메서드 //

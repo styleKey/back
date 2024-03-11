@@ -1,7 +1,6 @@
 package com.thekey.stylekeyserver.test.service;
 
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.AUTHENTICATED_FAIL;
-import static com.thekey.stylekeyserver.common.exception.ErrorCode.TEST_ANSWER_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.TEST_RESULT_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.UNAUTHORIZED_TEST_RESULT;
 
@@ -11,6 +10,7 @@ import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
+import com.thekey.stylekeyserver.test.entity.TestAnswer;
 import com.thekey.stylekeyserver.test.entity.TestAnswerDetail;
 import com.thekey.stylekeyserver.test.entity.TestResult;
 import com.thekey.stylekeyserver.test.repository.TestAnswerRepository;
@@ -82,9 +82,8 @@ public class TestResultService {
     }
 
     private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {
-        return request.getAnswerIds().stream()
-            .map(answerId -> testAnswerRepository.findById(answerId)
-                .orElseThrow(() -> new ApiException(TEST_ANSWER_NOT_FOUND)))
+        List<TestAnswer> testAnswers = testAnswerRepository.findByIdIn(request.getAnswerIds());
+        return testAnswers.stream()
             .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
             .collect(Collectors.toMap(
                 TestAnswerDetail::getStylePoint,

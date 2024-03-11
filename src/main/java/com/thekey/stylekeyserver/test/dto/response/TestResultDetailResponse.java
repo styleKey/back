@@ -11,12 +11,14 @@ import lombok.Getter;
 @JsonNaming(SnakeCaseStrategy.class)
 public class TestResultDetailResponse {
 
-    private StylePoint stylePoint;
+    private Long stylePointId;
+    private String stylePointImage;
     private Integer score;
 
     @Builder
     private TestResultDetailResponse(StylePoint stylePoint, Integer score) {
-        this.stylePoint = stylePoint;
+        this.stylePointId = stylePoint.getId();
+        this.stylePointImage = stylePoint.getImage();
         this.score = score;
     }
 
