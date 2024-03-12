@@ -48,7 +48,9 @@ public enum ErrorCode {
     /* 테스트 관련 */
     TEST_RESULT_NOT_FOUND(NOT_FOUND, "테스트 결과를 찾을 수 없습니다."),
     TEST_ANSWER_NOT_FOUND(NOT_FOUND, "테스트 선택지를 찾을 수 없습니다."),
-    UNAUTHORIZED_TEST_RESULT(FORBIDDEN, "테스트 결과에 대한 권한이 없습니다.");
+    UNAUTHORIZED_TEST_RESULT(FORBIDDEN, "테스트 결과에 대한 권한이 없습니다."),
+    DUPLICATE_TEST_ANSWERS(BAD_REQUEST, "하나의 질문에는 하나의 답변만 할 수 있습니다.")
+    ;
 
     private final HttpStatus httpStatus;
     private final String message;
