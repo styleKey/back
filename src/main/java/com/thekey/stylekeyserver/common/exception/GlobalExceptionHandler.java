@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
         return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.ERROR_INTERNAL_SERVER_ERROR.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ApiResponse<Object> handleRuntimeException(RuntimeException e) {
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
+    @ExceptionHandler(ApiException.class)
+    public ApiResponse<Object> handleApiException(ApiException e) {
+        return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
