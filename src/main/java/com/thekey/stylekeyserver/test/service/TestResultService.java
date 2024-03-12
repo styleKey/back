@@ -1,6 +1,7 @@
 package com.thekey.stylekeyserver.test.service;
 
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.AUTHENTICATED_FAIL;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.DUPLICATE_TEST_ANSWERS;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.STYLE_POINT_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.TEST_RESULT_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.UNAUTHORIZED_TEST_RESULT;
@@ -36,6 +37,25 @@ public class TestResultService {
     private final TestAnswerRepository testAnswerRepository;
     private final StylePointRepository stylePointRepository;
 
+    public TestResultResponse createTestResult(TestResultRequest request) {
+        List<TestAnswer> testAnswers = testAnswerRepository.findByIdIn(request.getAnswerIds());
+        validateTestAnswer(testAnswers);
+        Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(testAnswers);
+        TestResult testResult = TestResult.createWithoutUser(stylePointScores);
+        return TestResultResponse.of(testResult);
+    }
+
+    private void validateTestAnswer(List<TestAnswer> testAnswers) throws ApiException {
+        Map<Long, Boolean> questionAnswered = new HashMap<>();
+        for (TestAnswer answer : testAnswers) {
+            Long questionId = answer.getTestQuestion().getId();
+            questionAnswered.put(questionId, true);
+        }
+        if (testAnswers.size() != questionAnswered.size()) {
+            throw new ApiException(DUPLICATE_TEST_ANSWERS);
+        }
+    }
+
     @Transactional
     public Long saveTestResult(SaveTestResultRequest request, String userId) {
         User findUser = findUser(userId);
@@ -43,24 +63,6 @@ public class TestResultService {
         TestResult testResult = TestResult.create(findUser, stylePoints);
         TestResult savedTestResult = testResultRepository.save(testResult);
         return savedTestResult.getId();
-    }
-
-    private Map<StylePoint, Integer> findStylePoint(SaveTestResultRequest request) {
-        Map<StylePoint, Integer> stylePointsMap = new HashMap<>();
-        Map<Long, Integer> requestStylePoints = request.getStylePoints();
-        for (Map.Entry<Long, Integer> entry : requestStylePoints.entrySet()) {
-            StylePoint stylePoint = stylePointRepository.findById(entry.getKey())
-                .orElseThrow(() -> new ApiException(STYLE_POINT_NOT_FOUND));
-            stylePointsMap.put(stylePoint, entry.getValue());
-        }
-
-        return stylePointsMap;
-    }
-
-    public TestResultResponse createTestResult(TestResultRequest request) {
-        Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
-        TestResult testResult = TestResult.createWithoutUser(stylePointScores);
-        return TestResultResponse.of(testResult);
     }
 
     public List<TestResultResponse> getTestResults(String userId) {
@@ -98,13 +100,24 @@ public class TestResultService {
         }
     }
 
-    private Map<StylePoint, Integer> calculateStylePointScore(TestResultRequest request) {
-        List<TestAnswer> testAnswers = testAnswerRepository.findByIdIn(request.getAnswerIds());
+    private Map<StylePoint, Integer> calculateStylePointScore(List<TestAnswer> testAnswers) {
         return testAnswers.stream()
             .flatMap(testAnswer -> testAnswer.getTestAnswerDetails().stream())
             .collect(Collectors.toMap(
                 TestAnswerDetail::getStylePoint,
                 TestAnswerDetail::getScore,
                 Integer::sum));
+    }
+
+    private Map<StylePoint, Integer> findStylePoint(SaveTestResultRequest request) {
+        Map<StylePoint, Integer> stylePointsMap = new HashMap<>();
+        Map<Long, Integer> requestStylePoints = request.getStylePoints();
+        for (Map.Entry<Long, Integer> entry : requestStylePoints.entrySet()) {
+            StylePoint stylePoint = stylePointRepository.findById(entry.getKey())
+                .orElseThrow(() -> new ApiException(STYLE_POINT_NOT_FOUND));
+            stylePointsMap.put(stylePoint, entry.getValue());
+        }
+
+        return stylePointsMap;
     }
 }
