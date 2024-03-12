@@ -1,10 +1,10 @@
 package com.thekey.stylekeyserver.test.service;
 
-import static com.thekey.stylekeyserver.common.exception.ErrorCode.AUTHENTICATED_FAIL;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.DUPLICATE_TEST_ANSWERS;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.STYLE_POINT_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.TEST_RESULT_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.UNAUTHORIZED_TEST_RESULT;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.USER_NOT_FOUND;
 
 import com.thekey.stylekeyserver.auth.entity.User;
 import com.thekey.stylekeyserver.auth.repository.UserRepository;
@@ -89,7 +89,7 @@ public class TestResultService {
     private User findUser(String userId) {
         User findUser = userRepository.findByUserId(userId);
         if (findUser == null) {
-            throw new ApiException(AUTHENTICATED_FAIL);
+            throw new ApiException(USER_NOT_FOUND);
         }
         return findUser;
     }
