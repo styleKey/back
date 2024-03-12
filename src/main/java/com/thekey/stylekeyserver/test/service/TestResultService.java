@@ -1,6 +1,7 @@
 package com.thekey.stylekeyserver.test.service;
 
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.AUTHENTICATED_FAIL;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.STYLE_POINT_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.TEST_RESULT_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.UNAUTHORIZED_TEST_RESULT;
 
@@ -8,6 +9,8 @@ import com.thekey.stylekeyserver.auth.entity.User;
 import com.thekey.stylekeyserver.auth.repository.UserRepository;
 import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
+import com.thekey.stylekeyserver.test.dto.request.SaveTestResultRequest;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
 import com.thekey.stylekeyserver.test.entity.TestAnswer;
@@ -15,6 +18,7 @@ import com.thekey.stylekeyserver.test.entity.TestAnswerDetail;
 import com.thekey.stylekeyserver.test.entity.TestResult;
 import com.thekey.stylekeyserver.test.repository.TestAnswerRepository;
 import com.thekey.stylekeyserver.test.repository.TestResultRepository;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,17 +34,30 @@ public class TestResultService {
     private final UserRepository userRepository;
     private final TestResultRepository testResultRepository;
     private final TestAnswerRepository testAnswerRepository;
+    private final StylePointRepository stylePointRepository;
 
     @Transactional
-    public Long createAndSaveTestResultForUser(TestResultRequest request, String userId) {
-        User user = findUser(userId);
-        Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
-        TestResult testResult = TestResult.create(user, stylePointScores);
+    public Long saveTestResult(SaveTestResultRequest request, String userId) {
+        User findUser = findUser(userId);
+        Map<StylePoint, Integer> stylePoints = findStylePoint(request);
+        TestResult testResult = TestResult.create(findUser, stylePoints);
         TestResult savedTestResult = testResultRepository.save(testResult);
         return savedTestResult.getId();
     }
 
-    public TestResultResponse createTestResultWithoutUser(TestResultRequest request) {
+    private Map<StylePoint, Integer> findStylePoint(SaveTestResultRequest request) {
+        Map<StylePoint, Integer> stylePointsMap = new HashMap<>();
+        Map<Long, Integer> requestStylePoints = request.getStylePoints();
+        for (Map.Entry<Long, Integer> entry : requestStylePoints.entrySet()) {
+            StylePoint stylePoint = stylePointRepository.findById(entry.getKey())
+                .orElseThrow(() -> new ApiException(STYLE_POINT_NOT_FOUND));
+            stylePointsMap.put(stylePoint, entry.getValue());
+        }
+
+        return stylePointsMap;
+    }
+
+    public TestResultResponse createTestResult(TestResultRequest request) {
         Map<StylePoint, Integer> stylePointScores = calculateStylePointScore(request);
         TestResult testResult = TestResult.createWithoutUser(stylePointScores);
         return TestResultResponse.of(testResult);
