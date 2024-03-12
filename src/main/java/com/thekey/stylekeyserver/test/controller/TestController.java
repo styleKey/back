@@ -1,8 +1,12 @@
 package com.thekey.stylekeyserver.test.controller;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.AUTHENTICATED_FAIL;
+
 import com.thekey.stylekeyserver.common.dto.CreateResponse;
+import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.oauth.entity.UserPrincipal;
+import com.thekey.stylekeyserver.test.dto.request.SaveTestResultRequest;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;
 import com.thekey.stylekeyserver.test.dto.response.TestQuestionResponse;
 import com.thekey.stylekeyserver.test.dto.response.TestResultResponse;
@@ -38,17 +42,20 @@ public class TestController {
     }
 
     @Operation(summary = "Create Test-Result", description = "테스트 결과 생성")
-    @PostMapping("/test")
-    public ApiResponse<Object> saveTestResult(
-        @RequestBody @Validated TestResultRequest request,
+    @PostMapping("/tests/preview")
+    public ApiResponse<TestResultResponse> createTestResult(@RequestBody @Validated TestResultRequest request) {
+        return ApiResponse.ok(testResultService.createTestResult(request));
+    }
+
+    @Operation(summary = "Save Test-Result", description = "테스트 결과 저장")
+    @PostMapping("/tests")
+    public ApiResponse<CreateResponse> saveTestResult(
+        @RequestBody @Validated SaveTestResultRequest request,
         @AuthenticationPrincipal UserPrincipal user
     ) {
-        if (user != null) {
-            Long testResultId = testResultService.createAndSaveTestResultForUser(request, user.getUserId());
-            return ApiResponse.ok(CreateResponse.of(testResultId));
-        } else {
-            return ApiResponse.ok(testResultService.createTestResultWithoutUser(request));
-        }
+        validateLogin(user);
+        Long testResultId = testResultService.saveTestResult(request, user.getUserId());
+        return ApiResponse.ok(CreateResponse.of(testResultId));
     }
 
     @Operation(summary = "Read One Test-Result", description = "테스트 결과 단건 조회")
@@ -56,6 +63,7 @@ public class TestController {
     public ApiResponse<TestResultResponse> getTestResults(
         @PathVariable Long testResultId, @AuthenticationPrincipal UserPrincipal user
     ) {
+        validateLogin(user);
         TestResultResponse testResult = testResultService.findTestResult(user.getUserId(), testResultId);
         return ApiResponse.ok(testResult);
     }
@@ -63,6 +71,7 @@ public class TestController {
     @Operation(summary = "Read All Test-Result", description = "테스트 결과 전체 조회")
     @GetMapping("/test-result/list")
     public ApiResponse<List<TestResultResponse>> getTestResults(@AuthenticationPrincipal UserPrincipal user) {
+        validateLogin(user);
         return ApiResponse.ok(testResultService.getTestResults(user.getUserId()));
     }
 
@@ -72,7 +81,14 @@ public class TestController {
         @PathVariable Long testResultId,
         @AuthenticationPrincipal UserPrincipal user
     ) {
+        validateLogin(user);
         testResultService.deleteTestResult(testResultId, user.getUserId());
         return ApiResponse.ok();
+    }
+
+    private void validateLogin(UserPrincipal user) {
+        if (user == null) {
+            throw new ApiException(AUTHENTICATED_FAIL);
+        }
     }
 }
