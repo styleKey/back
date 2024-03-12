@@ -42,6 +42,9 @@ public enum ErrorCode {
     FILE_ALREADY_EXISTS(BAD_REQUEST, "이미 등록된 이미지입니다."),
     INVALID_IMAGE_FORMAT(BAD_REQUEST, "이미지 형식이 올바르지 않습니다."),
 
+    /* 스타일 포인트 관련 */
+    STYLE_POINT_NOT_FOUND(NOT_FOUND, "해당 스타일 포인트를 찾을 수 없습니다."),
+
     /* 테스트 관련 */
     TEST_RESULT_NOT_FOUND(NOT_FOUND, "테스트 결과를 찾을 수 없습니다."),
     TEST_ANSWER_NOT_FOUND(NOT_FOUND, "테스트 선택지를 찾을 수 없습니다."),
