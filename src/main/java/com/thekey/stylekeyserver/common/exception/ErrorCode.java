@@ -45,6 +45,18 @@ public enum ErrorCode {
     /* 스타일 포인트 관련 */
     STYLE_POINT_NOT_FOUND(NOT_FOUND, "해당 스타일 포인트를 찾을 수 없습니다."),
 
+    /* 브랜드 관련*/
+    BRAND_NOT_FOUND(NOT_FOUND, "해당 브랜드를 찾을 수 없습니다."),
+
+    /* 코디룩 관련*/
+    COORDINATE_LOOK_NOT_FOUND(NOT_FOUND, "해당 코디룩을 찾을 수 없습니다."),
+
+    /* 아이템 관련*/
+    ITEM_NOT_FOUND(NOT_FOUND, "해당 아이템을 찾을 수 없습니다."),
+
+    /* 카데고리 관련*/
+    CATEGORY_NOT_FOUND(NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
+
     /* 테스트 관련 */
     TEST_RESULT_NOT_FOUND(NOT_FOUND, "테스트 결과를 찾을 수 없습니다."),
     TEST_ANSWER_NOT_FOUND(NOT_FOUND, "테스트 선택지를 찾을 수 없습니다."),

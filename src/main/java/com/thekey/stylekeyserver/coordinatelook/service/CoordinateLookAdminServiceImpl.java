@@ -1,6 +1,8 @@
 package com.thekey.stylekeyserver.coordinatelook.service;
 
-import com.thekey.stylekeyserver.coordinatelook.CoordinateLookErrorMessage;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.COORDINATE_LOOK_NOT_FOUND;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.ITEM_NOT_FOUND;
+
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
@@ -8,7 +10,6 @@ import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import com.thekey.stylekeyserver.image.service.ImageService;
-import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
@@ -97,7 +98,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     public CoordinateLook findById(Long id) {
         return coordinateLookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + id));
+                        COORDINATE_LOOK_NOT_FOUND.getMessage() + id));
     }
 
     @Override
@@ -119,7 +120,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
         CoordinateLook coordinateLook = coordinateLookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + id));
+                        COORDINATE_LOOK_NOT_FOUND.getMessage() + id));
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
         if (!coordinateLookImageFile.isEmpty()) {
@@ -151,7 +152,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
         CoordinateLook coordinateLook = coordinateLookRepository.findById(coordinateLookId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + coordinateLookId));
+                        COORDINATE_LOOK_NOT_FOUND.getMessage() + coordinateLookId));
         itemAdminService.update(coordinateLookId, itemId, requestDto, itemImageFile);
         return coordinateLook;
     }
@@ -161,7 +162,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         CoordinateLook coordinateLook = coordinateLookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + id));
+                        COORDINATE_LOOK_NOT_FOUND.getMessage() + id));
 
         List<Item> items = coordinateLook.getItems();
         for (Item item : items) {
@@ -187,7 +188,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     public void deleteItemFromCoordinateLook(Long coordinateLookId, Long itemId) {
         CoordinateLook coordinateLook = coordinateLookRepository.findById(coordinateLookId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get() + coordinateLookId));
+                        COORDINATE_LOOK_NOT_FOUND.getMessage() + coordinateLookId));
 
         List<Item> items = coordinateLook.getItems();
 
@@ -205,7 +206,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
                 coordinateLookRepository.delete(coordinateLook);
             }
         } catch (NoSuchElementException | MalformedURLException | UnsupportedEncodingException e) {
-            throw new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + itemId);
+            throw new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + itemId);
         }
     }
 

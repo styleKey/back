@@ -1,5 +1,7 @@
 package com.thekey.stylekeyserver.item.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.ITEM_NOT_FOUND;
+
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
 import com.thekey.stylekeyserver.category.domain.Category;
@@ -10,7 +12,6 @@ import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import com.thekey.stylekeyserver.image.service.ImageService;
-import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
@@ -63,7 +64,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     @Transactional(readOnly = true)
     public Item findById(Long id) {
         return itemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + id));
     }
 
     @Override
@@ -84,10 +85,10 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     public Item update(Long coordinateLookId, Long itemId, ItemRequest requestDto, MultipartFile imageFile)
             throws IOException {
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + itemId));
+                .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + itemId));
 
         if (!itemRepository.existsByCoordinateLookId(coordinateLookId)) {
-            throw new IllegalArgumentException(ItemErrorMessage.NOT_FOUND_ITEM.get());
+            throw new IllegalArgumentException(ITEM_NOT_FOUND.getMessage());
         }
 
         Category category = categoryService.findById(requestDto.getCategoryId());
@@ -119,7 +120,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     @Transactional
     public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + id));
 
         Image image = item.getImage();
 

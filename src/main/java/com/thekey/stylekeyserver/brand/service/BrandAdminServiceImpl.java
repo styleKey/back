@@ -1,8 +1,8 @@
 package com.thekey.stylekeyserver.brand.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.BRAND_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.INVALID_IMAGE_FORMAT;
 
-import com.thekey.stylekeyserver.brand.BrandErrorMessage;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
@@ -54,7 +54,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional(readOnly = true)
     public Brand findById(Long id) {
         return brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage() + id));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional
     public Brand update(Long id, BrandRequest requestDto, MultipartFile imageFile) throws IOException {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage()+ id));
 
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
@@ -104,7 +104,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional
     public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(BrandErrorMessage.NOT_FOUND_BRAND.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage() + id));
 
         Image image = brand.getImage();
 
