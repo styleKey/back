@@ -27,7 +27,7 @@ public class LikeItemService {
 
     public void addLikeItem(List<Long> itemIds, String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
-        Set<Long> userLikes = redisService.getData(userLikesKey);
+        Set<Long> userLikes = redisService.getLikeData(userLikesKey);
         if (userLikes == null) {
             userLikes = new HashSet<>();
         }
@@ -47,12 +47,12 @@ public class LikeItemService {
             itemRepository.save(item);
         }
 
-        redisService.setData(userLikesKey, userLikes);
+        redisService.setLikeData(userLikesKey, userLikes);
     }
 
     public List<ApiItemResponse> getLikeItems(String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
-        Set<Long> userLikes = redisService.getData(userLikesKey);
+        Set<Long> userLikes = redisService.getLikeData(userLikesKey);
 
         if (userLikes == null) {
             return Collections.emptyList();
@@ -75,7 +75,7 @@ public class LikeItemService {
 
     public void deleteLikeItem(List<Long> itemIds, String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
-        Set<Long> userLikes = redisService.getData(userLikesKey);
+        Set<Long> userLikes = redisService.getLikeData(userLikesKey);
 
         if (userLikes != null) {
             for (Long itemId : itemIds) {
@@ -90,7 +90,7 @@ public class LikeItemService {
             }
         }
 
-        redisService.setData(userLikesKey, userLikes);
+        redisService.setLikeData(userLikesKey, userLikes);
     }
 
     private static String getUserLikesKey(String userId) {

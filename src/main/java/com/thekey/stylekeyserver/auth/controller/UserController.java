@@ -1,5 +1,6 @@
 package com.thekey.stylekeyserver.auth.controller;
 
+import com.thekey.stylekeyserver.item.service.RecentlyViewedItemsService;
 import com.thekey.stylekeyserver.oauth.entity.UserPrincipal;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookResponse;
@@ -27,6 +28,7 @@ public class UserController {
     private final UserService userService;
     private final LikeCoordinateLookService likeCoordinateLookService;
     private final LikeItemService likeItemService;
+    private final RecentlyViewedItemsService viewedItemsService;
 
     @GetMapping
     public ApiResponse getUser(@AuthenticationPrincipal UserPrincipal user) {
@@ -46,5 +48,11 @@ public class UserController {
     public ApiResponse<List<ApiItemResponse>> getLikeItems(@AuthenticationPrincipal UserPrincipal user)
             throws JsonProcessingException {
         return ApiResponse.ok(likeItemService.getLikeItems(user.getUserId()));
+    }
+
+    @Operation(summary = "사용자가 최근 본 아이템 목록 조회")
+    @GetMapping("/recent-items")
+    public ApiResponse<List<ApiItemResponse>> RecentlyViewItem(@AuthenticationPrincipal UserPrincipal user) {
+        return ApiResponse.ok(viewedItemsService.getViewItems(user.getUserId()));
     }
 }

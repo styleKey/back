@@ -3,10 +3,13 @@ package com.thekey.stylekeyserver.item.controller;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.item.dto.response.ApiItemResponse;
 import com.thekey.stylekeyserver.item.service.ItemService;
+import com.thekey.stylekeyserver.item.service.RecentlyViewedItemsService;
+import com.thekey.stylekeyserver.oauth.entity.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemApiController {
 
     private final ItemService itemService;
+    private final RecentlyViewedItemsService viewedItemsService;
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One Item", description = "아이템 정보 단건 조회")
-    public ApiResponse<ApiItemResponse> getItem(@PathVariable Long id) {
+    public ApiResponse<ApiItemResponse> getItem(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal user) {
+        viewedItemsService.addViewItem(id, user.getUserId());
         return ApiResponse.ok(itemService.getItemWithLikes(id));
     }
 
