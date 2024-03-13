@@ -54,7 +54,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional(readOnly = true)
     public Brand findById(Long id) {
         return brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage()));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional
     public Brand update(Long id, BrandRequest requestDto, MultipartFile imageFile) throws IOException {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage()+ id));
+                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage()));
 
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
@@ -104,7 +104,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional
     public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage() + id));
+                .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage()));
 
         Image image = brand.getImage();
 

@@ -1,6 +1,7 @@
 package com.thekey.stylekeyserver.stylepoint.service;
 
-import com.thekey.stylekeyserver.stylepoint.StylePointErrorMessage;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.STYLE_POINT_NOT_FOUND;
+
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
@@ -22,7 +23,7 @@ public class StylePointAdminServiceImpl implements StylePointAdminService {
     @Override
     public StylePoint findById(Long id) {
         return stylePointRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(StylePointErrorMessage.NOT_FOUND_STYLE_POINT.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(STYLE_POINT_NOT_FOUND.getMessage()));
     }
 
     @Override
@@ -33,7 +34,7 @@ public class StylePointAdminServiceImpl implements StylePointAdminService {
     @Override
     public StylePoint update(Long id, StylePointRequest requestDto) {
         StylePoint stylePoint = stylePointRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(StylePointErrorMessage.NOT_FOUND_STYLE_POINT.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(STYLE_POINT_NOT_FOUND.getMessage()));
 
         stylePoint.update(requestDto.getTitle(),
                 requestDto.getDescription(),

@@ -43,10 +43,10 @@ public class GlobalExceptionHandler {
         return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ApiResponse<Object> handleException(Exception e) {
-//        return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
-//    }
+    @ExceptionHandler(Exception.class)
+    public ApiResponse<Object> handleException(Exception e) {
+        return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ApiResponse<Object> handleHttpMessageNotReadableException() {

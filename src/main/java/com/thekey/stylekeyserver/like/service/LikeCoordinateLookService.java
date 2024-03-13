@@ -1,8 +1,9 @@
 package com.thekey.stylekeyserver.like.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.COORDINATE_LOOK_NOT_FOUND;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thekey.stylekeyserver.common.redis.RedisService;
-import com.thekey.stylekeyserver.coordinatelook.CoordinateLookErrorMessage;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookResponse;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
@@ -48,7 +49,7 @@ public class LikeCoordinateLookService {
             // 좋아요 개수 증가 DB에 업데이트
             CoordinateLook coordinateLook = coordinateLookRepository.findById(coordinateLookId)
                     .orElseThrow(() -> new EntityNotFoundException(
-                            CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get()
+                            COORDINATE_LOOK_NOT_FOUND.getMessage()
                     ));
             coordinateLook.setLikeCount(coordinateLook.getLikeCount() + 1);
             coordinateLookRepository.save(coordinateLook);
@@ -93,7 +94,7 @@ public class LikeCoordinateLookService {
                 // 좋아요 개수 감소 DB에 업데이트
                 CoordinateLook coordinateLook = coordinateLookRepository.findById(coordinateLookId)
                         .orElseThrow(() -> new EntityNotFoundException(
-                                CoordinateLookErrorMessage.NOT_FOUND_COORDINATE_LOOK.get()
+                                COORDINATE_LOOK_NOT_FOUND.getMessage()
                         ));
 
                 coordinateLook.setLikeCount(coordinateLook.getLikeCount() - 1);

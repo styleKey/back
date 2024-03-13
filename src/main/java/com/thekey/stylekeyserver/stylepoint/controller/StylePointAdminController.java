@@ -1,5 +1,7 @@
 package com.thekey.stylekeyserver.stylepoint.controller;
 
+import com.thekey.stylekeyserver.common.exception.ApiResponse;
+import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import com.thekey.stylekeyserver.stylepoint.dto.response.StylePointResponse;
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,24 +30,23 @@ public class StylePointAdminController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One StylePoint", description = "스타일포인트 단건 정보 조회")
-    public ResponseEntity<StylePointResponse> getStylePoint(@PathVariable Long id) {
+    public ApiResponse<StylePointResponse> getStylePoint(@PathVariable Long id) {
         Optional<StylePoint> optional = Optional.ofNullable(stylePointAdminService.findById(id));
 
-        return optional.map(stylePoint -> ResponseEntity.ok(StylePointResponse.of(stylePoint)))
-                .orElse(ResponseEntity.notFound().build());
-
+        return optional.map(stylePoint -> ApiResponse.ok(StylePointResponse.of(stylePoint)))
+                .orElse(ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.STYLE_POINT_NOT_FOUND.getMessage()));
     }
 
     @GetMapping
-    @Operation(summary = "Read All StylePoint", description = "스타일포인트 전체 정보 조회.")
-    public ResponseEntity<List<StylePointResponse>> getStylePoints() {
+    @Operation(summary = "Read All StylePoint", description = "스타일포인트 전체 정보 조회")
+    public ApiResponse<List<StylePointResponse>> getStylePoints() {
         List<StylePoint> stylePoints = stylePointAdminService.findAll();
 
         if (stylePoints.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.STYLE_POINT_NOT_FOUND.getMessage());
         }
 
-        return ResponseEntity.ok(stylePoints.stream()
+        return ApiResponse.ok(stylePoints.stream()
                 .map(StylePointResponse::of)
                 .collect(Collectors.toList()));
 
@@ -53,14 +54,14 @@ public class StylePointAdminController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update StylePoint", description = "스타일포인트 정보 수정")
-    public ResponseEntity<StylePointResponse> update(@PathVariable Long id,
-                                                     @RequestBody StylePointRequest requestDto) {
+    public ApiResponse<StylePointResponse> update(@PathVariable Long id,
+                                                  @RequestBody StylePointRequest requestDto) {
 
         if (id == null) {
-            return ResponseEntity.badRequest().build();
+            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.STYLE_POINT_NOT_FOUND.getMessage());
         }
 
         StylePoint updated = stylePointAdminService.update(id, requestDto);
-        return ResponseEntity.ok(StylePointResponse.of(updated));
+        return ApiResponse.ok(StylePointResponse.of(updated));
     }
 }
