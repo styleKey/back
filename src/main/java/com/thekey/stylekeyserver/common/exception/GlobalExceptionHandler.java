@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({UnsupportedEncodingException.class, MalformedURLException.class})
     public ApiResponse<Object> handleS3Exception(Exception e) {
-        return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.ERROR_INTERNAL_SERVER_ERROR.getMessage());
+        return ApiResponse.of(HttpStatus.BAD_REQUEST, ErrorCode.FILE_UPLOAD_FAILED.getMessage());
     }
 
     @ExceptionHandler(ApiException.class)
@@ -43,10 +43,10 @@ public class GlobalExceptionHandler {
         return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ApiResponse<Object> handleException(Exception e) {
-        return ApiResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.ERROR_INTERNAL_SERVER_ERROR.getMessage());
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ApiResponse<Object> handleException(Exception e) {
+//        return ApiResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+//    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ApiResponse<Object> handleHttpMessageNotReadableException() {

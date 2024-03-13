@@ -22,7 +22,7 @@ public class ImageService {
 
         for (Image image : unusedImages) {
             // 이미지를 S3에서 즉시 삭제
-            s3Service.deleteFile(image.getUrl(), image.getType());
+            s3Service.deleteFile(image.getUrl());
             imageRepository.delete(image);
         }
 

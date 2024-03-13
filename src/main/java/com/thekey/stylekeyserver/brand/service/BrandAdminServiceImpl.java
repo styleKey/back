@@ -1,9 +1,12 @@
 package com.thekey.stylekeyserver.brand.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.INVALID_IMAGE_FORMAT;
+
 import com.thekey.stylekeyserver.brand.BrandErrorMessage;
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
+import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
@@ -33,7 +36,11 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
     @Override
     @Transactional
-    public Brand create(BrandRequest requestDto, MultipartFile imageFile) throws IOException {
+    public Brand create(BrandRequest requestDto, MultipartFile imageFile) {
+
+        if (imageFile.isEmpty()) {
+            throw new ApiException(INVALID_IMAGE_FORMAT);
+        }
         Image image = s3Service.uploadFile(imageFile, Type.BRAND);
         imageRepository.save(image);
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());

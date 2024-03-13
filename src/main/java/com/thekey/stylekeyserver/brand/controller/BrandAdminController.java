@@ -35,19 +35,15 @@ public class BrandAdminController {
 
     @PostMapping
     @Operation(summary = "Create Brand", description = "브랜드 정보 등록")
-    public ApiResponse createBrand(@RequestPart BrandRequest requestDto,
-                                   @RequestPart("brand_imageFile") MultipartFile imageFile) throws Exception {
-
-        if (imageFile.isEmpty()) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
-        }
+    public ApiResponse<Void> createBrand(@RequestPart BrandRequest requestDto,
+                                         @RequestPart("brand_imageFile") MultipartFile imageFile) throws Exception {
         brandAdminService.create(requestDto, imageFile);
         return ApiResponse.ok();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One Brand", description = "브랜드 정보 단건 조회")
-    public ApiResponse getBrand(@PathVariable Long id) {
+    public ApiResponse<BrandResponse> getBrand(@PathVariable Long id) {
         Optional<Brand> optional = Optional.ofNullable(brandAdminService.findById(id));
 
         return optional.map(brand -> {
@@ -80,17 +76,12 @@ public class BrandAdminController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Brand", description = "브랜드 정보 수정")
-    public ApiResponse updateBrand(@PathVariable Long id,
-                                   @RequestPart BrandRequest requestDto,
-                                   @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
+    public ApiResponse<Void> updateBrand(@PathVariable Long id,
+                                         @RequestPart BrandRequest requestDto,
+                                         @RequestPart(value = "brand_imageFile", required = false) MultipartFile imageFile)
             throws Exception {
-        if (id == null) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
-        }
-
-        Brand brand = brandAdminService.update(id, requestDto, imageFile);
-        BrandResponse response = BrandResponse.of(brand);
-        return ApiResponse.ok(response);
+        brandAdminService.update(id, requestDto, imageFile);
+        return ApiResponse.ok();
     }
 
     @DeleteMapping("/{id}")

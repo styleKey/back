@@ -1,10 +1,13 @@
 package com.thekey.stylekeyserver.common.s3.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.FILE_ALREADY_EXISTS;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.FILE_UPLOAD_FAILED;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
+import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import java.io.File;
@@ -29,54 +32,37 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.brand}")
-    private String brandFolder;
-
-    @Value("${cloud.aws.s3.coordinateLook}")
-    private String coordinateLookFolder;
-
-    @Value("${cloud.aws.s3.item}")
-    private String itemFolder;
-
-    public Image uploadFile(MultipartFile file, Type imageType) throws IOException {
+    public Image uploadFile(MultipartFile file, Type imageType) {
         String fileName = generateFileName(file, imageType);
 
         if (s3Client.doesObjectExist(bucket, fileName)) {
-            throw new FileAlreadyExistsException(S3ErrorMessage.FILE_ALREADY_EXISTS.getMessage());
+            throw new ApiException(FILE_ALREADY_EXISTS);
         }
 
-        File convertedFile = convertMultiPartToFile(file);
-        uploadFileTos3bucket(fileName, convertedFile);
-        String url = getFileUrl(fileName);
+        try {
+            File convertedFile = convertMultiPartToFile(file);
+            uploadFileTos3bucket(fileName, convertedFile);
+            String url = getFileUrl(fileName);
 
-        return Image.builder()
-                .url(url)
-                .type(imageType)
-                .fileName(fileName)
-                .isUsed(true)
-                .build();
+            return Image.builder()
+                    .url(url)
+                    .type(imageType)
+                    .fileName(fileName)
+                    .isUsed(true)
+                    .build();
+
+        } catch (IOException e) {
+            throw new ApiException(FILE_UPLOAD_FAILED);
+        }
     }
 
-    public void deleteFile(String fileUrl, Type imageType)
+    public void deleteFile(String fileUrl)
             throws AmazonServiceException, UnsupportedEncodingException, MalformedURLException {
         URL url = new URL(fileUrl);
         String fileName = url.getPath();
         String fullFileName = fileName.substring(1);
         String decodedFullFileName = URLDecoder.decode(fullFileName, StandardCharsets.UTF_8.toString());
         s3Client.deleteObject(new DeleteObjectRequest(bucket, decodedFullFileName));
-    }
-
-    private String getFolderName(Type imageType) {
-        switch (imageType) {
-            case BRAND:
-                return brandFolder;
-            case COORDINATE_LOOK:
-                return coordinateLookFolder;
-            case ITEM:
-                return itemFolder;
-            default:
-                return "";
-        }
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
@@ -100,13 +86,13 @@ public class S3Service {
 
     private void uploadFileTos3bucket(String fileName, File file) throws FileAlreadyExistsException {
         if (s3Client.doesObjectExist(bucket, fileName)) {
-            throw new FileAlreadyExistsException(S3ErrorMessage.FILE_ALREADY_EXISTS.getMessage() + fileName);
+            throw new ApiException(FILE_ALREADY_EXISTS);
         }
 
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file));
         // s3에 객체 생성 시 임시 파일이 자동으로 남는다.
         if (!file.delete()) {
-            throw new RuntimeException(S3ErrorMessage.FILE_UPLOAD_FAILED.getMessage());
+            throw new ApiException(FILE_UPLOAD_FAILED);
         }
     }
 
