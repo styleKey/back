@@ -31,7 +31,7 @@ public class LikeCoordinateLookService {
 
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
-        if (userLikes == null) {
+        if (userLikes.isEmpty()) {
             userLikes = new HashSet<>();
         }
 
@@ -61,7 +61,7 @@ public class LikeCoordinateLookService {
     public List<ApiCoordinateLookResponse> getLikeCoordinateLooks(String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
-        if (userLikes == null) {
+        if (userLikes.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -85,7 +85,7 @@ public class LikeCoordinateLookService {
     public void deleteLikeCoordinateLook(List<Long> coordinateLookIds, String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
-        if (userLikes != null) {
+        if (!userLikes.isEmpty()) {
             for (Long coordinateLookId : coordinateLookIds) {
                 String coordinateLookLikesKey = getCoordinateLookLikesKey(coordinateLookId);
                 redisService.decreaseLikeCount(coordinateLookLikesKey);

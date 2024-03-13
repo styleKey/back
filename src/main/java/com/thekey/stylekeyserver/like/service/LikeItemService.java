@@ -29,7 +29,7 @@ public class LikeItemService {
     public void addLikeItem(List<Long> itemIds, String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
-        if (userLikes == null) {
+        if (userLikes.isEmpty()) {
             userLikes = new HashSet<>();
         }
 
@@ -55,7 +55,7 @@ public class LikeItemService {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
 
-        if (userLikes == null) {
+        if (userLikes.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -78,7 +78,7 @@ public class LikeItemService {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
 
-        if (userLikes != null) {
+        if (!userLikes.isEmpty()) {
             for (Long itemId : itemIds) {
                 String itemLikesKey = getItemLikesKey(itemId);
                 redisService.decreaseLikeCount(itemLikesKey);
