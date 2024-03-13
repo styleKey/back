@@ -20,19 +20,20 @@ public class RecentlyViewedItemsService {
     private static final String USER_VIEW_ITEMS = "user:%s:view_items";
     private static final long SECONDS_IN_A_WEEK = 7L * 24 * 60 * 60;    // 최근 7일 동안 저장
     private static final int MAX_COUNT = 30;    // 최대 30개
+    private static final double MILLISECONDS_TO_SECONDS = 1000.0;
 
     private final ItemRepository itemRepository;
     private final RedisService redisService;
 
     public void addViewItem(Long itemId, String userId) {
         String userViewedKey = getUserViewedKey(userId);
-        double score = System.currentTimeMillis() / 1000.0; // 현재 시간을 score로 사용
+        double score = getCurrentTimeInSeconds(); // 현재 시간을 score로 사용
         redisService.setViewData(userViewedKey, String.valueOf(itemId), score);
     }
 
     public List<ApiItemResponse> getViewItems(String userId) {
         String userViewedKey = getUserViewedKey(userId);
-        double minScore = (System.currentTimeMillis() / 1000.0) - SECONDS_IN_A_WEEK;
+        double minScore = getCurrentTimeInSeconds() - SECONDS_IN_A_WEEK;
         // 가장 오래된 아이템부터 (총 개수 - 30)개 제거
         List<Long> viewedItemIds = new ArrayList<>(redisService.getViewData(userViewedKey, minScore, MAX_COUNT));
         List<Item> items = itemRepository.findAllById(viewedItemIds);
@@ -52,6 +53,10 @@ public class RecentlyViewedItemsService {
 
     private static String getUserViewedKey(String userId) {
         return String.format(USER_VIEW_ITEMS, userId);
+    }
+
+    private double getCurrentTimeInSeconds() {
+        return System.currentTimeMillis() / MILLISECONDS_TO_SECONDS;
     }
 
 }
