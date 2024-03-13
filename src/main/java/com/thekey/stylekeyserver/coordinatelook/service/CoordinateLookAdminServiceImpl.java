@@ -3,6 +3,9 @@ package com.thekey.stylekeyserver.coordinatelook.service;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.COORDINATE_LOOK_NOT_FOUND;
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.ITEM_NOT_FOUND;
 
+import com.thekey.stylekeyserver.common.exception.ApiException;
+import com.thekey.stylekeyserver.common.exception.ApiResponse;
+import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
@@ -13,7 +16,6 @@ import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
-import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
 import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
@@ -74,7 +76,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
             MultipartFile itemImageFile = itemImageFilesMap.get(itemId);
 
             if (itemImageFile == null) {
-                throw new IllegalArgumentException(S3ErrorMessage.NO_FILE_ITEM_ID.getMessage() + itemId);
+                throw new ApiException(ErrorCode.INVALID_IMAGE_FORMAT);
             }
 
             Item item = itemAdminService.create(itemDto, itemImageFile);

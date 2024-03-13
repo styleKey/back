@@ -1,7 +1,6 @@
 package com.thekey.stylekeyserver.common.exception;
 
 import com.amazonaws.AmazonServiceException;
-import com.thekey.stylekeyserver.common.s3.S3ErrorMessage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -25,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FileAlreadyExistsException.class)
     public ApiResponse<Object> handleFileAlreadyExistsException(FileAlreadyExistsException e) {
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, S3ErrorMessage.FILE_ALREADY_EXISTS.getMessage());
+        return ApiResponse.of(HttpStatus.BAD_REQUEST, ErrorCode.FILE_ALREADY_EXISTS.getMessage());
     }
 
     @ExceptionHandler(AmazonServiceException.class)
