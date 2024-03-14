@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +35,20 @@ public class RedisService {
 
     public Set<Long> getViewData(String key, double minScore, int count) {
         Set<Object> itemIds = redisTemplate.opsForZSet().reverseRangeByScore(key, minScore, Double.MAX_VALUE, 0, count);
-        return itemIds.stream().map(itemId -> Long.valueOf((String) itemId)).collect(Collectors.toSet());
+        return itemIds.stream()
+                .map(itemId -> Long.valueOf((String) itemId))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public Set<Long> getLikeData(String key) throws JsonProcessingException {
         String values = valueOperations.get(key);
-        return values == null ? null : objectMapper.readValue(values, new TypeReference<Set<Long>>() {
+
+        if (values == null) {
+            return Collections.emptySet();
+        }
+        return objectMapper.readValue(values, new TypeReference<Set<Long>>() {
         });
     }
-
 
     public void deleteData(String key) {
         redisTemplate.delete(key);

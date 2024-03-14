@@ -4,11 +4,11 @@ import com.thekey.stylekeyserver.common.redis.RedisService;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.response.ApiItemResponse;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
-import java.util.ArrayList;
+import com.thekey.stylekeyserver.like.service.LikeItemService;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ public class RecentlyViewedItemsService {
 
     private final ItemRepository itemRepository;
     private final RedisService redisService;
+    private final LikeItemService likeItemService;
 
     public void addViewItem(Long itemId, String userId) {
         String userViewedKey = getUserViewedKey(userId);
@@ -35,20 +36,26 @@ public class RecentlyViewedItemsService {
         String userViewedKey = getUserViewedKey(userId);
         double minScore = getCurrentTimeInSeconds() - SECONDS_IN_A_WEEK;
         // 가장 오래된 아이템부터 (총 개수 - 30)개 제거
-        List<Long> viewedItemIds = new ArrayList<>(redisService.getViewData(userViewedKey, minScore, MAX_COUNT));
-        List<Item> items = itemRepository.findAllById(viewedItemIds);
+        Set<Long> itemIds = redisService.getViewData(userViewedKey, minScore, MAX_COUNT);
 
-        Map<Long, Item> itemIdToItemMap = items.stream()
-                .collect(Collectors.toMap(Item::getId, Function.identity()));
+        // 데이터베이스에서 아이템 조회
+        List<Item> items = itemIds.stream()
+                .map(itemId -> itemRepository.findById(itemId)
+                        .orElseThrow(() -> new EntityNotFoundException("해당 아이템이 존재하지 않습니다.")))
+                .toList();
 
-        // 역순으로 정렬된 아이템
-        List<Item> sortedItems = viewedItemIds.stream()
-                .map(itemIdToItemMap::get)
+        // Redis에서 가져온 순서대로 아이템 정렬
+        List<Item> sortedItems = itemIds.stream()
+                .map(itemId -> items.stream()
+                        .filter(item -> item.getId().equals(itemId))
+                        .findFirst()
+                        .orElse(null))
                 .filter(Objects::nonNull)
                 .toList();
 
         return sortedItems.stream()
-                .map(item -> ApiItemResponse.of(item, item.getLikeCount())).collect(Collectors.toList());
+                .map(item -> ApiItemResponse.of(item, item.getLikeCount()))
+                .collect(Collectors.toList());
     }
 
     private static String getUserViewedKey(String userId) {
