@@ -29,7 +29,7 @@ public class LikeCoordinateLookService {
             throws JsonProcessingException {
 
         String userLikesKey = getUserLikesKey(userId);
-        Set<Long> userLikes = redisService.getData(userLikesKey);
+        Set<Long> userLikes = redisService.getLikeData(userLikesKey);
         if (userLikes == null) {
             userLikes = new HashSet<>();
         }
@@ -54,12 +54,12 @@ public class LikeCoordinateLookService {
             coordinateLookRepository.save(coordinateLook);
         }
 
-        redisService.setData(userLikesKey, userLikes);
+        redisService.setLikeData(userLikesKey, userLikes);
     }
 
     public List<ApiCoordinateLookResponse> getLikeCoordinateLooks(String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
-        Set<Long> userLikes = redisService.getData(userLikesKey);
+        Set<Long> userLikes = redisService.getLikeData(userLikesKey);
         if (userLikes == null) {
             return Collections.emptyList();
         }
@@ -83,7 +83,7 @@ public class LikeCoordinateLookService {
 
     public void deleteLikeCoordinateLook(List<Long> coordinateLookIds, String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
-        Set<Long> userLikes = redisService.getData(userLikesKey);
+        Set<Long> userLikes = redisService.getLikeData(userLikesKey);
         if (userLikes != null) {
             for (Long coordinateLookId : coordinateLookIds) {
                 String coordinateLookLikesKey = getCoordinateLookLikesKey(coordinateLookId);
@@ -100,7 +100,7 @@ public class LikeCoordinateLookService {
                 coordinateLookRepository.save(coordinateLook);
             }
         }
-        redisService.setData(userLikesKey, userLikes);
+        redisService.setLikeData(userLikesKey, userLikes);
     }
 
     private static String getUserLikesKey(String userId) {
