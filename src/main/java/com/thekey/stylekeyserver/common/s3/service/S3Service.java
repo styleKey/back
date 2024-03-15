@@ -85,10 +85,6 @@ public class S3Service {
     }
 
     private void uploadFileTos3bucket(String fileName, File file) throws FileAlreadyExistsException {
-        if (s3Client.doesObjectExist(bucket, fileName)) {
-            throw new ApiException(FILE_ALREADY_EXISTS);
-        }
-
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file));
         // s3에 객체 생성 시 임시 파일이 자동으로 남는다.
         if (!file.delete()) {
