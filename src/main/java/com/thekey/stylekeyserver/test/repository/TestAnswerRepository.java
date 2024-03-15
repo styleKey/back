@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TestAnswerRepository extends JpaRepository<TestAnswer, Long> {
 
-    @Query("SELECT ta FROM TestAnswer ta JOIN FETCH ta.testAnswerDetails WHERE ta.id IN :ids")
+    @Query("SELECT ta "
+        + "FROM TestAnswer ta "
+        + "JOIN FETCH ta.testAnswerDetails tad "
+        + "JOIN FETCH tad.stylePoint "
+        + "WHERE ta.id IN :ids")
     List<TestAnswer> findByIdIn(@Param("ids") List<Long> ids);
 }
