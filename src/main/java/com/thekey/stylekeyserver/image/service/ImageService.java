@@ -17,7 +17,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final S3Service s3Service;
 
-    public void deleteUnusedImages() throws MalformedURLException, UnsupportedEncodingException {
+    public void deleteUnusedImages() {
         List<Image> unusedImages = imageRepository.findByIsUsed(false);
 
         for (Image image : unusedImages) {

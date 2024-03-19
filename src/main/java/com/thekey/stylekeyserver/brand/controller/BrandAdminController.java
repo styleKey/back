@@ -8,8 +8,7 @@ import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,9 +34,9 @@ public class BrandAdminController {
 
     @PostMapping
     @Operation(summary = "Create Brand", description = "브랜드 정보 등록")
-    public ApiResponse<Void> createBrand(@RequestPart BrandRequest requestDto,
-                                         @RequestPart("brand_imageFile") MultipartFile imageFile) throws Exception {
-        brandAdminService.create(requestDto, imageFile);
+    public ApiResponse<Void> createBrand(@RequestPart(required = false) @Valid BrandRequest requestDto,
+                                         @RequestPart(value = "brand_imageFile", required = false) MultipartFile brandImageFile) {
+        brandAdminService.create(requestDto, brandImageFile);
         return ApiResponse.ok();
     }
 
@@ -77,17 +76,15 @@ public class BrandAdminController {
     @PutMapping("/{id}")
     @Operation(summary = "Update Brand", description = "브랜드 정보 수정")
     public ApiResponse<Void> updateBrand(@PathVariable Long id,
-                                         @RequestPart BrandRequest requestDto,
-                                         @RequestPart(value = "brand_imageFile", required = false) MultipartFile imageFile)
-            throws Exception {
-        brandAdminService.update(id, requestDto, imageFile);
+                                         @RequestPart(required = false) BrandRequest requestDto,
+                                         @RequestPart(value = "brand_imageFile", required = false) MultipartFile brandImageFile) {
+        brandAdminService.update(id, requestDto, brandImageFile);
         return ApiResponse.ok();
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Brand", description = "브랜드 정보 삭제")
-    public ApiResponse<Void> deleteBrand(@PathVariable Long id)
-            throws MalformedURLException, UnsupportedEncodingException {
+    public ApiResponse<Void> deleteBrand(@PathVariable Long id) {
         brandAdminService.delete(id);
         return ApiResponse.ok();
     }

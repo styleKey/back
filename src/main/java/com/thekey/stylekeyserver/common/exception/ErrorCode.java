@@ -40,7 +40,7 @@ public enum ErrorCode {
     FAIL_FILE_UPDATE(BAD_REQUEST, "이미지 수정이 실패하였습니다."),
     FAIL_FILE_DELETE(BAD_REQUEST, "이미지 삭제가 실패하였습니다."),
     FILE_ALREADY_EXISTS(BAD_REQUEST, "이미 등록된 이미지입니다."),
-    INVALID_IMAGE_FORMAT(BAD_REQUEST, "이미지 형식이 올바르지 않습니다."),
+    FILE_NOT_FOUND(NOT_FOUND, "요청하신 이미지가 존재하지 않습니다."),
 
     /* 스타일 포인트 관련 */
     STYLE_POINT_NOT_FOUND(NOT_FOUND, "해당 스타일 포인트를 찾을 수 없습니다."),

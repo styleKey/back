@@ -7,22 +7,27 @@ import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
 public class CoordinateLookRequest {
 
+    @NotNull
     @Schema(description = "코디룩 제목")
     private String title;
 
+    @NotNull
     @Schema(description = "스타일포인트 ID")
     private Long stylePointId;
 
+    @NotNull
     @Schema(description = "아이템 목록")
     private List<ItemRequest> items;
 

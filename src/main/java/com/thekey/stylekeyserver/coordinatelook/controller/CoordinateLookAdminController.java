@@ -1,5 +1,6 @@
 package com.thekey.stylekeyserver.coordinatelook.controller;
 
+import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
@@ -10,7 +11,7 @@ import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminServi
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
+import jakarta.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,14 +46,9 @@ public class CoordinateLookAdminController {
 
     @PostMapping
     @Operation(summary = "Create CoordinateLook", description = "코디룩 정보 등록")
-    public ApiResponse<Void> create(@RequestPart CoordinateLookRequest requestDto,
-                                    @RequestPart("coordinate_looks_imageFile") MultipartFile coordinateLookImageFile,
-                                    @RequestPart("item_imageFile") List<MultipartFile> itemImageFiles)
-            throws Exception {
-
-        if (coordinateLookImageFile.isEmpty() || itemImageFiles.isEmpty()) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
-        }
+    public ApiResponse<Void> create(@RequestPart(required = false) @Valid CoordinateLookRequest requestDto,
+                                    @RequestPart(value = "coordinate_looks_imageFile", required = false) MultipartFile coordinateLookImageFile,
+                                    @RequestPart(value = "item_imageFile", required = false) List<MultipartFile> itemImageFiles) {
         coordinateLookAdminService.create(requestDto, coordinateLookImageFile, itemImageFiles);
         return ApiResponse.ok();
     }
@@ -92,14 +89,8 @@ public class CoordinateLookAdminController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update CoordinateLook", description = "코디룩 정보 수정")
-    public ApiResponse<Void> update(@PathVariable Long id, @RequestPart CoordinateLookRequest requestDto,
-                                    @RequestPart(value = "coordinate_looks_imageFile", required = false) MultipartFile coordinateLookImageFile)
-            throws Exception {
-
-        if (id == null) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
-        }
-
+    public ApiResponse<Void> update(@PathVariable Long id, @RequestPart(required = false) CoordinateLookRequest requestDto,
+                                    @RequestPart(value = "coordinate_looks_imageFile", required = false) MultipartFile coordinateLookImageFile) {
         coordinateLookAdminService.update(id, requestDto, coordinateLookImageFile);
         return ApiResponse.ok();
     }
@@ -108,13 +99,8 @@ public class CoordinateLookAdminController {
     @Operation(summary = "Update Item From CoordinateLookId", description = "코디룩에 속한 아이템 수정")
     public ApiResponse<Void> updateItemFromCoordinateLook(@PathVariable Long coordinateLookId,
                                                           @PathVariable Long itemId,
-                                                          @RequestPart ItemRequest requestDto,
-                                                          @RequestPart(value = "item_imageFile", required = false) MultipartFile itemImageFile)
-            throws IOException {
-        if (coordinateLookId == null || itemId == null) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
-        }
-
+                                                          @RequestPart(required = false) ItemRequest requestDto,
+                                                          @RequestPart(value = "item_imageFile", required = false) MultipartFile itemImageFile) {
         coordinateLookAdminService.updateItem(coordinateLookId, itemId, requestDto, itemImageFile);
         return ApiResponse.ok();
     }
