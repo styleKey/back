@@ -4,6 +4,8 @@ import static com.thekey.stylekeyserver.common.exception.ErrorCode.BRAND_NOT_FOU
 
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
+import com.thekey.stylekeyserver.brand.dto.response.BrandPageResponse;
+import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
 import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
@@ -15,6 +17,8 @@ import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +38,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Override
     @Transactional
     public Brand create(BrandRequest requestDto, MultipartFile brandImageFile) {
-        validationImageFile(brandImageFile);
+        validateImageFile(brandImageFile);
 
         Image image = s3Service.uploadFile(brandImageFile, Type.BRAND);
         imageRepository.save(image);
@@ -56,6 +60,17 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional(readOnly = true)
     public List<Brand> findAll() {
         return brandRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BrandPageResponse findAllPaging(Pageable pageable) {
+        Page<Brand> brandPage = brandRepository.findAll(pageable);
+
+        List<BrandResponse> brandResponses = brandPage.getContent().stream()
+                .map(BrandResponse::of)
+                .toList();
+        return BrandPageResponse.of(brandResponses, brandPage);
     }
 
     @Override
@@ -113,8 +128,8 @@ public class BrandAdminServiceImpl implements BrandAdminService {
         brandRepository.deleteById(id);
     }
 
-    private void validationImageFile(MultipartFile brandImageFile) {
-        if(brandImageFile == null || brandImageFile.isEmpty()) {
+    private void validateImageFile(MultipartFile brandImageFile) {
+        if (brandImageFile == null || brandImageFile.isEmpty()) {
             throw new ApiException(ErrorCode.FILE_NOT_FOUND);
         }
     }

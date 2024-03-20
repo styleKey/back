@@ -2,6 +2,7 @@ package com.thekey.stylekeyserver.brand.controller;
 
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
+import com.thekey.stylekeyserver.brand.dto.response.BrandPageResponse;
 import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
@@ -13,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,13 +57,9 @@ public class BrandAdminController {
 
     @GetMapping
     @Operation(summary = "Read All Brands", description = "브랜드 정보 전체 조회")
-    public ApiResponse<List<BrandResponse>> getBrands() {
-        List<Brand> brands = brandAdminService.findAll();
-        List<BrandResponse> response = brands.stream()
-                .map(BrandResponse::of)
-                .collect(Collectors.toList());
-
-        return ApiResponse.ok(response);
+    public ApiResponse<BrandPageResponse> getBrands(
+            @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+        return ApiResponse.ok(brandAdminService.findAllPaging(pageable));
     }
 
     @GetMapping("style-points/{id}")

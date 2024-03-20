@@ -1,10 +1,10 @@
 package com.thekey.stylekeyserver.coordinatelook.controller;
 
-import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookDetailsResponse;
+import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookPageResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
 import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
@@ -19,8 +19,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,13 +69,9 @@ public class CoordinateLookAdminController {
 
     @GetMapping
     @Operation(summary = "Read All CoordinateLook", description = "코디룩 정보 전체 조회")
-    public ApiResponse<List<CoordinateLookResponse>> getCoordinateLooks() {
-        List<CoordinateLook> coordinateLooks = coordinateLookAdminService.findAll();
-        List<CoordinateLookResponse> response = coordinateLooks.stream()
-                .map(CoordinateLookResponse::of)
-                .collect(Collectors.toList());
-
-        return ApiResponse.ok(response);
+    public ApiResponse<CoordinateLookPageResponse> getCoordinateLooks(
+            @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+        return ApiResponse.ok(coordinateLookAdminService.findAllPaging(pageable));
     }
 
     @GetMapping("/style-points/{id}")
@@ -89,7 +87,8 @@ public class CoordinateLookAdminController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update CoordinateLook", description = "코디룩 정보 수정")
-    public ApiResponse<Void> update(@PathVariable Long id, @RequestPart(required = false) CoordinateLookRequest requestDto,
+    public ApiResponse<Void> update(@PathVariable Long id,
+                                    @RequestPart(required = false) CoordinateLookRequest requestDto,
                                     @RequestPart(value = "coordinate_looks_imageFile", required = false) MultipartFile coordinateLookImageFile) {
         coordinateLookAdminService.update(id, requestDto, coordinateLookImageFile);
         return ApiResponse.ok();

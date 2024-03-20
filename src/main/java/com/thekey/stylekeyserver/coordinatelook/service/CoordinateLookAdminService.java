@@ -2,8 +2,10 @@ package com.thekey.stylekeyserver.coordinatelook.service;
 
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
+import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookPageResponse;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CoordinateLookAdminService {
@@ -15,6 +17,7 @@ public interface CoordinateLookAdminService {
     CoordinateLook findById(Long id);
 
     List<CoordinateLook> findAll();
+    CoordinateLookPageResponse findAllPaging(Pageable pageable);
 
     List<CoordinateLook> findByStylePointId(Long id);
 
