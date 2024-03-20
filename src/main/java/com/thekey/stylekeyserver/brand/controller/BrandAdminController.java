@@ -2,6 +2,7 @@ package com.thekey.stylekeyserver.brand.controller;
 
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
+import com.thekey.stylekeyserver.brand.dto.response.BrandPageResponse;
 import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,13 +55,9 @@ public class BrandAdminController {
 
     @GetMapping
     @Operation(summary = "Read All Brands", description = "브랜드 정보 전체 조회")
-    public ApiResponse<List<BrandResponse>> getBrands() {
-        List<Brand> brands = brandAdminService.findAll();
-        List<BrandResponse> response = brands.stream()
-                .map(BrandResponse::of)
-                .collect(Collectors.toList());
-
-        return ApiResponse.ok(response);
+    public ApiResponse<BrandPageResponse> getBrands(@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+                                                    @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return ApiResponse.ok(brandAdminService.findAllPaging(pageNo, pageSize));
     }
 
     @GetMapping("style-points/{id}")

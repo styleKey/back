@@ -4,6 +4,8 @@ import static com.thekey.stylekeyserver.common.exception.ErrorCode.BRAND_NOT_FOU
 
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
+import com.thekey.stylekeyserver.brand.dto.response.BrandPageResponse;
+import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
 import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
@@ -15,6 +17,10 @@ import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +62,20 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Transactional(readOnly = true)
     public List<Brand> findAll() {
         return brandRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BrandPageResponse findAllPaging(int pageNo, int pageSize) {
+        // 페이지 넘버는 1부터 시작하도록 조정
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
+        Page<Brand> brandPage = brandRepository.findAll(pageable);
+
+        List<BrandResponse> brandResponses = brandPage.getContent().stream()
+                .map(BrandResponse::of)
+                .toList();
+        return BrandPageResponse.of(brandResponses, pageNo, pageSize, brandPage.getTotalElements(),
+                brandPage.getTotalPages(), brandPage.isLast());
     }
 
     @Override
@@ -114,7 +134,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     }
 
     private void validationImageFile(MultipartFile brandImageFile) {
-        if(brandImageFile == null || brandImageFile.isEmpty()) {
+        if (brandImageFile == null || brandImageFile.isEmpty()) {
             throw new ApiException(ErrorCode.FILE_NOT_FOUND);
         }
     }
