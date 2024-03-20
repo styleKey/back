@@ -52,7 +52,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
                                  MultipartFile coordinateLookImageFile,
                                  List<MultipartFile> itemImageFiles) {
 
-        if(requestDto == null) {
+        if (requestDto == null) {
             throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
         }
 
@@ -115,7 +115,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     @Transactional
     public CoordinateLook update(Long id, CoordinateLookRequest requestDto, MultipartFile coordinateLookImageFile) {
 
-        if(requestDto == null) {
+        if (requestDto == null) {
             throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
         }
 
@@ -125,7 +125,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
         // 수정 할 이미지가 요청값에 포함 되어있을 때만 기존 이미지에서 수정할 이미지로 변경
-        if (coordinateLookImageFile != null && !coordinateLookImageFile.isEmpty()) {
+        if (checkExistenceOfCoordinateLookImageFile(coordinateLookImageFile)) {
             Image coordinateLookOldImage = coordinateLook.getImage();
             coordinateLookOldImage.setUnused();
             imageRepository.save(coordinateLookOldImage);
@@ -150,7 +150,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     public CoordinateLook updateItem(Long coordinateLookId, Long itemId, ItemRequest requestDto,
                                      MultipartFile itemImageFile) {
 
-        if(requestDto == null) {
+        if (requestDto == null) {
             throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
         }
 
@@ -212,9 +212,21 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     }
 
     private void validateImageFiles(MultipartFile coordinateLookImageFile, List<MultipartFile> itemImageFiles) {
-        if (coordinateLookImageFile == null || coordinateLookImageFile.isEmpty() || itemImageFiles == null || itemImageFiles.isEmpty()) {
+        if (isEmptyCoordinateLookImageFile(coordinateLookImageFile) || isEmptyItemImageFiles(itemImageFiles)) {
             throw new ApiException(ErrorCode.FILE_NOT_FOUND);
         }
+    }
+
+    private boolean isEmptyItemImageFiles(List<MultipartFile> itemImageFiles) {
+        return (itemImageFiles == null || itemImageFiles.isEmpty());
+    }
+
+    private boolean isEmptyCoordinateLookImageFile(MultipartFile coordinateLookImageFile) {
+        return (coordinateLookImageFile == null || coordinateLookImageFile.isEmpty());
+    }
+
+    private boolean checkExistenceOfCoordinateLookImageFile(MultipartFile coordinateLookImageFile) {
+        return (coordinateLookImageFile != null && !coordinateLookImageFile.isEmpty());
     }
 
     private Long getItemIdFromFileName(MultipartFile fileName) {
