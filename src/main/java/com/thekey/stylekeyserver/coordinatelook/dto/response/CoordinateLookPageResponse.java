@@ -1,12 +1,13 @@
 package com.thekey.stylekeyserver.coordinatelook.dto.response;
 
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 @Data
 @NoArgsConstructor
@@ -32,15 +33,14 @@ public class CoordinateLookPageResponse {
         this.last = last;
     }
 
-    public static CoordinateLookPageResponse of(List<CoordinateLookResponse> content, int pageNo, int pageSize,
-                                                long totalElements, int totalPages, boolean last) {
+    public static CoordinateLookPageResponse of(List<CoordinateLookResponse> content, Page<CoordinateLook> coordinateLookPage) {
         return CoordinateLookPageResponse.builder()
                 .content(content)
-                .pageNo(pageNo)
-                .pageSize(pageSize)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
-                .last(last)
+                .pageNo(coordinateLookPage.getNumber())
+                .pageSize(coordinateLookPage.getSize())
+                .totalElements(coordinateLookPage.getTotalElements())
+                .totalPages(coordinateLookPage.getTotalPages())
+                .last(coordinateLookPage.isLast())
                 .build();
     }
 }

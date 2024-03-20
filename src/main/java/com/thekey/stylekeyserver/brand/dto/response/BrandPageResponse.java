@@ -2,10 +2,12 @@ package com.thekey.stylekeyserver.brand.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.thekey.stylekeyserver.brand.domain.Brand;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 @Data
 @NoArgsConstructor
@@ -30,15 +32,14 @@ public class BrandPageResponse {
         this.last = last;
     }
 
-    public static BrandPageResponse of(List<BrandResponse> content, int pageNo, int pageSize, long totalElements, int totalPages,
-                              boolean last) {
+    public static BrandPageResponse of(List<BrandResponse> content, Page<Brand> brandPage) {
         return BrandPageResponse.builder()
                 .content(content)
-                .pageNo(pageNo)
-                .pageSize(pageSize)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
-                .last(last)
+                .pageNo(brandPage.getNumber())
+                .pageSize(brandPage.getSize())
+                .totalElements(brandPage.getTotalElements())
+                .totalPages(brandPage.getTotalPages())
+                .last(brandPage.isLast())
                 .build();
     }
 }

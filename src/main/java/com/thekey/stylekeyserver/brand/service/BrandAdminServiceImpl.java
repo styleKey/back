@@ -18,9 +18,7 @@ import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -66,16 +64,13 @@ public class BrandAdminServiceImpl implements BrandAdminService {
 
     @Override
     @Transactional(readOnly = true)
-    public BrandPageResponse findAllPaging(int pageNo, int pageSize) {
-        // 페이지 넘버는 1부터 시작하도록 조정
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
+    public BrandPageResponse findAllPaging(Pageable pageable) {
         Page<Brand> brandPage = brandRepository.findAll(pageable);
 
         List<BrandResponse> brandResponses = brandPage.getContent().stream()
                 .map(BrandResponse::of)
                 .toList();
-        return BrandPageResponse.of(brandResponses, pageNo, pageSize, brandPage.getTotalElements(),
-                brandPage.getTotalPages(), brandPage.isLast());
+        return BrandPageResponse.of(brandResponses, brandPage);
     }
 
     @Override

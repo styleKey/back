@@ -11,11 +11,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Item", description = "Item API")
@@ -44,16 +46,15 @@ public class ItemAdminController {
 
     @GetMapping
     @Operation(summary = "Read All Items", description = "아이템 정보 전체 조회")
-    public ApiResponse<ItemPageResponse> getItems(@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-                                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return ApiResponse.ok(itemAdminService.findAllPaging(pageNo, pageSize));
+    public ApiResponse<ItemPageResponse> getItems(
+            @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+        return ApiResponse.ok(itemAdminService.findAllPaging(pageable));
     }
 
     @GetMapping("/coordinate-looks/{id}")
     @Operation(summary = "Read All Items By CoordinateLookId", description = "코디룩 ID에 해당하는 아이템 목록 전체 조회")
     public ApiResponse<ItemPageResponse> getItemsByCoordinateLookId(@PathVariable Long id,
-                                                                      @RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-                                                                      @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return ApiResponse.ok(itemAdminService.findAllByCoordinateLookId(id, pageNo, pageSize));
+                                                                    @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
+        return ApiResponse.ok(itemAdminService.findAllByCoordinateLookId(id, pageable));
     }
 }

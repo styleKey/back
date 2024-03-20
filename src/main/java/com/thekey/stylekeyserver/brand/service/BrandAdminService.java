@@ -4,6 +4,7 @@ import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.dto.response.BrandPageResponse;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface BrandAdminService {
@@ -14,7 +15,7 @@ public interface BrandAdminService {
 
     List<Brand> findAll();
 
-    BrandPageResponse findAllPaging(int pageNo, int pageSize);
+    BrandPageResponse findAllPaging(Pageable pageable);
 
     List<Brand> findByStylePointId(Long id);
 

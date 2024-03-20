@@ -25,9 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,12 +76,9 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional(readOnly = true)
-    public ItemPageResponse findAllPaging(int pageNo, int pageSize) {
-        // 페이지 넘버는 1부터 시작하도록 조정
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
+    public ItemPageResponse findAllPaging(Pageable pageable) {
         Page<Item> itemPage = itemRepository.findAll(pageable);
-
-        return createItemPageResponse(itemPage, pageNo, pageSize);
+        return createItemPageResponse(itemPage);
     }
 
     @Override
@@ -95,12 +90,11 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional(readOnly = true)
-    public ItemPageResponse findAllByCoordinateLookId(Long coordinateLookId, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
+    public ItemPageResponse findAllByCoordinateLookId(Long coordinateLookId, Pageable pageable) {
         CoordinateLook coordinateLook = coordinateLookAdminService.findById(coordinateLookId);
         Page<Item> itemPage = itemRepository.findItemByCoordinateLook(coordinateLook, pageable);
 
-        return createItemPageResponse(itemPage, pageNo, pageSize);
+        return createItemPageResponse(itemPage);
     }
 
     @Override
@@ -142,7 +136,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional
-    public void delete(Long id)  {
+    public void delete(Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + id));
 
@@ -156,12 +150,11 @@ public class ItemAdminServiceImpl implements ItemAdminService {
         itemRepository.deleteById(id);
     }
 
-    private ItemPageResponse createItemPageResponse(Page<Item> itemPage, int pageNo, int pageSize) {
+    private ItemPageResponse createItemPageResponse(Page<Item> itemPage) {
         List<ItemResponse> itemResponses = itemPage.getContent().stream()
                 .map(ItemResponse::of)
                 .toList();
-        return ItemPageResponse.of(itemResponses, pageNo, pageSize, itemPage.getTotalElements(),
-                itemPage.getTotalPages(), itemPage.isLast());
+        return ItemPageResponse.of(itemResponses, itemPage);
     }
 
 }

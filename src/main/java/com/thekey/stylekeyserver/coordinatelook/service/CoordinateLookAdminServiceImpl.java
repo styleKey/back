@@ -29,9 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,16 +106,13 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
     @Override
     @Transactional(readOnly = true)
-    public CoordinateLookPageResponse findAllPaging(int pageNo, int pageSize) {
-        // 페이지 넘버는 1부터 시작하도록 조정
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
-        Page<CoordinateLook> itemPage = coordinateLookRepository.findAll(pageable);
+    public CoordinateLookPageResponse findAllPaging(Pageable pageable) {
+        Page<CoordinateLook> coordinateLookPage = coordinateLookRepository.findAll(pageable);
 
-        List<CoordinateLookResponse> coordinateLookResponses = itemPage.getContent().stream()
+        List<CoordinateLookResponse> coordinateLookResponses = coordinateLookPage.getContent().stream()
                 .map(CoordinateLookResponse::of)
                 .toList();
-        return CoordinateLookPageResponse.of(coordinateLookResponses, pageNo, pageSize, itemPage.getTotalElements(),
-                itemPage.getTotalPages(), itemPage.isLast());
+        return CoordinateLookPageResponse.of(coordinateLookResponses, coordinateLookPage);
     }
 
     @Override
