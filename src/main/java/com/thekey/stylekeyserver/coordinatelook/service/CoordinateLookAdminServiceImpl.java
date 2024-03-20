@@ -125,7 +125,7 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
 
         // 수정 할 이미지가 요청값에 포함 되어있을 때만 기존 이미지에서 수정할 이미지로 변경
-        if (checkExistenceOfCoordinateLookImageFile(coordinateLookImageFile)) {
+        if (!isEmptyCoordinateLookImageFile(coordinateLookImageFile)) {
             Image coordinateLookOldImage = coordinateLook.getImage();
             coordinateLookOldImage.setUnused();
             imageRepository.save(coordinateLookOldImage);
@@ -223,10 +223,6 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
 
     private boolean isEmptyCoordinateLookImageFile(MultipartFile coordinateLookImageFile) {
         return (coordinateLookImageFile == null || coordinateLookImageFile.isEmpty());
-    }
-
-    private boolean checkExistenceOfCoordinateLookImageFile(MultipartFile coordinateLookImageFile) {
-        return (coordinateLookImageFile != null && !coordinateLookImageFile.isEmpty());
     }
 
     private Long getItemIdFromFileName(MultipartFile fileName) {
