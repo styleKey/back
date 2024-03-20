@@ -83,11 +83,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
         Page<Item> itemPage = itemRepository.findAll(pageable);
 
-        List<ItemResponse> itemResponses = itemPage.getContent().stream()
-                .map(ItemResponse::of)
-                .toList();
-        return ItemPageResponse.of(itemResponses, pageNo, pageSize, itemPage.getTotalElements(),
-                itemPage.getTotalPages(), itemPage.isLast());
+        return createItemPageResponse(itemPage, pageNo, pageSize);
     }
 
     @Override
@@ -104,11 +100,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
         CoordinateLook coordinateLook = coordinateLookAdminService.findById(coordinateLookId);
         Page<Item> itemPage = itemRepository.findItemByCoordinateLook(coordinateLook, pageable);
 
-        List<ItemResponse> itemResponses = itemPage.getContent().stream()
-                .map(ItemResponse::of)
-                .toList();
-        return ItemPageResponse.of(itemResponses, pageNo, pageSize, itemPage.getTotalElements(),
-                itemPage.getTotalPages(), itemPage.isLast());
+        return createItemPageResponse(itemPage, pageNo, pageSize);
     }
 
     @Override
@@ -162,6 +154,14 @@ public class ItemAdminServiceImpl implements ItemAdminService {
             imageService.deleteUnusedImages();
         }
         itemRepository.deleteById(id);
+    }
+
+    private ItemPageResponse createItemPageResponse(Page<Item> itemPage, int pageNo, int pageSize) {
+        List<ItemResponse> itemResponses = itemPage.getContent().stream()
+                .map(ItemResponse::of)
+                .toList();
+        return ItemPageResponse.of(itemResponses, pageNo, pageSize, itemPage.getTotalElements(),
+                itemPage.getTotalPages(), itemPage.isLast());
     }
 
 }
