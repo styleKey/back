@@ -17,12 +17,12 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final S3Service s3Service;
 
-    public void deleteUnusedImages() throws MalformedURLException, UnsupportedEncodingException {
+    public void deleteUnusedImages() {
         List<Image> unusedImages = imageRepository.findByIsUsed(false);
 
         for (Image image : unusedImages) {
             // 이미지를 S3에서 즉시 삭제
-            s3Service.deleteFile(image.getUrl(), image.getType());
+            s3Service.deleteFile(image.getUrl());
             imageRepository.delete(image);
         }
 

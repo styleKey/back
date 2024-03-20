@@ -1,5 +1,7 @@
 package com.thekey.stylekeyserver.item.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.ITEM_NOT_FOUND;
+
 import com.thekey.stylekeyserver.brand.domain.Brand;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
 import com.thekey.stylekeyserver.category.domain.Category;
@@ -10,14 +12,10 @@ import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import com.thekey.stylekeyserver.image.service.ImageService;
-import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
 import com.thekey.stylekeyserver.common.s3.service.S3Service;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -47,8 +45,8 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional
-    public Item create(ItemRequest requestDto, MultipartFile imageFile) throws IOException {
-        Image image = s3Service.uploadFile(imageFile, Type.ITEM);
+    public Item create(ItemRequest requestDto, MultipartFile itemImageFile) {
+        Image image = s3Service.uploadFile(itemImageFile, Type.ITEM);
         imageRepository.save(image);
         Category category = categoryService.findById(requestDto.getCategoryId());
         Brand brand = brandAdminService.findById(requestDto.getBrandId());
@@ -63,7 +61,7 @@ public class ItemAdminServiceImpl implements ItemAdminService {
     @Transactional(readOnly = true)
     public Item findById(Long id) {
         return itemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + id));
     }
 
     @Override
@@ -81,32 +79,33 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional
-    public Item update(Long coordinateLookId, Long itemId, ItemRequest requestDto, MultipartFile imageFile)
-            throws IOException {
+    public Item update(Long coordinateLookId, Long itemId, ItemRequest requestDto, MultipartFile itemImageFile) {
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + itemId));
+                .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + itemId));
 
         if (!itemRepository.existsByCoordinateLookId(coordinateLookId)) {
-            throw new IllegalArgumentException(ItemErrorMessage.NOT_FOUND_ITEM.get());
+            throw new IllegalArgumentException(ITEM_NOT_FOUND.getMessage());
         }
 
         Category category = categoryService.findById(requestDto.getCategoryId());
         Brand brand = brandAdminService.findById(requestDto.getBrandId());
 
-        if (!imageFile.isEmpty()) {
+        // 수정 할 이미지가 요청값에 포함 되어있을 때만 기존 이미지에서 수정할 이미지로 변경
+        if (itemImageFile != null && !itemImageFile.isEmpty()) {
             Image oldImage = item.getImage();
             if (oldImage != null) {
                 oldImage.setUnused();
                 imageRepository.save(oldImage);
                 imageService.deleteUnusedImages();
 
-                Image newImage = s3Service.uploadFile(imageFile, Type.ITEM);
+                Image newImage = s3Service.uploadFile(itemImageFile, Type.ITEM);
                 imageRepository.save(newImage);
                 item.setImage(newImage);
                 itemRepository.save(item);
             }
         }
 
+        // 수정 할 이미지가 없다면 기본 정보만 변경
         item.update(requestDto.getTitle(),
                 requestDto.getSales_link(),
                 brand,
@@ -117,9 +116,9 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional
-    public void delete(Long id) throws MalformedURLException, UnsupportedEncodingException {
+    public void delete(Long id)  {
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage() + id));
 
         Image image = item.getImage();
 

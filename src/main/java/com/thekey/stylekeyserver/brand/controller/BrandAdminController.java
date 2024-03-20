@@ -8,8 +8,7 @@ import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,19 +34,15 @@ public class BrandAdminController {
 
     @PostMapping
     @Operation(summary = "Create Brand", description = "브랜드 정보 등록")
-    public ApiResponse createBrand(@RequestPart BrandRequest requestDto,
-                                   @RequestPart("brand_imageFile") MultipartFile imageFile) throws Exception {
-
-        if (imageFile.isEmpty()) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
-        }
-        brandAdminService.create(requestDto, imageFile);
+    public ApiResponse<Void> createBrand(@RequestPart(required = false) @Valid BrandRequest requestDto,
+                                         @RequestPart(value = "brand_imageFile", required = false) MultipartFile brandImageFile) {
+        brandAdminService.create(requestDto, brandImageFile);
         return ApiResponse.ok();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One Brand", description = "브랜드 정보 단건 조회")
-    public ApiResponse getBrand(@PathVariable Long id) {
+    public ApiResponse<BrandResponse> getBrand(@PathVariable Long id) {
         Optional<Brand> optional = Optional.ofNullable(brandAdminService.findById(id));
 
         return optional.map(brand -> {
@@ -80,23 +75,16 @@ public class BrandAdminController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update Brand", description = "브랜드 정보 수정")
-    public ApiResponse updateBrand(@PathVariable Long id,
-                                   @RequestPart BrandRequest requestDto,
-                                   @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
-            throws Exception {
-        if (id == null) {
-            return ApiResponse.fail(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_BAD_REQUEST.getMessage());
-        }
-
-        Brand brand = brandAdminService.update(id, requestDto, imageFile);
-        BrandResponse response = BrandResponse.of(brand);
-        return ApiResponse.ok(response);
+    public ApiResponse<Void> updateBrand(@PathVariable Long id,
+                                         @RequestPart(required = false) BrandRequest requestDto,
+                                         @RequestPart(value = "brand_imageFile", required = false) MultipartFile brandImageFile) {
+        brandAdminService.update(id, requestDto, brandImageFile);
+        return ApiResponse.ok();
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete Brand", description = "브랜드 정보 삭제")
-    public ApiResponse<Void> deleteBrand(@PathVariable Long id)
-            throws MalformedURLException, UnsupportedEncodingException {
+    public ApiResponse<Void> deleteBrand(@PathVariable Long id) {
         brandAdminService.delete(id);
         return ApiResponse.ok();
     }

@@ -1,8 +1,9 @@
 package com.thekey.stylekeyserver.like.service;
 
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.ITEM_NOT_FOUND;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thekey.stylekeyserver.common.redis.RedisService;
-import com.thekey.stylekeyserver.item.ItemErrorMessage;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.response.ApiItemResponse;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
@@ -28,7 +29,7 @@ public class LikeItemService {
     public void addLikeItem(List<Long> itemIds, String userId) throws JsonProcessingException {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
-        if (userLikes == null) {
+        if (userLikes.isEmpty()) {
             userLikes = new HashSet<>();
         }
 
@@ -42,7 +43,7 @@ public class LikeItemService {
             userLikes.add(itemId);
 
             Item item = itemRepository.findById(itemId)
-                    .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get()));
+                    .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage()));
             item.setLikeCount(item.getLikeCount() + 1);
             itemRepository.save(item);
         }
@@ -54,7 +55,7 @@ public class LikeItemService {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
 
-        if (userLikes == null) {
+        if (userLikes.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -77,14 +78,14 @@ public class LikeItemService {
         String userLikesKey = getUserLikesKey(userId);
         Set<Long> userLikes = redisService.getLikeData(userLikesKey);
 
-        if (userLikes != null) {
+        if (!userLikes.isEmpty()) {
             for (Long itemId : itemIds) {
                 String itemLikesKey = getItemLikesKey(itemId);
                 redisService.decreaseLikeCount(itemLikesKey);
                 userLikes.remove(itemId);
 
                 Item item = itemRepository.findById(itemId)
-                        .orElseThrow(() -> new EntityNotFoundException(ItemErrorMessage.NOT_FOUND_ITEM.get()));
+                        .orElseThrow(() -> new EntityNotFoundException(ITEM_NOT_FOUND.getMessage()));
                 item.setLikeCount(item.getLikeCount() - 1);
                 itemRepository.save(item);
             }

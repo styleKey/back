@@ -1,6 +1,7 @@
 package com.thekey.stylekeyserver.category.service;
 
-import com.thekey.stylekeyserver.category.CategoryErrorMessage;
+import static com.thekey.stylekeyserver.common.exception.ErrorCode.CATEGORY_NOT_FOUND;
+
 import com.thekey.stylekeyserver.category.domain.Category;
 import com.thekey.stylekeyserver.category.repository.CategoryRepository;
 
@@ -21,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(CategoryErrorMessage.NOT_FOUND_CATEGORY.get() + id));
+                .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.getMessage()));
     }
 
     @Override

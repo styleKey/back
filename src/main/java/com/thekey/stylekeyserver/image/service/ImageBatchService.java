@@ -26,7 +26,7 @@ public class ImageBatchService {
         for (Image image : unusedImages) {
             // 이미지가 24시간 이상 사용되지 않았다면 S3에서 이미지 파일 삭제
             if (image.getDeletedAt().isBefore(LocalDateTime.now())) {
-                s3Service.deleteFile(image.getUrl(), image.getType());
+                s3Service.deleteFile(image.getUrl());
                 imageRepository.delete(image);
             }
         }

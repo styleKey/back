@@ -34,7 +34,7 @@ public class ItemAdminController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Read One Item", description = "아이템 정보 단건 조회")
-    public ApiResponse getItem(@PathVariable Long id) {
+    public ApiResponse<ItemResponse> getItem(@PathVariable Long id) {
         Optional<Item> optional = Optional.ofNullable(itemAdminService.findById(id));
 
         return optional.map(item -> {
