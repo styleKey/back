@@ -38,7 +38,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Override
     @Transactional
     public Brand create(BrandRequest requestDto, MultipartFile brandImageFile) {
-        validationImageFile(brandImageFile);
+        validateImageFile(brandImageFile);
 
         Image image = s3Service.uploadFile(brandImageFile, Type.BRAND);
         imageRepository.save(image);
@@ -128,7 +128,7 @@ public class BrandAdminServiceImpl implements BrandAdminService {
         brandRepository.deleteById(id);
     }
 
-    private void validationImageFile(MultipartFile brandImageFile) {
+    private void validateImageFile(MultipartFile brandImageFile) {
         if (brandImageFile == null || brandImageFile.isEmpty()) {
             throw new ApiException(ErrorCode.FILE_NOT_FOUND);
         }
