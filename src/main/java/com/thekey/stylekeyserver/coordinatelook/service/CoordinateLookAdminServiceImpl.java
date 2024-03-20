@@ -6,6 +6,8 @@ import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
 import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
+import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookPageResponse;
+import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
 import com.thekey.stylekeyserver.image.domain.Image;
 import com.thekey.stylekeyserver.image.domain.Type;
@@ -26,6 +28,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,6 +104,20 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     @Transactional(readOnly = true)
     public List<CoordinateLook> findAll() {
         return coordinateLookRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CoordinateLookPageResponse findAllPaging(int pageNo, int pageSize) {
+        // 페이지 넘버는 1부터 시작하도록 조정
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
+        Page<CoordinateLook> itemPage = coordinateLookRepository.findAll(pageable);
+
+        List<CoordinateLookResponse> coordinateLookResponses = itemPage.getContent().stream()
+                .map(CoordinateLookResponse::of)
+                .toList();
+        return CoordinateLookPageResponse.of(coordinateLookResponses, pageNo, pageSize, itemPage.getTotalElements(),
+                itemPage.getTotalPages(), itemPage.isLast());
     }
 
     @Override
