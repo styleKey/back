@@ -2,21 +2,20 @@ package com.thekey.stylekeyserver.item.controller;
 
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
-import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
 import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.dto.response.ItemPageResponse;
 import com.thekey.stylekeyserver.item.dto.response.ItemResponse;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Item", description = "Item API")
@@ -45,23 +44,16 @@ public class ItemAdminController {
 
     @GetMapping
     @Operation(summary = "Read All Items", description = "아이템 정보 전체 조회")
-    public ApiResponse<List<ItemResponse>> getItems() {
-        List<Item> items = itemAdminService.findAll();
-        List<ItemResponse> responses = items.stream()
-                .map(ItemResponse::of)
-                .collect(Collectors.toList());
-
-        return ApiResponse.ok(responses);
+    public ApiResponse<ItemPageResponse> getItems(@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+                                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return ApiResponse.ok(itemAdminService.findAllPaging(pageNo, pageSize));
     }
 
     @GetMapping("/coordinate-looks/{id}")
     @Operation(summary = "Read All Items By CoordinateLookId", description = "코디룩 ID에 해당하는 아이템 목록 전체 조회")
-    public ApiResponse<List<ItemResponse>> getItemsByCoordinateLookId(@PathVariable Long id) {
-        List<Item> items = itemAdminService.findAllByCoordinateLookId(id);
-        List<ItemResponse> responses = items.stream()
-                .map(ItemResponse::of)
-                .toList();
-
-        return ApiResponse.ok(responses);
+    public ApiResponse<ItemPageResponse> getItemsByCoordinateLookId(@PathVariable Long id,
+                                                                      @RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+                                                                      @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return ApiResponse.ok(itemAdminService.findAllByCoordinateLookId(id, pageNo, pageSize));
     }
 }

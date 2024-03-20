@@ -14,6 +14,8 @@ import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import com.thekey.stylekeyserver.image.service.ImageService;
 import com.thekey.stylekeyserver.item.domain.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
+import com.thekey.stylekeyserver.item.dto.response.ItemPageResponse;
+import com.thekey.stylekeyserver.item.dto.response.ItemResponse;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
 import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import java.util.List;
@@ -22,6 +24,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,9 +78,37 @@ public class ItemAdminServiceImpl implements ItemAdminService {
 
     @Override
     @Transactional(readOnly = true)
+    public ItemPageResponse findAllPaging(int pageNo, int pageSize) {
+        // 페이지 넘버는 1부터 시작하도록 조정
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
+        Page<Item> itemPage = itemRepository.findAll(pageable);
+
+        List<ItemResponse> itemResponses = itemPage.getContent().stream()
+                .map(ItemResponse::of)
+                .toList();
+        return ItemPageResponse.of(itemResponses, pageNo, pageSize, itemPage.getTotalElements(),
+                itemPage.getTotalPages(), itemPage.isLast());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Item> findAllByCoordinateLookId(Long coordinateLookId) {
         CoordinateLook coordinateLook = coordinateLookAdminService.findById(coordinateLookId);
         return itemRepository.findItemByCoordinateLook(coordinateLook);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ItemPageResponse findAllByCoordinateLookId(Long coordinateLookId, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").descending());
+        CoordinateLook coordinateLook = coordinateLookAdminService.findById(coordinateLookId);
+        Page<Item> itemPage = itemRepository.findItemByCoordinateLook(coordinateLook, pageable);
+
+        List<ItemResponse> itemResponses = itemPage.getContent().stream()
+                .map(ItemResponse::of)
+                .toList();
+        return ItemPageResponse.of(itemResponses, pageNo, pageSize, itemPage.getTotalElements(),
+                itemPage.getTotalPages(), itemPage.isLast());
     }
 
     @Override
