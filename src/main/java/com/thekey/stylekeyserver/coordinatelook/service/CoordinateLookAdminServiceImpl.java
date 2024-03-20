@@ -51,11 +51,6 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     public CoordinateLook create(CoordinateLookRequest requestDto,
                                  MultipartFile coordinateLookImageFile,
                                  List<MultipartFile> itemImageFiles) {
-
-        if (requestDto == null) {
-            throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
-        }
-
         validateImageFiles(coordinateLookImageFile, itemImageFiles);
 
         StylePoint stylePoint = stylePointAdminService.findById(requestDto.getStylePointId());
@@ -114,11 +109,6 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     @Override
     @Transactional
     public CoordinateLook update(Long id, CoordinateLookRequest requestDto, MultipartFile coordinateLookImageFile) {
-
-        if (requestDto == null) {
-            throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
-        }
-
         CoordinateLook coordinateLook = coordinateLookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         COORDINATE_LOOK_NOT_FOUND.getMessage() + id));
@@ -149,11 +139,6 @@ public class CoordinateLookAdminServiceImpl implements CoordinateLookAdminServic
     @Transactional
     public CoordinateLook updateItem(Long coordinateLookId, Long itemId, ItemRequest requestDto,
                                      MultipartFile itemImageFile) {
-
-        if (requestDto == null) {
-            throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
-        }
-
         CoordinateLook coordinateLook = coordinateLookRepository.findById(coordinateLookId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         COORDINATE_LOOK_NOT_FOUND.getMessage() + coordinateLookId));

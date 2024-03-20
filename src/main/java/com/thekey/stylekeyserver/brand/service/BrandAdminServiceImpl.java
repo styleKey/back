@@ -34,11 +34,6 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Override
     @Transactional
     public Brand create(BrandRequest requestDto, MultipartFile brandImageFile) {
-
-        if(requestDto == null) {
-            throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
-        }
-
         validationImageFile(brandImageFile);
 
         Image image = s3Service.uploadFile(brandImageFile, Type.BRAND);
@@ -73,11 +68,6 @@ public class BrandAdminServiceImpl implements BrandAdminService {
     @Override
     @Transactional
     public Brand update(Long id, BrandRequest requestDto, MultipartFile brandImageFile) {
-
-        if(requestDto == null) {
-            throw new ApiException(ErrorCode.ERROR_BAD_REQUEST);
-        }
-
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(BRAND_NOT_FOUND.getMessage()));
 
