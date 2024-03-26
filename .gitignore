@@ -1,4 +1,8 @@
+# Custom
+/src/main/resources/application.yml
+
 HELP.md
+bin/
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
