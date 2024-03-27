@@ -1,1 +1,1 @@
-# Stylekey backend repository
+# Stylekey backend repository.
