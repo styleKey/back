@@ -1,4 +1,4 @@
-name: Style Key CI
+name: Style Key CI/CD
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
         
-    - name: Make application-prod.yml
+    - name: Make application-dev.yml
       env:
           ACTIONS_STEP_DEBUG: true
           APPLICATION_PROD: ${{ secrets.APPLICATION_DEV }}
@@ -48,7 +48,6 @@ jobs:
         docker build -t ${{ secrets.DOCKER_REPO }} .
         docker push ${{ secrets.DOCKER_REPO }}
 
-
   deploy:
     name: Deploy to EC2 Server
     runs-on: ubuntu-latest
@@ -68,4 +67,3 @@ jobs:
             sudo docker rm stylekey-service || true
             sudo docker run --name=stylekey-service --restart unless-stopped -p 8080:8080 -e TZ=Asia/Seoul -d ${{ secrets.DOCKER_REPO }} 
             sudo docker image prune -f
-
