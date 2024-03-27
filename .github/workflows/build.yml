@@ -1,4 +1,4 @@
-name: Style Key CI
+name: Style Key CI/CD
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
         
-    - name: Make application-prod.yml
+    - name: Make application-dev.yml
       env:
           ACTIONS_STEP_DEBUG: true
           APPLICATION_PROD: ${{ secrets.APPLICATION_DEV }}
@@ -47,3 +47,26 @@ jobs:
         docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
         docker build -t ${{ secrets.DOCKER_REPO }} .
         docker push ${{ secrets.DOCKER_REPO }}
+
+  deploy:
+    name: Deploy to EC2 Server
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: AWS EC2 Server Connect
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_SSH_HOST }}
+          username: ${{ secrets.EC2_SSH_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          script: |
+            echo ${{ secrets.DOCKER_HUB_PASSWORD }} | sudo docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+            sudo docker pull ${{ secrets.DOCKER_REPO }}
+            sudo docker stop stylekey-service || true
+            sudo docker rm stylekey-service || true
+            sudo docker run --name=stylekey-service --restart unless-stopped -p 8080:8080 -e TZ=Asia/Seoul -d ${{ secrets.DOCKER_REPO }} 
+            sudo docker image prune -f
+
+            
