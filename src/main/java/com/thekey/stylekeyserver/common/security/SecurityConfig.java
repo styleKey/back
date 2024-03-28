@@ -2,7 +2,6 @@ package com.thekey.stylekeyserver.common.security;
 
 import lombok.RequiredArgsConstructor;
 
-//import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,10 +22,8 @@ import com.thekey.stylekeyserver.oauth.exception.RestAuthenticationEntryPoint;
 import com.thekey.stylekeyserver.oauth.filter.TokenAuthenticationFilter;
 import com.thekey.stylekeyserver.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.thekey.stylekeyserver.oauth.handler.OAuth2AuthenticationSuccessHandler;
-import com.thekey.stylekeyserver.oauth.handler.TokenAccessDeniedHandler;
 import com.thekey.stylekeyserver.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.thekey.stylekeyserver.oauth.service.CustomOAuth2UserService;
-import com.thekey.stylekeyserver.oauth.service.CustomUserDetailsService;
 import com.thekey.stylekeyserver.oauth.token.AuthTokenProvider;
 
 import java.util.Arrays;
@@ -41,11 +38,8 @@ public class SecurityConfig {
     private final CorsProperties corsProperties;
     private final AppProperties appProperties;
     private final AuthTokenProvider tokenProvider;
-    private final CustomUserDetailsService userDetailsService;
     private final CustomOAuth2UserService oAuth2UserService;
-    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
-
 
     /*
      * Cors 설정
@@ -67,7 +61,6 @@ public class SecurityConfig {
         corsConfigSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigSource;
     }
-
 
     /*
      * 토큰 필터 설정
@@ -101,7 +94,6 @@ public class SecurityConfig {
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-
     /*
      * Oauth 인증 성공 핸들러
      * */
@@ -124,7 +116,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http.cors();
         http.csrf().disable();
@@ -137,7 +129,7 @@ public class SecurityConfig {
             .requestMatchers("/v3/api-docs/**").permitAll()
             .requestMatchers("/api/test-questions").permitAll()
             .requestMatchers("/api/test").permitAll()
-//                .requestMatchers("/admin/**").permitAll()
+                .requestMatchers("/admin/**").permitAll()
             .requestMatchers("/api/test").authenticated()
             .requestMatchers("/api/users").authenticated()
             .requestMatchers("/api/**").permitAll()
@@ -162,6 +154,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
 }
