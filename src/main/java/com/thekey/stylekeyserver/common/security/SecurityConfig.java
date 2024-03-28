@@ -29,7 +29,6 @@ import com.thekey.stylekeyserver.oauth.token.AuthTokenProvider;
 import java.util.Arrays;
 import java.util.Collections;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
