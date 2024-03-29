@@ -27,7 +27,7 @@ jobs:
     - name: Make application.yml
       env:
           ACTIONS_STEP_DEBUG: true
-          APPLICATION_PROD: ${{ secrets.APPLICATION_DEV }}
+          APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
       run: echo "$APPLICATION_DEV" > src/main/resources/application.yml
 
     - name: Grant execute permission for gradlew
