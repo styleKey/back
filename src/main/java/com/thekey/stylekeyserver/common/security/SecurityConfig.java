@@ -2,12 +2,10 @@ package com.thekey.stylekeyserver.common.security;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -86,23 +84,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-            .requestMatchers(PathRequest.toH2Console())
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
-
     /*
      * Oauth 인증 성공 핸들러
      * */
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
         return new OAuth2AuthenticationSuccessHandler(
-            tokenProvider,
-            appProperties,
-            userRefreshTokenRepository,
-            oAuth2AuthorizationRequestBasedOnCookieRepository()
+                tokenProvider,
+                appProperties,
+                userRefreshTokenRepository,
+                oAuth2AuthorizationRequestBasedOnCookieRepository()
         );
     }
 
@@ -115,7 +106,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.cors();
         http.csrf().disable();
@@ -124,32 +115,32 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-            .requestMatchers("/swagger-ui/**").permitAll()
-            .requestMatchers("/v3/api-docs/**").permitAll()
-            .requestMatchers("/api/test-questions").permitAll()
-            .requestMatchers("/api/test").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/test-questions").permitAll()
+                .requestMatchers("/api/test").permitAll()
                 .requestMatchers("/admin/**").permitAll()
-            .requestMatchers("/api/test").authenticated()
-            .requestMatchers("/api/users").authenticated()
-            .requestMatchers("/api/**").permitAll()
-            .anyRequest().authenticated()
-            .and()
+                .requestMatchers("/api/test").authenticated()
+                .requestMatchers("/api/users").authenticated()
+                .requestMatchers("/api/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
 
-            .oauth2Login()
-            .authorizationEndpoint().baseUri("/oauth2/authorization")
-            .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-            .and()
-            .redirectionEndpoint()
-            .baseUri(
-                "/login/oauth2/code/*") // /login/oauth2/code/**, /*/oauth2/code/* // /oauth/callback/kakao ///oauth/redirect
-            .and()
-            .userInfoEndpoint().userService(oAuth2UserService)
-            .and()
-            .successHandler(oAuth2AuthenticationSuccessHandler())
-            .failureHandler(oAuth2AuthenticationFailureHandler())
+                .oauth2Login()
+                .authorizationEndpoint().baseUri("/oauth2/authorization")
+                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                .and()
+                .redirectionEndpoint()
+                .baseUri(
+                        "/login/oauth2/code/*") // /login/oauth2/code/**, /*/oauth2/code/* // /oauth/callback/kakao ///oauth/redirect
+                .and()
+                .userInfoEndpoint().userService(oAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler())
+                .failureHandler(oAuth2AuthenticationFailureHandler())
 
-            .and().exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
-            .and().addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .and().exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .and().addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
