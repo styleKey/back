@@ -34,7 +34,7 @@ insert into category (category_title) values ('SHOES');
 insert into category (category_title) values ('ACC');
 
 -- TEST_QUESTION
-insert into TEST_QUESTION (TEST_QUESTION_CONTENT, TEST_QUESTION_IMAGE_URL)
+insert into test_question (test_question_content, test_question_image_url)
 values ('약속 시간에 늦어 급하게 옷을 입고 나간 당신, \n지금 입고 있는 옷의 색깔은?',
         'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q1.jpg'),
        ('외출을 위해 옷장 앞에 선 당신, \n선호하는 옷의 핏은?', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q2.jpg'),
