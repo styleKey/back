@@ -1,28 +1,28 @@
 -- STYLE_POINT
 insert into style_point (style_point_title, style_point_description, style_point_image) values
 ('Unique', '변화하는 트렌드를 반영하여 평범하지 않고 개성있는 디테일을 추구하는 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/unique_point.png'),
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/unique_point.jpg'),
 
 ('Street', '격식을 갖추지 않고 길거리에서 편하게 입을 수 있는 힙한 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/street_point.png'),
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/street_point.jpg'),
 
 ('Modern', '장식적인 것 없이 깔끔하고 심플하며 직선적인 실루엣을 추구하는 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/modern_point.png'),
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/modern_point.png'),
 
 ('Normal', '일상적이고 평범한 착장이 무난하지 않도록 센스있는 포인트가 들어간 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/normal_point.png'),
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/normal_point.jpg'),
 
 ('Lovely', '사랑스러운 소녀같이 귀엽고 로맨틱하면서 여성스러운 무드를 강조한 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/lovely_point.jpg'),
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/lovely_point.jpg'),
 
 ('Retro', '1990-2000년대의 감성을 재해석하여 오래된 듯한 멋진 느낌이 드는 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/retro_point.jpg'),
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/retro_point.jpg'),
 
 ('Glam', '섹시함이 강조되는 화려하고 여성스러운 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/glam_point.png'),
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/glam_point.jpg'),
 
 ('Active', '스포츠웨어와 일상복의 경계를 허물고 활동적인 이미지를 표현하는 스타일',
-'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/stylepoint/active_point.png');
+'https://stylekey.s3.ap-northeast-2.amazonaws.com/stylepoint/active_point.jpg');
 
 -- CATEGORY
 insert into category (category_title) values ('TOP');
@@ -36,19 +36,21 @@ insert into category (category_title) values ('ACC');
 -- TEST_QUESTION
 insert into test_question (test_question_content, test_question_image_url)
 values ('약속 시간에 늦어 급하게 옷을 입고 나간 당신, \n지금 입고 있는 옷의 색깔은?',
-        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q1.jpg'),
-       ('외출을 위해 옷장 앞에 선 당신, \n선호하는 옷의 핏은?', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q2.jpg'),
+        'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q1.jpg'),
+       ('외출을 위해 옷장 앞에 선 당신, \n선호하는 옷의 핏은?',
+       'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q2.jpg'),
        ('플리마켓에서 마음에 드는 가방을 발견했다! \n당신이 선택한 가방의 스타일은?',
-        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q3.jpg'),
+        'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q3.jpg'),
        ('우연히 지나가다가 보게 된 신발이 \n자꾸 눈에 아른거려… \n이건 너무 내 스타일이야!',
-        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q4.jpg'),
+        'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q4.jpg'),
        ('오랜만에 맞이한 휴일! \n시간에 쫓기지 않는 여유로운 하루, \n어떻게 보내면 좋을까?',
-        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q5.jpg'),
-       ('계절도 바뀌어가니 옷을 사야겠어! \n어디에서 쇼핑을 할까?', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q6.jpg'),
+        'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q5.jpg'),
+       ('계절도 바뀌어가니 옷을 사야겠어! \n어디에서 쇼핑을 할까?',
+       'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q6.jpg'),
        ('마음에 드는 옷이 너무 많아! \n이 중에 하나만 골라야 한다면… \n가장 중요하게 생각하는 요소는?',
-        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q7.jpg'),
+        'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q7.jpg'),
        ('내가 좋아하는 패션 유튜버가 \n오랜만에 영상을 올렸어! \n어떤 영상이 올라왔을까?',
-        'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/test/Image_Q8.jpg');
+        'https://stylekey.s3.ap-northeast-2.amazonaws.com/test/Image_Q8.jpg');
 
 -- TEST_ANSWER
 insert into test_answer(test_answer_content, test_question_id)
@@ -172,71 +174,71 @@ values (29, 4, 1),
 -- IMAGE
 -- Unique Point Brand Image
 insert into image (image_type, image_file_name, image_url, image_is_used, deleted_at) values
-('BRAND', 'brand/saltypebble_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/saltypebble_logo.png', 1, null),
-('BRAND', 'brand/openyy_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/openyy_logo.png', 1, null),
-('BRAND', 'brand/odlyworkshop_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/odlyworkshop_logo.png', 1, null),
-('BRAND', 'brand/anderssonbell_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/anderssonbell_logo.png', 1, null),
+('BRAND', 'brand/saltypebble_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/saltypebble_logo.png', 1, null),
+('BRAND', 'brand/openyy_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/openyy_logo.png', 1, null),
+('BRAND', 'brand/odlyworkshop_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/odlyworkshop_logo.png', 1, null),
+('BRAND', 'brand/anderssonbell_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/anderssonbell_logo.png', 1, null),
 
 -- Street Point Brand Image
-('BRAND', 'brand/stussy_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/stussy_logo.png', 1, null),
-('BRAND', 'brand/mschf_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/mschf_logo.png', 1, null),
-('BRAND', 'brand/leey_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/leey_logo.png', 1, null),
-('BRAND', 'brand/seo_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/seo_logo.png', 1, null),
+('BRAND', 'brand/stussy_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/stussy_logo.png', 1, null),
+('BRAND', 'brand/mschf_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/mschf_logo.png', 1, null),
+('BRAND', 'brand/leey_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/leey_logo.png', 1, null),
+('BRAND', 'brand/seo_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/seo_logo.png', 1, null),
 
 -- Modern Point Brand Image
-('BRAND', 'brand/cos_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/cos_logo.png', 1, null),
-('BRAND', 'brand/le17septembrehomme_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/le17septembrehomme_logo.png', 1, null),
-('BRAND', 'brand/facadapattern_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/facadapattern_logo.png', 1, null),
-('BRAND', 'brand/notia_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/notia_logo.png', 1, null),
+('BRAND', 'brand/cos_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/cos_logo.png', 1, null),
+('BRAND', 'brand/le17septembrehomme_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/le17septembrehomme_logo.png', 1, null),
+('BRAND', 'brand/facadapattern_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/facadapattern_logo.png', 1, null),
+('BRAND', 'brand/notia_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/notia_logo.png', 1, null),
 
 -- Normal Point Brand Image
-('BRAND', 'brand/insilencewomen_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/insilencewomen_logo.png', 1, null),
-('BRAND', 'brand/enor_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/enor_logo.png', 1, null),
-('BRAND', 'brand/studiotable_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/studiotable_logo.png', 1, null),
-('BRAND', 'brand/matinkim_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/matinkim_logo.png', 1, null),
+('BRAND', 'brand/insilencewomen_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/insilencewomen_logo.png', 1, null),
+('BRAND', 'brand/enor_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/enor_logo.png', 1, null),
+('BRAND', 'brand/studiotable_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/studiotable_logo.png', 1, null),
+('BRAND', 'brand/matinkim_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/matinkim_logo.png', 1, null),
 
 -- Lovely Point Brand Image
-('BRAND', 'brand/grove_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/grove_logo.png', 1, null),
-('BRAND', 'brand/glowny_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/glowny_logo.png', 1, null),
-('BRAND', 'brand/pehrt_logo.jpg', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/pehrt_logo.jpg', 1, null),
-('BRAND', 'brand/magarinfingers_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/magarinfingers_logo.png', 1, null),
+('BRAND', 'brand/grove_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/grove_logo.png', 1, null),
+('BRAND', 'brand/glowny_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/glowny_logo.png', 1, null),
+('BRAND', 'brand/pehrt_logo.jpg', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/pehrt_logo.jpg', 1, null),
+('BRAND', 'brand/magarinfingers_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/magarinfingers_logo.png', 1, null),
 
 -- Retro Point Brand Image
-('BRAND', 'brand/sculptor_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/sculptor_logo.png', 1, null),
-('BRAND', 'brand/teket_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/teket_logo.png', 1, null),
-('BRAND', 'brand/badee_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/badee_logo.png', 1, null),
-('BRAND', 'brand/whynotus_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/whynotus_logo.png', 1, null),
+('BRAND', 'brand/sculptor_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/sculptor_logo.png', 1, null),
+('BRAND', 'brand/teket_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/teket_logo.png', 1, null),
+('BRAND', 'brand/badee_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/badee_logo.png', 1, null),
+('BRAND', 'brand/whynotus_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/whynotus_logo.png', 1, null),
 
 -- Glam Point Brand Image
-('BRAND', 'brand/painorpleasure_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/painorpleasure_logo.png', 1, null),
-('BRAND', 'brand/notyourrose_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/notyourrose_logo.png', 1, null),
-('BRAND', 'brand/yuse_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/yuse_logo.png', 1, null),
-('BRAND', 'brand/threetimes_logo.jpg', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/threetimes_logo.jpg', 1, null),
+('BRAND', 'brand/painorpleasure_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/painorpleasure_logo.png', 1, null),
+('BRAND', 'brand/notyourrose_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/notyourrose_logo.png', 1, null),
+('BRAND', 'brand/yuse_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/yuse_logo.png', 1, null),
+('BRAND', 'brand/threetimes_logo.jpg', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/threetimes_logo.jpg', 1, null),
 
 -- Active Point Brand Image
-('BRAND', 'brand/ojos_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/ojos_logo.png', 1, null),
-('BRAND', 'brand/coyseio_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/coyseio_logo.png', 1, null),
-('BRAND', 'brand/hugyourskin_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/hugyourskin_logo.png', 1, null),
-('BRAND', 'brand/sansangear_logo.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/brand/sansangear_logo.png', 1, null),
+('BRAND', 'brand/ojos_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/ojos_logo.png', 1, null),
+('BRAND', 'brand/coyseio_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/coyseio_logo.png', 1, null),
+('BRAND', 'brand/hugyourskin_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/hugyourskin_logo.png', 1, null),
+('BRAND', 'brand/sansangear_logo.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/brand/sansangear_logo.png', 1, null),
 
 -- CoordinateLook Image
-('COORDINATE_LOOK','coordinateLook/unique_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/unique_cody_1.png', 1, null),
-('COORDINATE_LOOK','coordinateLook/street_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/street_cody_1.png', 1, null),
-('COORDINATE_LOOK','coordinateLook/modern_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/modern_cody_1.png', 1, null),
-('COORDINATE_LOOK','coordinateLook/normal_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/normal_cody_1.png', 1, null),
-('COORDINATE_LOOK','coordinateLook/lovely_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/lovely_cody_1.png', 1, null),
-('COORDINATE_LOOK','coordinateLook/retro_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/retro_cody_1.png', 1, null),
-('COORDINATE_LOOK','coordinateLook/glam_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/glam_cody_1.png', 1, null),
-('COORDINATE_LOOK','coordinateLook/active_cody_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/coordinateLook/active_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/unique_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/unique_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/street_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/street_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/modern_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/modern_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/normal_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/normal_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/lovely_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/lovely_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/retro_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/retro_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/glam_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/glam_cody_1.png', 1, null),
+('COORDINATE_LOOK','coordinateLook/active_cody_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/coordinateLook/active_cody_1.png', 1, null),
 
 -- ITEM Image
 -- Unique Point 대표 코디룩 아이템 (6개)
-('ITEM','item/unique_cody_1_item_1.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_1.png', 1, null),
-('ITEM','item/unique_cody_1_item_2.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_2.png', 1, null),
-('ITEM','item/unique_cody_1_item_3.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_3.png', 1, null),
-('ITEM','item/unique_cody_1_item_4.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_4.png', 1, null),
-('ITEM','item/unique_cody_1_item_5.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_5.png', 1, null),
-('ITEM','item/unique_cody_1_item_6.png', 'https://stylekeybucket.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_6.png', 1, null);
+('ITEM','item/unique_cody_1_item_1.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_1.png', 1, null),
+('ITEM','item/unique_cody_1_item_2.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_2.png', 1, null),
+('ITEM','item/unique_cody_1_item_3.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_3.png', 1, null),
+('ITEM','item/unique_cody_1_item_4.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_4.png', 1, null),
+('ITEM','item/unique_cody_1_item_5.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_5.png', 1, null),
+('ITEM','item/unique_cody_1_item_6.png', 'https://stylekey.s3.ap-northeast-2.amazonaws.com/item/unique_cody_1_item_6.png', 1, null);
 
 -- BRAND
 insert into brand (brand_title, brand_title_eng, brand_site_url, style_point_id, brand_image_id) values
