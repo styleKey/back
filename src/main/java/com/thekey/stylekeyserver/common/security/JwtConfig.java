@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import com.thekey.stylekeyserver.oauth.token.AuthTokenProvider;
 import org.springframework.context.annotation.Primary;
 
-
 @Configuration
 public class JwtConfig {
+
     @Value("${jwt.secret}")
     private String secret;
 

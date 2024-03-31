@@ -25,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "`USER`")
+@Table(name = "USERS")
 public class User extends BaseTimeEntity {
     @JsonIgnore
     @Id
