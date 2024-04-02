@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.item.service;
 
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.entity.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.dto.response.ItemPageResponse;
 import java.util.List;

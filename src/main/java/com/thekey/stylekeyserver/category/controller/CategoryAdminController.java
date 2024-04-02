@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.category.controller;
 
-import com.thekey.stylekeyserver.category.domain.Category;
+import com.thekey.stylekeyserver.category.entity.Category;
 import com.thekey.stylekeyserver.category.service.CategoryService;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;

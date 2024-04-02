@@ -1,7 +1,7 @@
 package com.thekey.stylekeyserver.item.repository;
 
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
+import com.thekey.stylekeyserver.item.entity.Item;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

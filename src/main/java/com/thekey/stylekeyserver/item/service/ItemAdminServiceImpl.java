@@ -2,17 +2,17 @@ package com.thekey.stylekeyserver.item.service;
 
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.ITEM_NOT_FOUND;
 
-import com.thekey.stylekeyserver.brand.domain.Brand;
+import com.thekey.stylekeyserver.brand.entity.Brand;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
-import com.thekey.stylekeyserver.category.domain.Category;
+import com.thekey.stylekeyserver.category.entity.Category;
 import com.thekey.stylekeyserver.category.service.CategoryService;
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.service.CoordinateLookAdminService;
-import com.thekey.stylekeyserver.image.domain.Image;
-import com.thekey.stylekeyserver.image.domain.Type;
+import com.thekey.stylekeyserver.image.entity.Image;
+import com.thekey.stylekeyserver.image.entity.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import com.thekey.stylekeyserver.image.service.ImageService;
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.entity.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.dto.response.ItemPageResponse;
 import com.thekey.stylekeyserver.item.dto.response.ItemResponse;

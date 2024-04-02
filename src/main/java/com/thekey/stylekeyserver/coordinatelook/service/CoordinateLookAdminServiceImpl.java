@@ -4,20 +4,20 @@ import static com.thekey.stylekeyserver.common.exception.ErrorCode.COORDINATE_LO
 
 import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.request.CoordinateLookRequest;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookPageResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
-import com.thekey.stylekeyserver.image.domain.Image;
-import com.thekey.stylekeyserver.image.domain.Type;
+import com.thekey.stylekeyserver.image.entity.Image;
+import com.thekey.stylekeyserver.image.entity.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import com.thekey.stylekeyserver.image.service.ImageService;
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.entity.Item;
 import com.thekey.stylekeyserver.item.dto.request.ItemRequest;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;
 import com.thekey.stylekeyserver.common.s3.service.S3Service;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import java.util.ArrayList;
 import java.util.HashMap;

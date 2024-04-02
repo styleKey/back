@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.category.domain;
+package com.thekey.stylekeyserver.category.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

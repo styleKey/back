@@ -9,7 +9,7 @@ import static com.thekey.stylekeyserver.common.exception.ErrorCode.USER_NOT_FOUN
 import com.thekey.stylekeyserver.auth.entity.User;
 import com.thekey.stylekeyserver.auth.repository.UserRepository;
 import com.thekey.stylekeyserver.common.exception.ApiException;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
 import com.thekey.stylekeyserver.test.dto.request.SaveTestResultRequest;
 import com.thekey.stylekeyserver.test.dto.request.TestResultRequest;

@@ -4,7 +4,7 @@ import static com.thekey.stylekeyserver.common.exception.ErrorCode.COORDINATE_LO
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thekey.stylekeyserver.common.redis.RedisService;
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookResponse;
 import com.thekey.stylekeyserver.coordinatelook.repository.CoordinateLookRepository;
 import jakarta.persistence.EntityNotFoundException;

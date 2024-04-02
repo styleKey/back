@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.brand.controller;
 
-import com.thekey.stylekeyserver.brand.domain.Brand;
+import com.thekey.stylekeyserver.brand.entity.Brand;
 import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.service.BrandAdminService;
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
