@@ -1,5 +1,5 @@
 # Custom
-/src/main/resources/application.yml
+application-*.yml
 
 HELP.md
 bin/
