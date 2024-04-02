@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.stylepoint.service;
 
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.STYLE_POINT_NOT_FOUND;
 
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import com.thekey.stylekeyserver.stylepoint.repository.StylePointRepository;
 import jakarta.persistence.*;

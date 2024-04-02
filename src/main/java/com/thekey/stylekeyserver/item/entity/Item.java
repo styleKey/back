@@ -1,10 +1,10 @@
-package com.thekey.stylekeyserver.item.domain;
+package com.thekey.stylekeyserver.item.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.thekey.stylekeyserver.brand.domain.Brand;
-import com.thekey.stylekeyserver.category.domain.Category;
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
-import com.thekey.stylekeyserver.image.domain.Image;
+import com.thekey.stylekeyserver.brand.entity.Brand;
+import com.thekey.stylekeyserver.category.entity.Category;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
+import com.thekey.stylekeyserver.image.entity.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

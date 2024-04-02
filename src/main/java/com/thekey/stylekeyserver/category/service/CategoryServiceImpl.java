@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.category.service;
 
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.CATEGORY_NOT_FOUND;
 
-import com.thekey.stylekeyserver.category.domain.Category;
+import com.thekey.stylekeyserver.category.entity.Category;
 import com.thekey.stylekeyserver.category.repository.CategoryRepository;
 
 import java.util.List;

@@ -1,8 +1,8 @@
-package com.thekey.stylekeyserver.brand.domain;
+package com.thekey.stylekeyserver.brand.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.thekey.stylekeyserver.image.domain.Image;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.image.entity.Image;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -2,19 +2,19 @@ package com.thekey.stylekeyserver.brand.service;
 
 import static com.thekey.stylekeyserver.common.exception.ErrorCode.BRAND_NOT_FOUND;
 
-import com.thekey.stylekeyserver.brand.domain.Brand;
+import com.thekey.stylekeyserver.brand.entity.Brand;
 import com.thekey.stylekeyserver.brand.dto.request.BrandRequest;
 import com.thekey.stylekeyserver.brand.dto.response.BrandPageResponse;
 import com.thekey.stylekeyserver.brand.dto.response.BrandResponse;
 import com.thekey.stylekeyserver.brand.repository.BrandRepository;
 import com.thekey.stylekeyserver.common.exception.ApiException;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
-import com.thekey.stylekeyserver.image.domain.Image;
-import com.thekey.stylekeyserver.image.domain.Type;
+import com.thekey.stylekeyserver.image.entity.Image;
+import com.thekey.stylekeyserver.image.entity.Type;
 import com.thekey.stylekeyserver.image.repository.ImageRepository;
 import com.thekey.stylekeyserver.common.s3.service.S3Service;
 import com.thekey.stylekeyserver.image.service.ImageService;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;

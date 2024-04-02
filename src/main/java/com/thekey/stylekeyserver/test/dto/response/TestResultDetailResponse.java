@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.test.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import com.thekey.stylekeyserver.test.entity.TestResultDetail;
 import lombok.Builder;
 import lombok.Getter;

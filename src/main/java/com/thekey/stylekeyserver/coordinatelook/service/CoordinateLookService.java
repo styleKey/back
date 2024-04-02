@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.coordinatelook.service;
 
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookDetailsResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.ApiCoordinateLookResponse;
 import com.thekey.stylekeyserver.like.service.LikeCoordinateLookService;

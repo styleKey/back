@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.image.domain;
+package com.thekey.stylekeyserver.image.entity;
 
 public enum Type {
     BRAND("brand"),

@@ -2,8 +2,8 @@ package com.thekey.stylekeyserver.brand.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.thekey.stylekeyserver.brand.domain.Brand;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.brand.entity.Brand;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

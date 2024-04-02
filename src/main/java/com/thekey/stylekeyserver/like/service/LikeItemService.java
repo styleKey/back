@@ -4,7 +4,7 @@ import static com.thekey.stylekeyserver.common.exception.ErrorCode.ITEM_NOT_FOUN
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thekey.stylekeyserver.common.redis.RedisService;
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.entity.Item;
 import com.thekey.stylekeyserver.item.dto.response.ApiItemResponse;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;

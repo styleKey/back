@@ -1,8 +1,8 @@
-package com.thekey.stylekeyserver.image.domain;
+package com.thekey.stylekeyserver.image.entity;
 
-import com.thekey.stylekeyserver.brand.domain.Brand;
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.brand.entity.Brand;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
+import com.thekey.stylekeyserver.item.entity.Item;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

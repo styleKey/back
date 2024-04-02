@@ -1,4 +1,4 @@
-package com.thekey.stylekeyserver.stylepoint.domain;
+package com.thekey.stylekeyserver.stylepoint.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
