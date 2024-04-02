@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.stylepoint.controller;
 
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.dto.response.StylePointResponse;
 import com.thekey.stylekeyserver.stylepoint.service.StylePointAdminService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.coordinatelook.repository;
 
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

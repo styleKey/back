@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.item.controller;
 
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.entity.Item;
 import com.thekey.stylekeyserver.item.dto.response.ItemPageResponse;
 import com.thekey.stylekeyserver.item.dto.response.ItemResponse;
 import com.thekey.stylekeyserver.item.service.ItemAdminService;

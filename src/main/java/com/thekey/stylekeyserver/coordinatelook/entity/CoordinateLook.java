@@ -1,9 +1,9 @@
-package com.thekey.stylekeyserver.coordinatelook.domain;
+package com.thekey.stylekeyserver.coordinatelook.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.thekey.stylekeyserver.image.domain.Image;
-import com.thekey.stylekeyserver.item.domain.Item;
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.image.entity.Image;
+import com.thekey.stylekeyserver.item.entity.Item;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import java.util.ArrayList;
 import java.util.List;
 

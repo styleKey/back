@@ -2,7 +2,7 @@ package com.thekey.stylekeyserver.coordinatelook.controller;
 
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
 import com.thekey.stylekeyserver.common.exception.ErrorCode;
-import com.thekey.stylekeyserver.coordinatelook.domain.CoordinateLook;
+import com.thekey.stylekeyserver.coordinatelook.entity.CoordinateLook;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookDetailsResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookPageResponse;
 import com.thekey.stylekeyserver.coordinatelook.dto.response.CoordinateLookResponse;

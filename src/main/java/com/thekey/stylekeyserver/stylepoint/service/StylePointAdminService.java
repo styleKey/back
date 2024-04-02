@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.stylepoint.service;
 
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import com.thekey.stylekeyserver.stylepoint.dto.request.StylePointRequest;
 import java.util.List;
 

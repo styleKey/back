@@ -1,7 +1,7 @@
 package com.thekey.stylekeyserver.item.service;
 
 import com.thekey.stylekeyserver.common.redis.RedisService;
-import com.thekey.stylekeyserver.item.domain.Item;
+import com.thekey.stylekeyserver.item.entity.Item;
 import com.thekey.stylekeyserver.item.dto.response.ApiItemResponse;
 import com.thekey.stylekeyserver.item.repository.ItemRepository;
 import com.thekey.stylekeyserver.like.service.LikeItemService;

@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.image.repository;
 
-import com.thekey.stylekeyserver.image.domain.Image;
+import com.thekey.stylekeyserver.image.entity.Image;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

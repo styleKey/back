@@ -1,6 +1,6 @@
 package com.thekey.stylekeyserver.test.entity;
 
-import com.thekey.stylekeyserver.stylepoint.domain.StylePoint;
+import com.thekey.stylekeyserver.stylepoint.entity.StylePoint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
