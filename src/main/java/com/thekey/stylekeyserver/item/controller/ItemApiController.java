@@ -1,6 +1,7 @@
 package com.thekey.stylekeyserver.item.controller;
 
 import com.thekey.stylekeyserver.common.exception.ApiResponse;
+import com.thekey.stylekeyserver.item.dto.response.ApiItemPageResponse;
 import com.thekey.stylekeyserver.item.dto.response.ApiItemResponse;
 import com.thekey.stylekeyserver.item.service.ItemService;
 import com.thekey.stylekeyserver.item.service.RecentlyViewedItemsService;
@@ -9,6 +10,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,9 +36,10 @@ public class ItemApiController {
     }
 
     @GetMapping
-    @Operation(summary = "Read All Items", description = "아이템 정보 전체 조회")
-    public ApiResponse<List<ApiItemResponse>> getItems() {
-        return ApiResponse.ok(itemService.getAllItemsWithLikes());
+    @Operation(summary = "Read All Items", description = "아이템 정보 전체 조회 (좋아요 순으로 정렬) 무한 스크템")
+    public ApiResponse<ApiItemPageResponse> getItems(
+            @PageableDefault(sort = "likeCount", direction = Direction.DESC) Pageable pageable) {
+        return ApiResponse.ok(itemService.getAllItemsWithLikes(pageable));
     }
 
     @GetMapping("/coordinate-looks/{id}")
