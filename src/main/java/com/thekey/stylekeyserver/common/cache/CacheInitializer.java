@@ -9,11 +9,9 @@ import com.thekey.stylekeyserver.like.service.LikeItemService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.SmartLifecycle;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
-@DependsOn("redisTemplate") // redisTemplate 의존하도록 설정
 @RequiredArgsConstructor
 public class CacheInitializer implements SmartLifecycle {
 
