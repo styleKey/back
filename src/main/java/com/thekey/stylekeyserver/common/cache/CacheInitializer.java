@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class CacheInitializer {
     private final LikeCoordinateLookService likeCoordinateLookService;
 
     @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void initializeCacheWithCoordinateLookLikes(ApplicationReadyEvent event) {
         List<CoordinateLook> coordinateLooks = coordinateLookRepository.findAll();
 
@@ -35,6 +37,7 @@ public class CacheInitializer {
     }
 
     @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void initializeCacheWithItemLikes(ApplicationReadyEvent event) {
         List<Item> items = itemRepository.findAll();
 
